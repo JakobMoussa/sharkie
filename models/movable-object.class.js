@@ -6,6 +6,7 @@ imageCache = {};
 height = 250;
 width = 250;
 speed = 0.15;
+otherDirection = false;
 
     loadImage(path) {
         this.img = new Image();
