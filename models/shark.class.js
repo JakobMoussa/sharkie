@@ -21,23 +21,78 @@ class Shark extends MovableObject {
     ];
 
     currentImage = 0;
+    world;
+    speed = 10;
+    Keyboard;
+    vx = 0;
+    vy = 0;
+
+    acceleration = 0.6;
+    maxSpeed = 6;
+    friction = 0.85;
 
     constructor() {
-        super().loadImage("img/Grafiken - Sharkie/1.Sharkie/1.IDLE/1.png");
+        super();
+        this.loadImage("img/Grafiken - Sharkie/1.Sharkie/1.IDLE/1.png");
         this.loadImages(this.IMAGES_MOVING);
         this.animate();
-        setInterval(() => {
-            let i = this.currentImage % this.IMAGES_MOVING.length;
-            let path = this.IMAGES_MOVING[i];
-            this.img = this.imageCache[path];
-            this.currentImage++;
-        }, 250);
     }
+
 
     animate() {
+    setInterval(() => {
+        if (!this.world || !this.world.keyboard) return;
 
+        if (this.world.keyboard.RIGHT) {
+        this.vx += this.acceleration;
+        this.otherDirection = false;
+        }
+        if (this.world.keyboard.LEFT) {
+        this.vx -= this.acceleration;
+        this.otherDirection = true;
+        }
+        if (this.world.keyboard.UP) {
+        this.vy -= this.acceleration;
+        }
+        if (this.world.keyboard.DOWN) {
+        this.vy += this.acceleration;
+        }
+
+        this.world.x_camera = -this.x;
+
+        // Speed begrenzen
+        this.vx = Math.max(-this.maxSpeed, Math.min(this.vx, this.maxSpeed));
+        this.vy = Math.max(-this.maxSpeed, Math.min(this.vy, this.maxSpeed));
+
+        // Position updaten
+        this.x += this.vx;
+        this.y += this.vy;
+
+        const anyHorizontal = this.world.keyboard.LEFT || this.world.keyboard.RIGHT;
+        const anyVertical = this.world.keyboard.UP || this.world.keyboard.DOWN;
+
+        if (!anyHorizontal) this.vx *= this.friction;
+        if (!anyVertical) this.vy *= this.friction;
+
+        if (Math.abs(this.vx) < 0.05) this.vx = 0;
+        if (Math.abs(this.vy) < 0.05) this.vy = 0;
+
+        this.y = Math.max(0, Math.min(this.y, this.world.canvas.height - this.height));
+        this.x = Math.max(0, Math.min(this.x, 3400 - this.width));
+
+    }, 1000 / 60);
+
+    // Animation: nur wenn er sich bewegt
+    setInterval(() => {
+        if (Math.abs(this.vx) > 0 || Math.abs(this.vy) > 0) {
+        let i = this.currentImage % this.IMAGES_MOVING.length;
+        let path = this.IMAGES_MOVING[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+        }
+    }, 120);
     }
-   
+
     moveUp() {
 
     }

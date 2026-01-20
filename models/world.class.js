@@ -1,36 +1,36 @@
 class World {
     shark = new Shark();
-        enemies = [
-        new PufferFish(300, this.randomY(), 'green'),
-        new PufferFish(500, this.randomY(), 'red'),
-        new PufferFish(850, this.randomY(), 'green'),
-        new PufferFish(450, this.randomY(), 'red'),
-        new PufferFish(750, this.randomY(), 'green'),
-    ];
-
-    backgroundObjects = [
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 0, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/2.png', 0, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 0, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/2.png', 0, 0),
-    ];
+    enemies = Level1.enemies;
+    backgroundObjects = Level1.backgroundObjects;
 
     canvas;
     ctx;
     img;
+    keyboard;
+    x_camera = 0;
 
-    constructor(canvas) {
+    constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
-        this.canvas = canvas
+        this.canvas = canvas;
+        this.keyboard = keyboard;
+        this.setWorld();
         this.draw();
     }
 
+    setWorld() {
+        this.shark.world = this;
+    }
+ 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.translate(this.x_camera, 0);
         
         this.addObjectsToMap(this.backgroundObjects);
         this.addToMap(this.shark);
         this.addObjectsToMap(this.enemies);
+
+        this.ctx.translate(-this.x_camera, 0);
 
         requestAnimationFrame(() => this.draw());
     }
@@ -40,11 +40,21 @@ class World {
     }
 
     addToMap(mo) {
-        if (!mo.img) return;
+        if (!mo.img || !mo.img.complete || mo.img.naturalWidth === 0) return;
 
-        if (mo.img.complete && mo.img.naturalWidth > 0) {
+        this.ctx.save();
+
+        if (mo.otherDirection) {
+
+            this.ctx.translate(mo.x + mo.width, mo.y);
+            this.ctx.scale(-1, 1);
+            this.ctx.drawImage(mo.img, 0, 0, mo.width, mo.height);
+        } else {
+
             this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
         }
+
+        this.ctx.restore();
     }
 
     randomY() {
