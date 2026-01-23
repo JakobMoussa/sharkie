@@ -8,6 +8,7 @@ const Level1 = new Level(
         new PufferFish(850, randomY(), 'green'),
         new PufferFish(450, randomY(), 'red'),
         new PufferFish(750, randomY(), 'green'),
+        new Endboss(1500)
         ],
 
         [
