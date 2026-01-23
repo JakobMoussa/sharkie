@@ -7,12 +7,18 @@ class World {
     ctx;
     img;
     keyboard;
+    endboss;
     x_camera = 0;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+
+        this.endboss = new Endboss();
+        this.endboss.world = this;
+        this.endboss.endbossAnimation();
+
         this.setWorld();
         this.draw();
     }
@@ -27,6 +33,7 @@ class World {
         this.ctx.translate(this.x_camera, 0);
         
         this.addObjectsToMap(this.backgroundObjects);
+        this.addToMap(this.endboss);
         this.addToMap(this.shark);
         this.addObjectsToMap(this.enemies);
 
@@ -53,13 +60,11 @@ class World {
 
             this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
         }
-
         this.ctx.restore();
     }
 
     randomY() {
         return 100 + Math.random() * 400;
     }
-
 
 }

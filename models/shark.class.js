@@ -1,5 +1,5 @@
 class Shark extends MovableObject {
-    IMAGES_MOVING = [   
+    IMAGES_SWIMING = [   
         'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/1.png',
         'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/2.png',
         'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/3.png',
@@ -34,63 +34,57 @@ class Shark extends MovableObject {
     constructor() {
         super();
         this.loadImage("img/Grafiken - Sharkie/1.Sharkie/1.IDLE/1.png");
-        this.loadImages(this.IMAGES_MOVING);
+        this.loadImages(this.IMAGES_SWIMING);
         this.animate();
     }
 
 
     animate() {
-    setInterval(() => {
-        if (!this.world || !this.world.keyboard) return;
+        setInterval(() => {
+            if (!this.world || !this.world.keyboard) return;
 
-        if (this.world.keyboard.RIGHT) {
-        this.vx += this.acceleration;
-        this.otherDirection = false;
-        }
-        if (this.world.keyboard.LEFT) {
-        this.vx -= this.acceleration;
-        this.otherDirection = true;
-        }
-        if (this.world.keyboard.UP) {
-        this.vy -= this.acceleration;
-        }
-        if (this.world.keyboard.DOWN) {
-        this.vy += this.acceleration;
-        }
+            if (this.world.keyboard.RIGHT) {
+            this.vx += this.acceleration;
+            this.otherDirection = false;
+            }
+            if (this.world.keyboard.LEFT) {
+            this.vx -= this.acceleration;
+            this.otherDirection = true;
+            }
+            if (this.world.keyboard.UP) {
+            this.vy -= this.acceleration;
+            }
+            if (this.world.keyboard.DOWN) {
+            this.vy += this.acceleration;
+            }
 
-        this.world.x_camera = -this.x;
+            this.world.x_camera = -this.x;
 
-        // Speed begrenzen
-        this.vx = Math.max(-this.maxSpeed, Math.min(this.vx, this.maxSpeed));
-        this.vy = Math.max(-this.maxSpeed, Math.min(this.vy, this.maxSpeed));
+            this.vx = Math.max(-this.maxSpeed, Math.min(this.vx, this.maxSpeed));
+            this.vy = Math.max(-this.maxSpeed, Math.min(this.vy, this.maxSpeed));
 
-        // Position updaten
-        this.x += this.vx;
-        this.y += this.vy;
+            this.x += this.vx;
+            this.y += this.vy;
 
-        const anyHorizontal = this.world.keyboard.LEFT || this.world.keyboard.RIGHT;
-        const anyVertical = this.world.keyboard.UP || this.world.keyboard.DOWN;
+            const anyHorizontal = this.world.keyboard.LEFT || this.world.keyboard.RIGHT;
+            const anyVertical = this.world.keyboard.UP || this.world.keyboard.DOWN;
 
-        if (!anyHorizontal) this.vx *= this.friction;
-        if (!anyVertical) this.vy *= this.friction;
+            if (!anyHorizontal) this.vx *= this.friction;
+            if (!anyVertical) this.vy *= this.friction;
 
-        if (Math.abs(this.vx) < 0.05) this.vx = 0;
-        if (Math.abs(this.vy) < 0.05) this.vy = 0;
+            if (Math.abs(this.vx) < 0.05) this.vx = 0;
+            if (Math.abs(this.vy) < 0.05) this.vy = 0;
 
-        this.y = Math.max(0, Math.min(this.y, this.world.canvas.height - this.height));
-        this.x = Math.max(0, Math.min(this.x, 3400 - this.width));
+            this.y = Math.max(0, Math.min(this.y, this.world.canvas.height - this.height));
+            this.x = Math.max(0, Math.min(this.x, 3400 - this.width));
 
-    }, 1000 / 60);
+        }, 1000 / 60);
 
-    // Animation: nur wenn er sich bewegt
-    setInterval(() => {
-        if (Math.abs(this.vx) > 0 || Math.abs(this.vy) > 0) {
-        let i = this.currentImage % this.IMAGES_MOVING.length;
-        let path = this.IMAGES_MOVING[i];
-        this.img = this.imageCache[path];
-        this.currentImage++;
-        }
-    }, 120);
+        setInterval(() => {
+            if (Math.abs(this.vx) > 0 || Math.abs(this.vy) > 0) {
+                this.playAnimation(this.IMAGES_SWIMING);
+            }
+        }, 120);
     }
 
     moveUp() {

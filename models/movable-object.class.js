@@ -1,12 +1,12 @@
 class MovableObject {
-x = 0;
-y = 200;
-img;
-imageCache = {};
-height = 250;
-width = 250;
-speed = 0.15;
-otherDirection = false;
+    x = 0;
+    y = 200;
+    img;
+    imageCache = {};
+    height = 250;
+    width = 250;
+    speed = 0.15;
+    otherDirection = false;
 
     loadImage(path) {
         this.img = new Image();
@@ -28,6 +28,25 @@ otherDirection = false;
         }, 1000 / 60);
     }
 
+    playAnimation(images) {
+        if (!images || images.length === 0) return;
+
+        let i = this.currentImage % images.length;
+        let path = images[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+    }
+
+    fishAnimation(images) {
+        if (!images || images.length === 0) return;
+
+        this.currentImage = (this.currentImage + 1) % images.length;
+        const path = images[this.currentImage];
+        this.img = this.imageCache[path] || this.img;
+    }
+
+
+    
 }
 
 
