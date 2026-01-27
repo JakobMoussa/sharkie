@@ -24,6 +24,9 @@ class Endboss extends MovableObject {
     introPlayed = false;
     APPEAR_X = 1500;
     INTRO_DISTANCE = 350;
+    width = 300;
+    height = 450;
+
 
     constructor() {
         super();
@@ -72,8 +75,8 @@ class Endboss extends MovableObject {
 
         const distance = Math.abs(shark.x - this.x);
         if (!this.introPlayed && distance <= this.INTRO_DISTANCE) {
-        this.introPlayed = true;
-        this.playIntroAnimation();
+            this.introPlayed = true;
+            this.playIntroAnimation();
         }
 
         if (!this.introPlayed) return;
