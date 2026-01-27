@@ -75,8 +75,8 @@ class Shark extends MovableObject {
             if (Math.abs(this.vx) < 0.05) this.vx = 0;
             if (Math.abs(this.vy) < 0.05) this.vy = 0;
 
-            this.y = Math.max(0, Math.min(this.y, this.world.canvas.height - this.height));
-            this.x = Math.max(0, Math.min(this.x, 3400 - this.width));
+            this.y = Math.max(-90, Math.min(this.y, this.world.canvas.height - this.height));
+            this.x = Math.max(0, Math.min(this.x, 3800 - this.width));
 
         }, 1000 / 60);
 

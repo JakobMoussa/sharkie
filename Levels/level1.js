@@ -8,6 +8,10 @@ const Level1 = new Level(
         new PufferFish(850, randomY(), 'green'),
         new PufferFish(450, randomY(), 'red'),
         new PufferFish(750, randomY(), 'green'),
+        new JelliFish(600, randomY()),
+        new JelliFish(900, randomY()),
+        new JelliFish(1300, randomY()),
+        new JelliFish(1700, randomY()),
         new Endboss(1500)
         ],
 
@@ -23,5 +27,6 @@ const Level1 = new Level(
         new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 3600, 0),
         new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 3600, 0),
         ],
+        
 
 );
