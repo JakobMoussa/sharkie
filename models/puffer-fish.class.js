@@ -44,8 +44,5 @@ class PufferFish extends MovableObject {
         }, 250);
     }
 
-    moveUp() {
-
-    }
 
 }

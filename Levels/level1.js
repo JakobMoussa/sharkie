@@ -3,16 +3,20 @@ function randomY() {
 }
 const Level1 = new Level(
         [
-        new PufferFish(300, randomY(), 'green'),
-        new PufferFish(500, randomY(), 'red'),
-        new PufferFish(850, randomY(), 'green'),
-        new PufferFish(450, randomY(), 'red'),
-        new PufferFish(750, randomY(), 'green'),
-        new JelliFish(600, randomY()),
-        new JelliFish(900, randomY()),
-        new JelliFish(1300, randomY()),
-        new JelliFish(1700, randomY()),
-        new Endboss(1500)
+        new PufferFish(600, randomY(), 'green'),
+        new PufferFish(1400, randomY(), 'red'),
+        new PufferFish(1550, randomY(), 'green'),
+        new PufferFish(700, randomY(), 'red'),
+        new PufferFish(1250, randomY(), 'green'),
+        new PufferFish(1000, randomY(), 'red'),
+        new PufferFish(1200, randomY(), 'green'),
+        new JellyFish(750, randomY()),
+        new JellyFish(900, randomY()),
+        new JellyFish(600, randomY()),
+        new JellyFish(900, randomY()),
+        new JellyFish(1300, randomY()),
+        new JellyFish(2000, randomY()),
+        new Endboss(2500)
         ],
 
         [

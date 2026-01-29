@@ -22,11 +22,11 @@ class Endboss extends MovableObject {
     floatAngle = 8;
     hasAppeared = false;
     introPlayed = false;
-    APPEAR_X = 1500;
-    INTRO_DISTANCE = 350;
+    APPEAR_X = 2500;
+    SPAWN_Y = 0;
+    INTRO_DISTANCE = 800;
     width = 300;
     height = 450;
-
 
     constructor() {
         super();
@@ -55,36 +55,35 @@ class Endboss extends MovableObject {
         next();
     }
 
+
     endbossAnimation() {
         setInterval(() => {
-        if (!this.world) return;
+            if (!this.world) return;
 
-        const shark = this.world.shark;
+            const shark = this.world.shark;
 
-        if (!this.hasAppeared) {
-        if (shark.x >= this.APPEAR_X) {
-            this.hasAppeared = true;
- 
-            this.x = 1700;
-            this.y = 0;
-            this.baseY = this.y;
-        } else {
-            return;
-        }
-        }
+            if (!this.hasAppeared) {
+                if (shark.x >= this.APPEAR_X) {
 
-        const distance = Math.abs(shark.x - this.x);
-        if (!this.introPlayed && distance <= this.INTRO_DISTANCE) {
-            this.introPlayed = true;
-            this.playIntroAnimation();
-        }
+                    this.x = this.APPEAR_X + 200;
+                    this.y = this.SPAWN_Y;
+                    this.baseY = this.y;
 
-        if (!this.introPlayed) return;
+                    const distance = Math.abs(shark.x - this.x);
 
-        this.floatAngle += 0.05;
-        this.y = this.baseY + Math.sin(this.floatAngle) * 30;
+                    if (distance <= this.INTRO_DISTANCE) {
+                        this.hasAppeared = true;
+                        this.playIntroAnimation();
+                    }
+                }
+                return;
+            }
+
+            this.floatAngle += 0.05;
+            this.y = this.baseY + Math.sin(this.floatAngle) * 30;
 
         }, 1000 / 60);
     }
+
 
 }

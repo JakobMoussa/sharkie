@@ -7,6 +7,7 @@ class MovableObject {
     width = 250;
     speed = 0.15;
     otherDirection = false;
+    offset = 10;
 
     loadImage(path) {
         this.img = new Image();
@@ -43,6 +44,15 @@ class MovableObject {
         this.currentImage = (this.currentImage + 1) % images.length;
         const path = images[this.currentImage];
         this.img = this.imageCache[path] || this.img;
+    }
+
+    isColliding(other, offset) {
+        return (
+            this.x + this.width - offset > other.x + offset &&
+            this.x + offset < other.x + other.width - offset &&
+            this.y + this.height - offset > other.y + offset &&
+            this.y + offset < other.y + other.height - offset
+        );
     }
 
 
