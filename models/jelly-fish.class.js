@@ -1,4 +1,4 @@
-class JelliFish extends MovableObject {
+class JellyFish extends MovableObject {
     
     width = 80;
     height = 70;
@@ -11,7 +11,7 @@ class JelliFish extends MovableObject {
     heightDepth = 320;
 
 
-    JELLIFISH_SWIM = [
+    JELLYFISH_SWIM = [
         'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Regular damage/Lila 1.png',
         'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Regular damage/Lila 2.png',
         'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Regular damage/Lila 3.png',
@@ -26,15 +26,15 @@ class JelliFish extends MovableObject {
 
         this.floatAngle = Math.random() * Math.PI * 1;
 
-        this.loadImage(this.JELLIFISH_SWIM[0]);
-        this.loadImages(this.JELLIFISH_SWIM);
+        this.loadImage(this.JELLYFISH_SWIM[0]);
+        this.loadImages(this.JELLYFISH_SWIM);
         this.animate();
     }
 
     animate() {
 
         setInterval(() => {
-            this.fishAnimation(this.JELLIFISH_SWIM);
+            this.fishAnimation(this.JELLYFISH_SWIM);
         }, 500);
 
         setInterval(() => {

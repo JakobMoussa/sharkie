@@ -20,6 +20,8 @@ class World {
         this.endboss.endbossAnimation();
 
         this.setWorld();
+        this.shark.start();
+        this.checkCollisions();
         this.draw();
     }
 
@@ -65,6 +67,21 @@ class World {
 
     randomY() {
         return 100 + Math.random() * 400;
+    }
+
+    checkCollisions() {
+        setInterval(() => {
+            this.enemies.forEach((enemy, index) => {
+                if (this.shark.isColliding(enemy, 15)) {
+                    if (enemy instanceof JellyFish) this.shark.hitShock(800);
+
+                    if (enemy instanceof PufferFish) this.shark.hitPoison(1200);
+                }
+            });
+            if (this.endboss?.hasAppeared && this.shark.isColliding(this.endboss, 20)) {
+                console.log("Treffer mit Endboss");
+            }
+        }, 100 / 60);
     }
 
 }
