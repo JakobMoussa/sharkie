@@ -60,6 +60,17 @@ class Shark extends MovableObject {
         'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/1.Poisoned/5.png'
     ];
 
+    FINSLAP_IMAGES = [
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/1.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/2.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/3.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/4.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/5.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/6.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/7.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/8.png'
+    ];
+
     currentImage = 0;
     world;
     speed = 10;
@@ -77,6 +88,10 @@ class Shark extends MovableObject {
     poisonUntil = 0;
     shockUntil = 0;
 
+    slap = false;
+    slapUntil = 0;
+    slapCoolDownUntil = 0;
+
     constructor() {
         super();
         this.loadImage(this.IDLE_IMAGES[0]);
@@ -86,6 +101,8 @@ class Shark extends MovableObject {
         this.loadImages(this.SWIM_IMAGES);
         this.loadImages(this.POISONED_IMAGES);
         this.loadImages(this.ELECTRICSHOCK_IMAGES);
+        this.loadImages(this.FINSLAP_IMAGES);
+
     }
 
     start() {
@@ -99,6 +116,7 @@ class Shark extends MovableObject {
 
     updateMovement() {
         if (!this.world || !this.world.keyboard) return;
+            this.setSlap();
             this.applyInputAcceleration();
             this.applyClampSpeed();
             this.applyPosition();
@@ -148,6 +166,7 @@ class Shark extends MovableObject {
     updateLastMoveTime() {
         const moving = (Math.abs(this.vx) > 0.05 || Math.abs(this.vy) > 0.05);
         if (moving) this.lastMoveTime = Date.now();
+        
     }
 
     startAnimationLoop() {
@@ -163,8 +182,8 @@ class Shark extends MovableObject {
 
         if (now < this.shockUntil) { this.state = "shock"; return; }
         if (now < this.poisonUntil) { this.state = "poisoned"; return; }
+        if (this.slap) { this.state = "slap"; return; }
         if (moving) { this.state = "swim"; return; }
-
         const idleTime = now - this.lastMoveTime;
         this.state = (idleTime > 3000) ? "longidle" : "idle";
     }
@@ -177,6 +196,9 @@ class Shark extends MovableObject {
             case "poisoned":
             this.playAnimation(this.POISONED_IMAGES);
             break;
+            case "slap":
+            this.playAnimation(this.FINSLAP_IMAGES);
+            break;
             case "swim":
             this.playAnimation(this.SWIM_IMAGES);
             break;
@@ -186,6 +208,7 @@ class Shark extends MovableObject {
             default:
             this.playAnimation(this.IDLE_IMAGES);
         }
+        
     }
 
     hitPoison(durationMs = 1200) {
@@ -195,5 +218,17 @@ class Shark extends MovableObject {
     hitShock(durationMs = 800) {
         this.shockUntil = Date.now() + durationMs;
     }
+
+    setSlap() {
+        const now = Date.now();
+
+        if (this.world.keyboard.SPACE && now >= this.slapCoolDownUntil) {
+            this.slapUntil = now + 350;
+            this.slapCoolDownUntil = now + 600;
+        }
+
+        this.slap = now < this.slapUntil;
+    }
+
 
 }
