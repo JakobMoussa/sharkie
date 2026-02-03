@@ -21,20 +21,20 @@ class Shark extends MovableObject {
     ];
 
     LONGIDLE_IMAGES = [
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i2.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i3.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i4.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i5.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i6.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i7.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i8.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i9.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i10.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i11.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i12.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i13.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/i14.png'
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I1.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I2.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I3.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I4.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I5.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I6.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I7.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I8.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I9.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I10.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I11.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I12.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I13.png',
+        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I14.png'
     ];
 
     SWIM_IMAGES = [
@@ -60,6 +60,17 @@ class Shark extends MovableObject {
         'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/1.Poisoned/5.png'
     ];
 
+    FINSLAP_IMAGES = [
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/1.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/2.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/3.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/4.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/5.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/6.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/7.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/8.png'
+    ];
+
     currentImage = 0;
     world;
     speed = 10;
@@ -77,15 +88,34 @@ class Shark extends MovableObject {
     poisonUntil = 0;
     shockUntil = 0;
 
-    constructor() {
-        super();
-        this.loadImage(this.IDLE_IMAGES[0]);
+    slap = false;
+    slapUntil = 0;
+    slapCooldownUntil = 0;
 
-        this.loadImages(this.IDLE_IMAGES);
-        this.loadImages(this.LONGIDLE_IMAGES);
-        this.loadImages(this.SWIM_IMAGES);
-        this.loadImages(this.POISONED_IMAGES);
-        this.loadImages(this.ELECTRICSHOCK_IMAGES);
+    constructor() {
+    super();
+    this.loadImage(this.IDLE_IMAGES[0]);
+
+    this.loadImages(this.IDLE_IMAGES);
+    this.loadImages(this.LONGIDLE_IMAGES);
+    this.loadImages(this.SWIM_IMAGES);
+    this.loadImages(this.POISONED_IMAGES);
+    this.loadImages(this.ELECTRICSHOCK_IMAGES);
+    this.loadImages(this.FINSLAP_IMAGES);
+}
+
+
+    setSlap() {
+        const now = Date.now();
+
+        if (this.world.keyboard.SPACE && now >= this.slapCooldownUntil) {
+            this.slapUntil = now + 350;
+            this.slapCooldownUntil = now + 600;
+        }
+
+        this.slap = now < this.slapUntil;
+        if (this.slap) console.log("SLAP");
+        
     }
 
     start() {
@@ -99,6 +129,7 @@ class Shark extends MovableObject {
 
     updateMovement() {
         if (!this.world || !this.world.keyboard) return;
+            this.setSlap();
             this.applyInputAcceleration();
             this.applyClampSpeed();
             this.applyPosition();
@@ -114,7 +145,7 @@ class Shark extends MovableObject {
         if (this.world.keyboard.UP)    { this.vy -= this.acceleration; }
         if (this.world.keyboard.DOWN)  { this.vy += this.acceleration; }
     }
-    
+
     applyClampSpeed() {
         this.vx = Math.max(-this.maxSpeed, Math.min(this.vx, this.maxSpeed));
         this.vy = Math.max(-this.maxSpeed, Math.min(this.vy, this.maxSpeed));
@@ -163,6 +194,7 @@ class Shark extends MovableObject {
 
         if (now < this.shockUntil) { this.state = "shock"; return; }
         if (now < this.poisonUntil) { this.state = "poisoned"; return; }
+        if (this.slap) { this.state = "slap"; return; }
         if (moving) { this.state = "swim"; return; }
 
         const idleTime = now - this.lastMoveTime;
@@ -176,6 +208,9 @@ class Shark extends MovableObject {
             break;
             case "poisoned":
             this.playAnimation(this.POISONED_IMAGES);
+            break;
+            case "slap":
+            this.playAnimation(this.FINSLAP_IMAGES);
             break;
             case "swim":
             this.playAnimation(this.SWIM_IMAGES);

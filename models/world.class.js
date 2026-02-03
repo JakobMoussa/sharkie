@@ -73,8 +73,12 @@ class World {
         setInterval(() => {
             this.enemies.forEach((enemy, index) => {
                 if (this.shark.isColliding(enemy, 15)) {
+                    if (this.shark.slap) {
+                        this.enemies.splice(index, 1);
+                        return;
+                    }
+                    
                     if (enemy instanceof JellyFish) this.shark.hitShock(800);
-
                     if (enemy instanceof PufferFish) this.shark.hitPoison(1200);
                 }
             });
