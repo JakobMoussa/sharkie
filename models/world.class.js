@@ -72,19 +72,29 @@ class World {
     checkCollisions() {
         setInterval(() => {
             this.enemies.forEach((enemy, index) => {
+
+                if (enemy instanceof PufferFish) {
+                    const sx = this.shark.x + this.shark.width / 2;
+                    const sy = this.shark.y + this.shark.height / 2;
+                    const ex = enemy.x + enemy.width / 2;
+                    const ey = enemy.y + enemy.height / 2;
+
+                    const nearX = Math.abs(sx - ex) < 300;
+                    const nearY = Math.abs(sy - ey) < 200;
+
+                    enemy.setNear(nearX && nearY);
+                }
+
                 if (this.shark.isColliding(enemy, 15)) {
                     if (this.shark.slap) {
                         this.enemies.splice(index, 1);
-                        return;
+                        return;                
                     }
-                    
+
                     if (enemy instanceof JellyFish) this.shark.hitShock(800);
                     if (enemy instanceof PufferFish) this.shark.hitPoison(1200);
                 }
             });
-            if (this.endboss?.hasAppeared && this.shark.isColliding(this.endboss, 20)) {
-                console.log("Treffer mit Endboss");
-            }
         }, 100 / 60);
     }
 

@@ -17,7 +17,6 @@ class MovableObject {
     loadImages(arr) {
     arr.forEach((path) => {
         let img = new Image();
-        // img.onerror = () => console.error("Bild nicht gefunden:", path);
         img.src = path;
         this.imageCache[path] = img;
     });
