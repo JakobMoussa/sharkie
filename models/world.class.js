@@ -69,32 +69,67 @@ class World {
         return 100 + Math.random() * 400;
     }
 
+
+    updatePufferNear(enemy) {
+        if (!(enemy instanceof PufferFish) || enemy.dead) return;
+
+        const sx = this.shark.x + this.shark.width / 2;
+        const sy = this.shark.y + this.shark.height / 2;
+        const ex = enemy.x + enemy.width / 2;
+        const ey = enemy.y + enemy.height / 2;
+
+        const nearX = Math.abs(sx - ex) < 300;
+        const nearY = Math.abs(sy - ey) < 200;
+
+        enemy.setNear(nearX && nearY);
+    }
+
+    trySlapKill(enemy) {
+        if (!this.shark.slap) return false;
+
+        if (enemy instanceof PufferFish && !enemy.dead) {
+            enemy.die();
+            return true;
+        }
+
+        if (enemy instanceof JellyFish && !enemy.dead) {
+            enemy.die();
+            return true;
+        }
+
+        return false;
+    }
+
+    applyEnemyDamage(enemy) {
+        if (enemy.dead) return;
+
+        if (enemy instanceof JellyFish) {
+            this.shark.hitShock(800);
+        }
+
+        if (enemy instanceof PufferFish) {
+            this.shark.hitPoison(1200);
+        }
+    }
+
+    cleanupDeadEnemies() {
+        this.enemies = this.enemies.filter(e => !e.deadDone);
+    }
+
     checkCollisions() {
         setInterval(() => {
-            this.enemies.forEach((enemy, index) => {
 
-                if (enemy instanceof PufferFish) {
-                    const sx = this.shark.x + this.shark.width / 2;
-                    const sy = this.shark.y + this.shark.height / 2;
-                    const ex = enemy.x + enemy.width / 2;
-                    const ey = enemy.y + enemy.height / 2;
-
-                    const nearX = Math.abs(sx - ex) < 300;
-                    const nearY = Math.abs(sy - ey) < 200;
-
-                    enemy.setNear(nearX && nearY);
-                }
+            this.enemies.forEach((enemy) => {
+                this.updatePufferNear(enemy);
 
                 if (this.shark.isColliding(enemy, 15)) {
-                    if (this.shark.slap) {
-                        this.enemies.splice(index, 1);
-                        return;                
-                    }
-
-                    if (enemy instanceof JellyFish) this.shark.hitShock(800);
-                    if (enemy instanceof PufferFish) this.shark.hitPoison(1200);
+                    if (this.trySlapKill(enemy)) return;
+                    this.applyEnemyDamage(enemy);
                 }
             });
+
+            this.cleanupDeadEnemies();
+
         }, 100 / 60);
     }
 

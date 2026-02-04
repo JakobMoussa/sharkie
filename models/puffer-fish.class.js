@@ -4,6 +4,7 @@ class PufferFish extends MovableObject {
     height = 100;
     images = [];
     currentImage = 0;
+    deadDone = false;
 
     FISHES_SWIMING_GREEN = [        
         'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png',
@@ -38,6 +39,18 @@ class PufferFish extends MovableObject {
         'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition5.png'
     ];
 
+    GREEN_FISHES_DEAD= [        
+        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 1 (can animate by going up).png',
+        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 2 (can animate by going down to the floor after the Fin Slap attack).png',
+        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 3 (can animate by going down to the floor after the Fin Slap attack).png',
+    ];
+
+    RED_FISHES_DEAD= [        
+        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.2.png',
+        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.3.png',
+        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.png',
+    ];
+
     constructor(x, y, color = 'green') {
         super();
         this.x = x;
@@ -46,21 +59,46 @@ class PufferFish extends MovableObject {
         this.swimImgs = (color === 'red') ? this.FISHES_SWIMING_RED : this.FISHES_SWIMING_GREEN;
         this.transImgs = (color === 'red') ? this.TRANSITION_RED : this.TRANSITION_GREEN;
         this.isNear = false;
-
+        this.dead = false;
+        this.deadImgs = (color === 'red') ? this.RED_FISHES_DEAD : this.GREEN_FISHES_DEAD;
+        
+        this.loadImages(this.deadImgs);
         this.loadImage(this.swimImgs[0]);
         this.loadImages(this.swimImgs);
         this.loadImages(this.transImgs);
+        this.loadImages(this.deadImgs);
         this.animate();
     }
 
     setNear(value) {
+        if(this.dead) return;
         this.isNear = value;
+    }
+
+    die() {
+        this.dead = true;
+        this.deadDone = false;
+        this.currentImage = 0;
     }
 
     animate() {
         this.moveLeft();
         setInterval(() => {
-            const now = Date.now();
+
+            if (this.dead) {
+                if (this.currentImage >= this.deadImgs.length) {
+                    this.deadDone = true;
+                    this.currentImage = this.deadImgs.length - 1;
+                    this.img = this.imageCache[this.deadImgs[this.currentImage]];
+                    return;
+                }
+
+                const path = this.deadImgs[this.currentImage];
+                this.img = this.imageCache[path];
+                this.currentImage++;
+                return;
+            }
+            
             if (this.isNear) {
                 this.fishAnimation(this.transImgs);
             } else {
