@@ -9,6 +9,9 @@ class World {
     keyboard;
     endboss;
     x_camera = 0;
+    poisons = [];
+    statusBar;
+    poisonBar;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -21,7 +24,10 @@ class World {
 
         this.setWorld();
         this.shark.start();
+        this.statusBar = new StatusBar();
+        this.poisonBar = new PoisonBar();
         this.checkCollisions();
+        this.spawnPoison();
         this.draw();
     }
 
@@ -31,15 +37,18 @@ class World {
  
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        this.ctx.translate(this.x_camera, 0);
         
+        this.ctx.translate(this.x_camera, 0);
         this.addObjectsToMap(this.backgroundObjects);
+        this.addObjectsToMap(this.poisons);
         this.addToMap(this.endboss);
         this.addToMap(this.shark);
         this.addObjectsToMap(this.enemies);
 
         this.ctx.translate(-this.x_camera, 0);
+        
+        this.addToMap(this.statusBar);
+        this.addToMap(this.poisonBar);
 
         requestAnimationFrame(() => this.draw());
     }
@@ -49,8 +58,8 @@ class World {
     }
 
     addToMap(mo) {
-        if (!mo.img || !mo.img.complete || mo.img.naturalWidth === 0) return;
-
+        // if (!mo.img || !mo.img.complete || mo.img.naturalWidth === 0) return;
+        if (!mo.img) return;
         this.ctx.save();
 
         if (mo.otherDirection) {
@@ -132,5 +141,13 @@ class World {
 
         }, 100 / 60);
     }
+
+    spawnPoison() {
+    for (let i = 0; i < 30; i++) {
+        const x = 300 + Math.random() * 2800;
+        const y = this.randomY();
+        this.poisons.push(new Poison(x, y));
+    }
+}
 
 }

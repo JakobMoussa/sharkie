@@ -1,10 +1,5 @@
-class MovableObject {
-    x = 0;
-    y = 200;
-    img;
-    imageCache = {};
-    height = 250;
-    width = 250;
+class MovableObject extends DrawableObject {
+    
     speed = 0.15;
     otherDirection = false;
     offset = 10;
