@@ -12,6 +12,7 @@ class World {
     poisons = [];
     statusBar;
     poisonBar;
+    coins = [];
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -28,6 +29,7 @@ class World {
         this.poisonBar = new PoisonBar();
         this.checkCollisions();
         this.spawnPoison();
+        this.spawnCoins();
         this.draw();
     }
 
@@ -41,12 +43,13 @@ class World {
         this.ctx.translate(this.x_camera, 0);
         this.addObjectsToMap(this.backgroundObjects);
         this.addObjectsToMap(this.poisons);
+        this.addObjectsToMap(this.coins);
         this.addToMap(this.endboss);
         this.addToMap(this.shark);
         this.addObjectsToMap(this.enemies);
 
         this.ctx.translate(-this.x_camera, 0);
-        
+
         this.addToMap(this.statusBar);
         this.addToMap(this.poisonBar);
 
@@ -147,6 +150,14 @@ class World {
         const x = 300 + Math.random() * 2800;
         const y = this.randomY();
         this.poisons.push(new Poison(x, y));
+    }
+    }
+
+    spawnCoins() {
+    for (let i = 0; i < 20; i++) {
+        const x = 300 + Math.random() * 2600;
+        const y = this.randomY();
+        this.coins.push(new Coin(x, y));
     }
 }
 
