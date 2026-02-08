@@ -9,11 +9,15 @@ class World {
     keyboard;
     endboss;
     x_camera = 0;
-    poisons = [];
     statusBar;
     poisonBar;
+    poisons = [];
+    poisonCount = 0;
+    maxPoison = 10;
     coinsBar;
     coins = [];
+    coinCount = 0;
+    maxCoins = 20;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
@@ -143,6 +147,8 @@ class World {
                 }
             });
 
+            this.checkCoins();
+            this.ckeckPoisons();
             this.cleanupDeadEnemies();
 
         }, 100 / 60);
@@ -156,12 +162,40 @@ class World {
     }
     }
 
-    spawnCoins() {
-    for (let i = 0; i < 20; i++) {
-        const x = 300 + Math.random() * 2600;
-        const y = this.randomY();
-        this.coins.push(new Coin(x, y));
+    ckeckPoisons() {
+        this.poisons.forEach((poison, index) => {
+            if (this.poisonCount >= this.maxPoison) return;
+
+            if (this.shark.isColliding(poison, 10)) {
+                this.poisons.splice(index, 1);
+
+                this.poisonCount++;
+                const percent = (this.poisonCount / this.maxPoison) * 100;
+                this.poisonBar.setPercentage(percent);
+            }
+        });
     }
-}
+
+    spawnCoins() {
+        for (let i = 0; i < 20; i++) {
+            const x = 300 + Math.random() * 2600;
+            const y = this.randomY();
+            this.coins.push(new Coin(x, y));
+        }
+    }
+
+    checkCoins() {
+        this.coins.forEach((coin, index) => {
+            if (this.shark.isColliding(coin, 10)) {
+                this.coins.splice(index, 1);
+
+                this.coinCount++;
+                const percent = (this.coinCount / this.maxCoins) * 100;
+                this.coinsBar.setPercentage(percent);
+            }
+        });
+    }
+
+
 
 }
