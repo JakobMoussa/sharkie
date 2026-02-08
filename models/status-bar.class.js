@@ -20,6 +20,6 @@ class StatusBar extends MovableObject {
         this.y = 20;
         this.width = 200;
         this.height = 60;
-        console.log("StatusBar img:", this.img);
+        console.log("CoinsBar img:", this.img);
     }
 }

@@ -12,6 +12,7 @@ class World {
     poisons = [];
     statusBar;
     poisonBar;
+    coinsBar;
     coins = [];
 
     constructor(canvas, keyboard) {
@@ -27,6 +28,7 @@ class World {
         this.shark.start();
         this.statusBar = new StatusBar();
         this.poisonBar = new PoisonBar();
+        this.coinsBar = new CoinsBar();
         this.checkCollisions();
         this.spawnPoison();
         this.spawnCoins();
@@ -52,6 +54,7 @@ class World {
 
         this.addToMap(this.statusBar);
         this.addToMap(this.poisonBar);
+        this.addToMap(this.coinsBar);
 
         requestAnimationFrame(() => this.draw());
     }
