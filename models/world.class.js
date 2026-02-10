@@ -19,6 +19,9 @@ class World {
     coinCount = 0;
     maxCoins = 20;
 
+    poisonShots = [];
+    shootCd = 0;
+
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -50,6 +53,7 @@ class World {
         this.addObjectsToMap(this.backgroundObjects);
         this.addObjectsToMap(this.poisons);
         this.addObjectsToMap(this.coins);
+        this.addObjectsToMap(this.poisonShots);
         this.addToMap(this.endboss);
         this.addToMap(this.shark);
         this.addObjectsToMap(this.enemies);
@@ -151,6 +155,9 @@ class World {
             this.ckeckPoisons();
             this.cleanupDeadEnemies();
 
+            this.shootPoison();
+            this.cleanupShots();
+
         }, 100 / 60);
     }
 
@@ -196,6 +203,25 @@ class World {
         });
     }
 
+    shootPoison() {
+        if (!this.shark.shotReady) return;
+        if (this.poisonCount <= 0) return;
+
+        const x = this.shark.x + this.shark.width;
+        const y = this.shark.y + this.shark.height / 2;
+
+        this.poisonShots.push(new PoisonShot(x, y));
+
+        this.poisonCount--;
+        const percent = (this.poisonCount / this.maxPoison) * 100;
+        this.poisonBar.setPercentage(percent);
+
+        this.shark.shotReady = false;
+    }
+
+    cleanupShots() {
+        this.poisonShots = this.poisonShots.filter(s => s.x < 4000);
+    }
 
 
 }

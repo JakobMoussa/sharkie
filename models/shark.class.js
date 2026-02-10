@@ -71,6 +71,17 @@ class Shark extends MovableObject {
         'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/8.png'
     ];
 
+    SHOT_IMAGES = [
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/1.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/2.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/3.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/4.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/5.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/6.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/7.png',
+        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/8.png'
+    ];
+
     currentImage = 0;
     world;
     speed = 10;
@@ -92,17 +103,23 @@ class Shark extends MovableObject {
     slapUntil = 0;
     slapCooldownUntil = 0;
 
-    constructor() {
-    super();
-    this.loadImage(this.IDLE_IMAGES[0]);
+    shoot = false;
+    shootUntil = 0;
 
-    this.loadImages(this.IDLE_IMAGES);
-    this.loadImages(this.LONGIDLE_IMAGES);
-    this.loadImages(this.SWIM_IMAGES);
-    this.loadImages(this.POISONED_IMAGES);
-    this.loadImages(this.ELECTRICSHOCK_IMAGES);
-    this.loadImages(this.FINSLAP_IMAGES);
-}
+    shotReady = false;
+
+    constructor() {
+        super();
+        this.loadImage(this.IDLE_IMAGES[0]);
+
+        this.loadImages(this.IDLE_IMAGES);
+        this.loadImages(this.LONGIDLE_IMAGES);
+        this.loadImages(this.SWIM_IMAGES);
+        this.loadImages(this.POISONED_IMAGES);
+        this.loadImages(this.ELECTRICSHOCK_IMAGES);
+        this.loadImages(this.FINSLAP_IMAGES);
+        this.loadImages(this.SHOT_IMAGES);
+    }
 
 
     setSlap() {
@@ -118,6 +135,21 @@ class Shark extends MovableObject {
         
     }
 
+    setShoot() {
+        const now = Date.now();
+
+        if (this.world.keyboard.F && !this.shoot) {
+            this.shoot = true;
+            this.shotReady = false;
+            this.shootUntil = now + (this.SHOT_IMAGES.length * 100);
+        }
+
+        if (this.shoot && now >= this.shootUntil) {
+            this.shoot = false;
+            this.shotReady = true;
+        }
+    }
+
     start() {
         this.startMovementLoop();
         this.startAnimationLoop();
@@ -130,6 +162,8 @@ class Shark extends MovableObject {
     updateMovement() {
         if (!this.world || !this.world.keyboard) return;
             this.setSlap();
+            this.setSlap();
+            this.setShoot();
             this.applyInputAcceleration();
             this.applyClampSpeed();
             this.applyPosition();
@@ -194,6 +228,7 @@ class Shark extends MovableObject {
 
         if (now < this.shockUntil) { this.state = "shock"; return; }
         if (now < this.poisonUntil) { this.state = "poisoned"; return; }
+        if (this.shoot) { this.state = "shoot"; return; }
         if (this.slap) { this.state = "slap"; return; }
         if (moving) { this.state = "swim"; return; }
 
@@ -217,6 +252,9 @@ class Shark extends MovableObject {
             break;
             case "longidle":
             this.playAnimation(this.LONGIDLE_IMAGES);
+            break;
+            case "shoot":
+            this.playAnimation(this.SHOT_IMAGES);
             break;
             default:
             this.playAnimation(this.IDLE_IMAGES);
