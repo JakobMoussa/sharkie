@@ -46,6 +46,21 @@ class Shark extends MovableObject {
         'img/Grafiken - Sharkie/1.Sharkie/3.Swim/6.png'
     ];
 
+    DEAD_IMAGES = [
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/1.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/2.png',       
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/3.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/4.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/5.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/6.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/7.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/8.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/9.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/10.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/11.png',
+        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/12.png'
+    ];
+
 
     ELECTRICSHOCK_IMAGES = [
         'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/2.Electric shock/1.png',
@@ -88,24 +103,19 @@ class Shark extends MovableObject {
     Keyboard;
     vx = 0;
     vy = 0;
-
+    energy = 100;
     acceleration = 0.6;
     maxSpeed = 6;
     friction = 0.85;
-
     state = "idle";
     lastMoveTime = Date.now();
-
     poisonUntil = 0;
     shockUntil = 0;
-
     slap = false;
     slapUntil = 0;
     slapCooldownUntil = 0;
-
     shoot = false;
     shootUntil = 0;
-
     shotReady = false;
 
     constructor() {
@@ -115,12 +125,12 @@ class Shark extends MovableObject {
         this.loadImages(this.IDLE_IMAGES);
         this.loadImages(this.LONGIDLE_IMAGES);
         this.loadImages(this.SWIM_IMAGES);
+        this.loadImages(this.DEAD_IMAGES);
         this.loadImages(this.POISONED_IMAGES);
         this.loadImages(this.ELECTRICSHOCK_IMAGES);
         this.loadImages(this.FINSLAP_IMAGES);
         this.loadImages(this.SHOT_IMAGES);
     }
-
 
     setSlap() {
         const now = Date.now();
@@ -131,8 +141,6 @@ class Shark extends MovableObject {
         }
 
         this.slap = now < this.slapUntil;
-        if (this.slap) console.log("SLAP");
-        
     }
 
     setShoot() {
@@ -141,7 +149,7 @@ class Shark extends MovableObject {
         if (this.world.keyboard.F && !this.shoot) {
             this.shoot = true;
             this.shotReady = false;
-            this.shootUntil = now + (this.SHOT_IMAGES.length * 100);
+            this.shootUntil = now + (this.SHOT_IMAGES.length * 120);
         }
 
         if (this.shoot && now >= this.shootUntil) {
@@ -161,7 +169,6 @@ class Shark extends MovableObject {
 
     updateMovement() {
         if (!this.world || !this.world.keyboard) return;
-            this.setSlap();
             this.setSlap();
             this.setShoot();
             this.applyInputAcceleration();
@@ -259,13 +266,19 @@ class Shark extends MovableObject {
             default:
             this.playAnimation(this.IDLE_IMAGES);
         }
-    }
+    }   
 
     hitPoison(durationMs = 1200) {
+        if(Date.now() < this.poisonUntil) return;
+
+        this.energy -= 5;
         this.poisonUntil = Date.now() + durationMs;
     }
 
     hitShock(durationMs = 800) {
+        if (Date.now() < this.shockUntil) return;
+        
+        this.energy -= 10;
         this.shockUntil = Date.now() + durationMs;
     }
 

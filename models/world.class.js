@@ -36,6 +36,7 @@ class World {
         this.statusBar = new StatusBar();
         this.poisonBar = new PoisonBar();
         this.coinsBar = new CoinsBar();
+        this.statusBar = new StatusBar();
         this.checkCollisions();
         this.spawnPoison();
         this.spawnCoins();
@@ -133,6 +134,8 @@ class World {
         if (enemy instanceof PufferFish) {
             this.shark.hitPoison(1200);
         }
+
+        this.statusBar.setPercentage(this.shark.energy);
     }
 
     cleanupDeadEnemies() {
@@ -153,6 +156,7 @@ class World {
 
             this.checkCoins();
             this.ckeckPoisons();
+            this.checkPoisonShotHits();
             this.cleanupDeadEnemies();
 
             this.shootPoison();
@@ -221,6 +225,29 @@ class World {
 
     cleanupShots() {
         this.poisonShots = this.poisonShots.filter(s => s.x < 4000);
+    }
+
+    checkPoisonShotHits() {
+        this.poisonShots.forEach((shot, shotIndex) => {
+
+            this.enemies.forEach((enemy) => {
+                if (enemy.dead) return;
+
+                if (shot.isColliding(enemy, 10)) {
+                    enemy.die();
+                    shot.hit = true;
+                }
+            });
+
+        });
+
+        this.poisonShots = this.poisonShots.filter(s => !s.hit);
+    }
+
+    die() {
+        this.dead = true;
+        this.deadDone = false;
+        this.currentImage = 0;
     }
 
 

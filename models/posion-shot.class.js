@@ -3,6 +3,7 @@ class PoisonShot extends MovableObject {
     height = 50;
     speed = 10;
     currentImage = 0;
+    hit = false;
 
     IMAGES_SHOT = [
         'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png',
