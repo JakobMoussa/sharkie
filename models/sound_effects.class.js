@@ -1,0 +1,6 @@
+class SoundEffects {
+
+    constructor () {
+
+    }
+}

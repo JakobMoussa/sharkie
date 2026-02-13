@@ -1,6 +1,6 @@
 class Endboss extends MovableObject {
     
-    IMAGES_SWIMING = [
+    SWIM_IMAGES = [
         "img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/1.Introduce/1.png",
         "img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/1.Introduce/2.png",
         "img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/1.Introduce/3.png",
@@ -13,6 +13,47 @@ class Endboss extends MovableObject {
         "img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/1.Introduce/10.png"
     ];
 
+    FLOATING_IMAGES = [
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/1.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/2.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/3.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/4.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/5.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/6.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/7.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/8.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/9.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/10.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/11.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/12.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/2.floating/13.png'
+    ];
+
+    ATTACK_IMAGES = [
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Attack/1.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Attack/2.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Attack/3.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Attack/4.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Attack/5.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Attack/6.png'
+    ];
+
+    HURT_IMAGES = [
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Hurt/1.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Hurt/2.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Hurt/3.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Hurt/4.png'
+    ];
+
+    DEAD_IMAGES = [
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 6.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 7.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 8.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 9.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 10.png',
+        'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2.png'
+    ];
+
     currentImage = 0;
     vx = 0;
     vy = 0;
@@ -22,16 +63,27 @@ class Endboss extends MovableObject {
     floatAngle = 8;
     hasAppeared = false;
     introPlayed = false;
+    visible = false;
     APPEAR_X = 2500;
     SPAWN_Y = 0;
     INTRO_DISTANCE = 800;
     width = 300;
     height = 450;
 
+    energy = 100;
+    dead = false;
+    hurt = false;
+    attack = false;
+
     constructor() {
         super();
-        this.loadImages(this.IMAGES_SWIMING);
-        this.x = 1500;
+        this.loadImages(this.SWIM_IMAGES);
+        this.loadImages(this.FLOATING_IMAGES);
+        this.loadImages(this.HURT_IMAGES);
+        this.loadImages(this.ATTACK_IMAGES);
+        this.loadImages(this.DEAD_IMAGES);
+
+        this.x = 2000;
         this.y = 200;
         this.baseY = this.y;
     }
@@ -42,19 +94,19 @@ class Endboss extends MovableObject {
 
         let i = 0;
         const next = () => {
-            if (i < this.IMAGES_SWIMING.length) {
-            const path = this.IMAGES_SWIMING[i];
-            this.img = this.imageCache[path] || this.img;
-            i++;
+            if (i < this.SWIM_IMAGES.length) {
+                const path = this.SWIM_IMAGES[i];
+                this.img = this.imageCache[path] || this.img;
+                i++;
             setTimeout(next, 180);
             } else {
-            this._introRunning = false;
+                this._introRunning = false;
+                this.introPlayed = true;
             }
         };
 
         next();
     }
-
 
     endbossAnimation() {
         setInterval(() => {
@@ -64,7 +116,7 @@ class Endboss extends MovableObject {
 
             if (!this.hasAppeared) {
                 if (shark.x >= this.APPEAR_X) {
-
+                    this.visible = true;
                     this.x = this.APPEAR_X + 200;
                     this.y = this.SPAWN_Y;
                     this.baseY = this.y;
@@ -83,7 +135,54 @@ class Endboss extends MovableObject {
             this.y = this.baseY + Math.sin(this.floatAngle) * 30;
 
         }, 1000 / 60);
+        setInterval(() => {
+            if (!this.hasAppeared) return;
+            if (!this.introPlayed) return;
+
+            if (this.dead) {
+                this.playAnimation(this.DEAD_IMAGES);
+                return;
+            }
+
+            if (this.hurt) {
+                this.playAnimation(this.HURT_IMAGES);
+                return;
+            }
+
+            const shark = this.world?.shark;
+            if (!shark) return;
+
+            const distance = Math.abs(shark.x - this.x);
+
+            if (distance < 200) {
+                this.attack = true;
+                this.playAnimation(this.ATTACK_IMAGES);
+            } else {
+                this.attack = false;
+                this.playAnimation(this.FLOATING_IMAGES);
+            }
+
+        }, 150);
+
     }
+    
+
+    hit() {
+        
+        if (this.dead) return;
+
+        this.energy -= 20;
+        this.hurt = true;
+
+        setTimeout(() => {
+            this.hurt = false;
+        }, 400);
+
+        if (this.energy <= 0) {
+            this.dead = true;
+        }
+    }
+    
 
 
 }

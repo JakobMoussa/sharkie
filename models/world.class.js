@@ -36,7 +36,6 @@ class World {
         this.statusBar = new StatusBar();
         this.poisonBar = new PoisonBar();
         this.coinsBar = new CoinsBar();
-        this.statusBar = new StatusBar();
         this.checkCollisions();
         this.spawnPoison();
         this.spawnCoins();
@@ -55,7 +54,9 @@ class World {
         this.addObjectsToMap(this.poisons);
         this.addObjectsToMap(this.coins);
         this.addObjectsToMap(this.poisonShots);
-        this.addToMap(this.endboss);
+        if (this.endboss.visible) {
+            this.addToMap(this.endboss);
+        }
         this.addToMap(this.shark);
         this.addObjectsToMap(this.enemies);
 
@@ -152,6 +153,10 @@ class World {
                     if (this.trySlapKill(enemy)) return;
                     this.applyEnemyDamage(enemy);
                 }
+                if (this.shark.isColliding(this.endboss, 20) && !this.endboss.dead) {
+                    this.shark.hitShock(800);
+                    this.statusBar.setPercentage(this.shark.energy);
+                }
             });
 
             this.checkCoins();
@@ -234,9 +239,18 @@ class World {
                 if (enemy.dead) return;
 
                 if (shot.isColliding(enemy, 10)) {
-                    enemy.die();
+                    if (typeof enemy.die === 'function') {
+                        enemy.die();
+                        shot.hit = true;
+                    }
+
+                }
+
+                if (shot.isColliding(this.endboss, 20) && !this.endboss.dead) {
+                    this.endboss.hit();
                     shot.hit = true;
                 }
+
             });
 
         });
