@@ -75,6 +75,10 @@ class Endboss extends MovableObject {
     hurt = false;
     attack = false;
 
+    energy = 100;
+    hurtUntil = 0;
+    dead = false;
+
     constructor() {
         super();
         this.loadImages(this.SWIM_IMAGES);
@@ -89,8 +93,9 @@ class Endboss extends MovableObject {
     }
 
     playIntroAnimation() {
-        if (this._introRunning) return;
-        this._introRunning = true;
+
+        if (this.introRunning) return;
+        this.introRunning = true;
 
         let i = 0;
         const next = () => {
@@ -100,7 +105,8 @@ class Endboss extends MovableObject {
                 i++;
             setTimeout(next, 180);
             } else {
-                this._introRunning = false;
+                this.introRunning = false;
+                this.introPlayed = true;
                 this.introPlayed = true;
             }
         };
@@ -144,7 +150,7 @@ class Endboss extends MovableObject {
                 return;
             }
 
-            if (this.hurt) {
+            if (Date.now() < this.hurtUntil) {
                 this.playAnimation(this.HURT_IMAGES);
                 return;
             }
@@ -166,9 +172,8 @@ class Endboss extends MovableObject {
 
     }
     
-
     hit() {
-        
+
         if (this.dead) return;
 
         this.energy -= 20;

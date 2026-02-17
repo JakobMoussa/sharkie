@@ -22,6 +22,10 @@ class World {
     poisonShots = [];
     shootCd = 0;
 
+
+    endbossBar;
+    showEndbossBar = false;
+
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -36,6 +40,7 @@ class World {
         this.statusBar = new StatusBar();
         this.poisonBar = new PoisonBar();
         this.coinsBar = new CoinsBar();
+        this.endbossBar = new EndbossStatusBar();
         this.checkCollisions();
         this.spawnPoison();
         this.spawnCoins();
@@ -48,33 +53,43 @@ class World {
  
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
+
+        this.ctx.save();
+
         this.ctx.translate(this.x_camera, 0);
+
         this.addObjectsToMap(this.backgroundObjects);
         this.addObjectsToMap(this.poisons);
         this.addObjectsToMap(this.coins);
         this.addObjectsToMap(this.poisonShots);
+
         if (this.endboss.visible) {
             this.addToMap(this.endboss);
+
+            if (this.showEndbossBar) {
+                this.endbossBar.draw(this.ctx, this.endboss);
+            }
         }
+
         this.addToMap(this.shark);
         this.addObjectsToMap(this.enemies);
 
-        this.ctx.translate(-this.x_camera, 0);
+        this.ctx.restore();
 
         this.addToMap(this.statusBar);
         this.addToMap(this.poisonBar);
         this.addToMap(this.coinsBar);
-
+        
         requestAnimationFrame(() => this.draw());
     }
+
 
     addObjectsToMap(objects) {
         objects.forEach(o => this.addToMap(o));
     }
 
     addToMap(mo) {
-        // if (!mo.img || !mo.img.complete || mo.img.naturalWidth === 0) return;
+        
         if (!mo.img) return;
         this.ctx.save();
 
@@ -234,25 +249,23 @@ class World {
 
     checkPoisonShotHits() {
         this.poisonShots.forEach((shot, shotIndex) => {
-
             this.enemies.forEach((enemy) => {
                 if (enemy.dead) return;
-
                 if (shot.isColliding(enemy, 10)) {
                     if (typeof enemy.die === 'function') {
                         enemy.die();
                         shot.hit = true;
                     }
-
                 }
-
-                if (shot.isColliding(this.endboss, 20) && !this.endboss.dead) {
+            });
+                if (this.endboss.visible && !this.endboss.dead && shot.isColliding(this.endboss, 30)) {
                     this.endboss.hit();
                     shot.hit = true;
+
+                    this.showEndbossBar = true;
+                    this.endbossBar.setPercentage(this.endboss.energy);
+
                 }
-
-            });
-
         });
 
         this.poisonShots = this.poisonShots.filter(s => !s.hit);
