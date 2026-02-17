@@ -71,13 +71,17 @@ class Endboss extends MovableObject {
     height = 450;
 
     energy = 100;
-    dead = false;
     hurt = false;
     attack = false;
 
-    energy = 100;
     hurtUntil = 0;
     dead = false;
+
+    followSpeed = 2.5;
+    followRange = 800;
+    attackRange = 200;
+    isFollowing = false;
+
 
     constructor() {
         super();
@@ -114,22 +118,25 @@ class Endboss extends MovableObject {
         next();
     }
 
+
     endbossAnimation() {
+
         setInterval(() => {
             if (!this.world) return;
 
             const shark = this.world.shark;
 
+    
             if (!this.hasAppeared) {
                 if (shark.x >= this.APPEAR_X) {
                     this.visible = true;
+
                     this.x = this.APPEAR_X + 200;
                     this.y = this.SPAWN_Y;
                     this.baseY = this.y;
 
-                    const distance = Math.abs(shark.x - this.x);
-
-                    if (distance <= this.INTRO_DISTANCE) {
+                    const dist = Math.abs(shark.x - this.x);
+                    if (dist <= this.INTRO_DISTANCE) {
                         this.hasAppeared = true;
                         this.playIntroAnimation();
                     }
@@ -137,13 +144,30 @@ class Endboss extends MovableObject {
                 return;
             }
 
-            this.floatAngle += 0.05;
-            this.y = this.baseY + Math.sin(this.floatAngle) * 30;
+            if (!this.introPlayed) return;
+            if (this.dead) return;
+
+            const dist = Math.abs(shark.x - this.x);
+
+            if (dist < this.followRange) {
+                this.followShark(shark);
+                this.baseY = this.y;
+            } else {
+                this.floatAngle += 0.02;
+                this.y = this.baseY + Math.sin(this.floatAngle) * 30;
+            }
+
+            this.y = Math.max(0, Math.min(this.y, 600 - this.height));
 
         }, 1000 / 60);
+
         setInterval(() => {
+            if (!this.world) return;
             if (!this.hasAppeared) return;
             if (!this.introPlayed) return;
+
+            const shark = this.world.shark;
+            const dist = Math.abs(shark.x - this.x);
 
             if (this.dead) {
                 this.playAnimation(this.DEAD_IMAGES);
@@ -155,12 +179,7 @@ class Endboss extends MovableObject {
                 return;
             }
 
-            const shark = this.world?.shark;
-            if (!shark) return;
-
-            const distance = Math.abs(shark.x - this.x);
-
-            if (distance < 200) {
+            if (dist < this.attackRange) {
                 this.attack = true;
                 this.playAnimation(this.ATTACK_IMAGES);
             } else {
@@ -171,6 +190,7 @@ class Endboss extends MovableObject {
         }, 150);
 
     }
+
     
     hit() {
 
@@ -178,6 +198,7 @@ class Endboss extends MovableObject {
 
         this.energy -= 20;
         this.hurt = true;
+        this.hurtUntil = Date.now() + 400;
 
         setTimeout(() => {
             this.hurt = false;
@@ -187,7 +208,21 @@ class Endboss extends MovableObject {
             this.dead = true;
         }
     }
+
+    followShark(shark) {
+        const dx = shark.x - this.x;
+        const dy = shark.y - this.y;
+
+        if (Math.abs(dx) > 10) {
+            this.x += (dx > 0 ? this.followSpeed : -this.followSpeed);
+        }
+
+        if (Math.abs(dy) > 5) {
+            this.y += (dy > 0 ? this.followSpeed * 0.6 : -this.followSpeed * 0.6);
+        }
+
+        this.otherDirection = dx > 0;
+        this.y = Math.max(0, Math.min(this.y, 600 - this.height));
+    }
     
-
-
 }
