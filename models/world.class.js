@@ -63,7 +63,7 @@ class World {
         this.addObjectsToMap(this.coins);
         this.addObjectsToMap(this.poisonShots);
 
-        if (this.endboss.visible) {
+        if (this.endboss.visible && !this.endboss.deadDone) {
             this.addToMap(this.endboss);
 
             if (this.showEndbossBar) {
@@ -89,7 +89,7 @@ class World {
     }
 
     addToMap(mo) {
-        
+
         if (!mo.img) return;
         this.ctx.save();
 
@@ -167,12 +167,27 @@ class World {
                 if (this.shark.isColliding(enemy, 15)) {
                     if (this.trySlapKill(enemy)) return;
                     this.applyEnemyDamage(enemy);
+                    if (
+                        this.endboss.visible &&
+                        !this.endboss.dead &&
+                        this.shark.slap &&
+                        this.shark.isColliding(this.endboss, 20)
+                    )       {
+                this.endboss.hit();
+
+                this.showEndbossBar = true;
+                this.endbossBar.setPercentage(this.endboss.energy);
+            }
                 }
                 if (this.shark.isColliding(this.endboss, 20) && !this.endboss.dead) {
                     this.shark.hitShock(800);
                     this.statusBar.setPercentage(this.shark.energy);
                 }
             });
+
+            if (this.endboss.deadDone) {
+                this.showEndbossBar = false;
+            }
 
             this.checkCoins();
             this.ckeckPoisons();

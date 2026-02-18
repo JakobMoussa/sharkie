@@ -81,6 +81,8 @@ class Endboss extends MovableObject {
     followRange = 800;
     attackRange = 200;
     isFollowing = false;
+    dead = false;
+    deadFrame = 0;
 
 
     constructor() {
@@ -170,7 +172,14 @@ class Endboss extends MovableObject {
             const dist = Math.abs(shark.x - this.x);
 
             if (this.dead) {
-                this.playAnimation(this.DEAD_IMAGES);
+                if (this.deadFrame >= this.DEAD_IMAGES.length) {
+                    this.deadDone = true;
+                    this.deadFrame = this.DEAD_IMAGES.length - 1;
+                }
+
+                const path = this.DEAD_IMAGES[this.deadFrame];
+                this.img = this.imageCache[path];
+                this.deadFrame++;
                 return;
             }
 
@@ -191,20 +200,17 @@ class Endboss extends MovableObject {
 
     }
 
-    
     hit() {
-
         if (this.dead) return;
 
-        this.energy -= 20;
-        this.hurt = true;
-        this.hurtUntil = Date.now() + 400;
+        const now = Date.now();
+        if (now < this.hurtUntil) return;
 
-        setTimeout(() => {
-            this.hurt = false;
-        }, 400);
+        this.energy -= 20;
+        this.hurtUntil = now + 400;
 
         if (this.energy <= 0) {
+            this.energy = 0;
             this.dead = true;
         }
     }
