@@ -151,6 +151,10 @@ class World {
             this.shark.hitPoison(1200);
         }
 
+        if (this.shark.energy <= 0) {
+            this.shark.energy = 0;
+        }
+
         this.statusBar.setPercentage(this.shark.energy);
     }
 
@@ -164,7 +168,7 @@ class World {
             this.enemies.forEach((enemy) => {
                 this.updatePufferNear(enemy);
 
-                if (this.shark.isColliding(enemy, 15)) {
+                if (this.shark.isColliding(enemy, 40)) {
                     if (this.trySlapKill(enemy)) return;
                     this.applyEnemyDamage(enemy);
                     if (

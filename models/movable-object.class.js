@@ -49,7 +49,6 @@ class MovableObject extends DrawableObject {
         );
     }
 
-
     
 }
 

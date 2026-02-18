@@ -169,6 +169,7 @@ class Shark extends MovableObject {
 
     updateMovement() {
         if (!this.world || !this.world.keyboard) return;
+        if (this.energy <= 0) return;
             this.setSlap();
             this.setShoot();
             this.applyInputAcceleration();
@@ -231,6 +232,11 @@ class Shark extends MovableObject {
 
     updateState() {
         const now = Date.now();
+
+        if (this.energy <= 0) { 
+            this.state = "dead"; 
+            return; 
+        }
         const moving = (Math.abs(this.vx) > 0.05 || Math.abs(this.vy) > 0.05);
 
         if (now < this.shockUntil) { this.state = "shock"; return; }
@@ -239,12 +245,16 @@ class Shark extends MovableObject {
         if (this.slap) { this.state = "slap"; return; }
         if (moving) { this.state = "swim"; return; }
 
+
         const idleTime = now - this.lastMoveTime;
         this.state = (idleTime > 3000) ? "longidle" : "idle";
     }
 
     updateAnimation() {
         switch (this.state) {
+            case "dead":
+            this.playAnimation(this.DEAD_IMAGES);
+            break;
             case "shock":
             this.playAnimation(this.ELECTRICSHOCK_IMAGES);
             break;
@@ -272,6 +282,7 @@ class Shark extends MovableObject {
         if(Date.now() < this.poisonUntil) return;
 
         this.energy -= 5;
+        if (this.energy < 0) this.energy = 0;
         this.poisonUntil = Date.now() + durationMs;
     }
 
@@ -279,6 +290,7 @@ class Shark extends MovableObject {
         if (Date.now() < this.shockUntil) return;
         
         this.energy -= 10;
+        if (this.energy < 0) this.energy = 0;
         this.shockUntil = Date.now() + durationMs;
     }
 
