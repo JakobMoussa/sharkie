@@ -1,4 +1,5 @@
 class Shark extends MovableObject {
+    
     IDLE_IMAGES = [   
         'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/1.png',
         'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/2.png',
@@ -138,9 +139,12 @@ class Shark extends MovableObject {
         if (this.world.keyboard.SPACE && now >= this.slapCooldownUntil) {
             this.slapUntil = now + 350;
             this.slapCooldownUntil = now + 600;
+
+            if (this.world.sounds) this.world.sounds.play("sharkSlap");
         }
 
         this.slap = now < this.slapUntil;
+        
     }
 
     setShoot() {
@@ -150,6 +154,7 @@ class Shark extends MovableObject {
             this.shoot = true;
             this.shotReady = false;
             this.shootUntil = now + (this.SHOT_IMAGES.length * 120);
+            if (this.world.sounds) this.world.sounds.play("bubble");
         }
 
         if (this.shoot && now >= this.shootUntil) {
@@ -233,10 +238,8 @@ class Shark extends MovableObject {
     updateState() {
         const now = Date.now();
 
-        if (this.energy <= 0) { 
-            this.state = "dead"; 
-            return; 
-        }
+        if (this.energy <= 0) {this.state = "dead"; return; }
+
         const moving = (Math.abs(this.vx) > 0.05 || Math.abs(this.vy) > 0.05);
 
         if (now < this.shockUntil) { this.state = "shock"; return; }

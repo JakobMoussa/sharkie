@@ -109,7 +109,8 @@ class Endboss extends MovableObject {
                 const path = this.SWIM_IMAGES[i];
                 this.img = this.imageCache[path] || this.img;
                 i++;
-            setTimeout(next, 180);
+                setTimeout(next, 180);
+                this.world.sounds.play("endbossEntry");
             } else {
                 this.introRunning = false;
                 this.introPlayed = true;
@@ -172,6 +173,8 @@ class Endboss extends MovableObject {
             const dist = Math.abs(shark.x - this.x);
 
             if (this.dead) {
+                    this.world.sounds.play("win")
+
                 if (this.deadFrame >= this.DEAD_IMAGES.length) {
                     this.deadDone = true;
                     this.deadFrame = this.DEAD_IMAGES.length - 1;

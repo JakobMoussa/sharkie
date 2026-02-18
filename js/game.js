@@ -1,12 +1,23 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
+let sounds = new SoundEffects();
 
 function init() {
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
     ctx = canvas.getContext('2d');
 }
+
+function startMusicOnce() {
+    if (world && world.sounds) world.sounds.play("background");
+    document.removeEventListener("click", startMusicOnce);
+    document.removeEventListener("keydown", startMusicOnce);
+}
+
+document.addEventListener("click", startMusicOnce);
+document.addEventListener("keydown", startMusicOnce);
+
 
 window.addEventListener("keydown", (e) => {
     if (e.keyCode === 39) keyboard.RIGHT = true;

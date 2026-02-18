@@ -30,7 +30,7 @@ class World {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
-
+        this.sounds = new SoundEffects();
         this.endboss = new Endboss();
         this.endboss.world = this;
         this.endboss.endbossAnimation();
@@ -167,10 +167,11 @@ class World {
 
             this.enemies.forEach((enemy) => {
                 this.updatePufferNear(enemy);
-
+    
                 if (this.shark.isColliding(enemy, 40)) {
                     if (this.trySlapKill(enemy)) return;
                     this.applyEnemyDamage(enemy);
+                    if (this.sounds) {this.sounds.play("sharkHurt"); }
                     if (
                         this.endboss.visible &&
                         !this.endboss.dead &&
@@ -205,11 +206,11 @@ class World {
     }
 
     spawnPoison() {
-    for (let i = 0; i < 30; i++) {
-        const x = 300 + Math.random() * 2800;
-        const y = this.randomY();
-        this.poisons.push(new Poison(x, y));
-    }
+        for (let i = 0; i < 30; i++) {
+            const x = 300 + Math.random() * 2800;
+            const y = this.randomY();
+            this.poisons.push(new Poison(x, y));
+        }
     }
 
     ckeckPoisons() {
@@ -220,6 +221,7 @@ class World {
                 this.poisons.splice(index, 1);
 
                 this.poisonCount++;
+                if (this.sounds) { this.sounds.play("poison"); };
                 const percent = (this.poisonCount / this.maxPoison) * 100;
                 this.poisonBar.setPercentage(percent);
             }
@@ -242,6 +244,7 @@ class World {
                 this.coinCount++;
                 const percent = (this.coinCount / this.maxCoins) * 100;
                 this.coinsBar.setPercentage(percent);
+                this.sounds.play("coin");
             }
         });
     }
