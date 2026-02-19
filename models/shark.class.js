@@ -281,20 +281,43 @@ class Shark extends MovableObject {
         }
     }   
 
+    // hitPoison(durationMs = 1200) {
+    //     if(Date.now() < this.poisonUntil) return;
+
+    //     this.energy -= 5;
+    //     if (this.energy < 0) this.energy = 0;
+    //     this.poisonUntil = Date.now() + durationMs;
+    // }
+
+    // hitShock(durationMs = 800) {
+    //         console.log("hitShock TRIGGER", "x:", this.x, "y:", this.y);
+    //         console.trace("hitShock called from:");
+    //     if (Date.now() < this.shockUntil) return;
+        
+    //     this.energy -= 10;
+    //     if (this.energy < 0) this.energy = 0;
+    //     this.shockUntil = Date.now() + durationMs;
+    // }
+    hitShock(durationMs = 800) {
+        const now = Date.now();
+        if (now < this.shockUntil) return false;
+
+        this.energy -= 10;
+        if (this.energy < 0) this.energy = 0;
+
+        this.shockUntil = now + durationMs;
+        return true;
+    }
+
     hitPoison(durationMs = 1200) {
-        if(Date.now() < this.poisonUntil) return;
+        const now = Date.now();
+        if (now < this.poisonUntil) return false;
 
         this.energy -= 5;
         if (this.energy < 0) this.energy = 0;
-        this.poisonUntil = Date.now() + durationMs;
-    }
 
-    hitShock(durationMs = 800) {
-        if (Date.now() < this.shockUntil) return;
-        
-        this.energy -= 10;
-        if (this.energy < 0) this.energy = 0;
-        this.shockUntil = Date.now() + durationMs;
+        this.poisonUntil = now + durationMs;
+        return true;
     }
 
 }

@@ -2,7 +2,7 @@ class MovableObject extends DrawableObject {
     
     speed = 0.15;
     otherDirection = false;
-    offset = 10;
+    offset = 50;
 
     loadImage(path) {
         this.img = new Image();

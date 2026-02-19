@@ -141,7 +141,7 @@ class World {
     }
 
     applyEnemyDamage(enemy) {
-        if (enemy.dead) return;
+        if (enemy.dead) return false;
 
         if (enemy instanceof JellyFish) {
             this.shark.hitShock(800);
@@ -156,6 +156,7 @@ class World {
         }
 
         this.statusBar.setPercentage(this.shark.energy);
+         return false;
     }
 
     cleanupDeadEnemies() {
@@ -167,32 +168,35 @@ class World {
 
             this.enemies.forEach((enemy) => {
                 this.updatePufferNear(enemy);
-    
+
                 if (this.shark.isColliding(enemy, 40)) {
                     if (this.trySlapKill(enemy)) return;
-                    this.applyEnemyDamage(enemy);
-                    if (this.sounds) {this.sounds.play("sharkHurt"); }
-                    if (
-                        this.endboss.visible &&
-                        !this.endboss.dead &&
-                        this.shark.slap &&
-                        this.shark.isColliding(this.endboss, 20)
-                    )       {
-                this.endboss.hit();
-
-                this.showEndbossBar = true;
-                this.endbossBar.setPercentage(this.endboss.energy);
-            }
-                }
-                if (this.shark.isColliding(this.endboss, 20) && !this.endboss.dead) {
-                    this.shark.hitShock(800);
-                    this.statusBar.setPercentage(this.shark.energy);
+                    const tookDamage = this.applyEnemyDamage(enemy);
+                    if (tookDamage) {
+                        this.statusBar.setPercentage(this.shark.energy);
+                        if (this.sounds) this.sounds.play("sharkHurt");
+                    }
                 }
             });
 
-            if (this.endboss.deadDone) {
-                this.showEndbossBar = false;
+            if (
+                this.endboss.visible &&
+                !this.endboss.dead &&
+                this.shark.slap &&
+                this.shark.isColliding(this.endboss, 20)
+            ) {
+                this.endboss.hit();
+                this.showEndbossBar = true;
+                this.endbossBar.setPercentage(this.endboss.energy);
             }
+
+            if (this.endboss.visible && !this.endboss.dead && this.shark.isColliding(this.endboss, 20)) {
+                this.shark.hitShock(800);
+                this.statusBar.setPercentage(this.shark.energy);
+                if (this.sounds) this.sounds.play("sharkHurt");
+            }
+
+            if (this.endboss.deadDone) this.showEndbossBar = false;
 
             this.checkCoins();
             this.ckeckPoisons();
@@ -202,8 +206,9 @@ class World {
             this.shootPoison();
             this.cleanupShots();
 
-        }, 100 / 60);
+        }, 1000 / 60);
     }
+
 
     spawnPoison() {
         for (let i = 0; i < 30; i++) {

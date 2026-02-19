@@ -84,6 +84,9 @@ class Endboss extends MovableObject {
     dead = false;
     deadFrame = 0;
 
+    winSoundPlayed = false;
+
+
 
     constructor() {
         super();
@@ -173,7 +176,15 @@ class Endboss extends MovableObject {
             const dist = Math.abs(shark.x - this.x);
 
             if (this.dead) {
-                    this.world.sounds.play("win")
+                if (!this.winSoundPlayed) {
+                    this.winSoundPlayed = true;
+
+                    this.world.sounds.play("win");
+
+                    setTimeout(() => {
+                        this.world.sounds.stop("win");
+                    }, 6000);
+                }
 
                 if (this.deadFrame >= this.DEAD_IMAGES.length) {
                     this.deadDone = true;
