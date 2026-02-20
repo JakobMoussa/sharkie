@@ -54,6 +54,13 @@ class Endboss extends MovableObject {
         'img/Grafiken - Sharkie/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2.png'
     ];
 
+    WIN_IMAGES = [
+        'img/Grafiken - Sharkie/6.Botones/Tittles/You win/Recurso 19.png',
+        'img/Grafiken - Sharkie/6.Botones/Tittles/You win/Recurso 20.png',
+        'img/Grafiken - Sharkie/6.Botones/Tittles/You win/Recurso 21.png',
+        'img/Grafiken - Sharkie/6.Botones/Tittles/You win/Recurso 22.png'
+    ]
+
     currentImage = 0;
     vx = 0;
     vy = 0;
@@ -75,7 +82,6 @@ class Endboss extends MovableObject {
     attack = false;
 
     hurtUntil = 0;
-    dead = false;
 
     followSpeed = 2.5;
     followRange = 800;
@@ -86,6 +92,8 @@ class Endboss extends MovableObject {
 
     winSoundPlayed = false;
 
+    winStart = 0;
+    winFrame = 0;
 
 
     constructor() {
@@ -95,6 +103,7 @@ class Endboss extends MovableObject {
         this.loadImages(this.HURT_IMAGES);
         this.loadImages(this.ATTACK_IMAGES);
         this.loadImages(this.DEAD_IMAGES);
+        this.loadImages(this.WIN_IMAGES);
 
         this.x = 2000;
         this.y = 200;
@@ -104,7 +113,6 @@ class Endboss extends MovableObject {
     playIntroAnimation() {
 
         if (this.introRunning) return;
-        this.introRunning = true;
 
         let i = 0;
         const next = () => {
@@ -124,10 +132,10 @@ class Endboss extends MovableObject {
         next();
     }
 
-
     endbossAnimation() {
 
         setInterval(() => {
+            if (this.world?.gameState !== "play") return;
             if (!this.world) return;
 
             const shark = this.world.shark;
@@ -168,6 +176,7 @@ class Endboss extends MovableObject {
         }, 1000 / 60);
 
         setInterval(() => {
+            if (this.world?.gameState !== "play") return;
             if (!this.world) return;
             if (!this.hasAppeared) return;
             if (!this.introPlayed) return;
@@ -183,7 +192,7 @@ class Endboss extends MovableObject {
 
                     setTimeout(() => {
                         this.world.sounds.stop("win");
-                    }, 6000);
+                    }, 7000);
                 }
 
                 if (this.deadFrame >= this.DEAD_IMAGES.length) {
@@ -243,6 +252,23 @@ class Endboss extends MovableObject {
 
         this.otherDirection = dx > 0;
         this.y = Math.max(0, Math.min(this.y, 600 - this.height));
+    }
+    
+    drawWinCentered(ctx) {
+        if (!this.winStart) this.winStart = Date.now();
+
+        const passed = Date.now() - this.winStart;
+
+        if (passed < 5000 && passed % 400 < 20) {
+            this.winFrame = (this.winFrame + 1) % this.WIN_IMAGES.length;
+        }
+
+        const img = this.imageCache[this.WIN_IMAGES[this.winFrame]];
+        if (!img) return;
+
+        const w = ctx.canvas.width * 0.70;
+        const h = ctx.canvas.height * 0.40;
+        ctx.drawImage(img, (ctx.canvas.width - w) / 2, (ctx.canvas.height - h) / 2, w, h);
     }
     
 }

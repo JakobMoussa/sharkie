@@ -98,6 +98,14 @@ class Shark extends MovableObject {
         'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/8.png'
     ];
 
+    GAME_OVER = [
+        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 9.png',
+        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 10.png',
+        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 11.png',
+        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 12.png',
+        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 13.png'
+    ];
+
     currentImage = 0;
     world;
     speed = 10;
@@ -118,6 +126,11 @@ class Shark extends MovableObject {
     shoot = false;
     shootUntil = 0;
     shotReady = false;
+    deadDone = false;
+    deadFrame = 0;
+    gameOverFrame = 0;
+    losePlayed = false;
+    gameOverStart = 0;
 
     constructor() {
         super();
@@ -131,6 +144,7 @@ class Shark extends MovableObject {
         this.loadImages(this.ELECTRICSHOCK_IMAGES);
         this.loadImages(this.FINSLAP_IMAGES);
         this.loadImages(this.SHOT_IMAGES);
+        this.loadImages(this.GAME_OVER);
     }
 
     setSlap() {
@@ -173,6 +187,7 @@ class Shark extends MovableObject {
     }
 
     updateMovement() {
+        if (this.world?.gameState !== "play") return;
         if (!this.world || !this.world.keyboard) return;
         if (this.energy <= 0) return;
             this.setSlap();
@@ -232,6 +247,7 @@ class Shark extends MovableObject {
         setInterval(() => {
             this.updateState();
             this.updateAnimation();
+            this.gameOverScreen();
         }, 120);
     }
 
@@ -281,23 +297,6 @@ class Shark extends MovableObject {
         }
     }   
 
-    // hitPoison(durationMs = 1200) {
-    //     if(Date.now() < this.poisonUntil) return;
-
-    //     this.energy -= 5;
-    //     if (this.energy < 0) this.energy = 0;
-    //     this.poisonUntil = Date.now() + durationMs;
-    // }
-
-    // hitShock(durationMs = 800) {
-    //         console.log("hitShock TRIGGER", "x:", this.x, "y:", this.y);
-    //         console.trace("hitShock called from:");
-    //     if (Date.now() < this.shockUntil) return;
-        
-    //     this.energy -= 10;
-    //     if (this.energy < 0) this.energy = 0;
-    //     this.shockUntil = Date.now() + durationMs;
-    // }
     hitShock(durationMs = 800) {
         const now = Date.now();
         if (now < this.shockUntil) return false;
@@ -318,6 +317,48 @@ class Shark extends MovableObject {
 
         this.poisonUntil = now + durationMs;
         return true;
+    }
+
+    drawGameOverCentered(ctx) {
+        if (!this.gameOverStart) this.gameOverStart = Date.now();
+
+        const passed = Date.now() - this.gameOverStart;
+
+        if (passed < 5000 && passed % 400 < 20) {
+            this.gameOverFrame = (this.gameOverFrame + 1) % this.GAME_OVER.length;
+        }
+
+        const img = this.imageCache[this.GAME_OVER[this.gameOverFrame]];
+        if (!img) return;
+
+        const w = ctx.canvas.width * 0.75;
+        const h = ctx.canvas.height * 0.45;
+        ctx.drawImage(img, (ctx.canvas.width - w) / 2, (ctx.canvas.height - h) / 2, w, h);
+    }
+
+    gameOverScreen() {
+        if (this.energy > 0) return;
+
+        if (!this.deadDone) {
+            const path = this.DEAD_IMAGES[this.deadFrame];
+            this.img = this.imageCache[path];
+            this.deadFrame++;
+
+            if (this.deadFrame >= this.DEAD_IMAGES.length) {
+                this.deadDone = true;
+                this.gameOverFrame = 0;
+            }
+            return;
+        }
+
+        this.gameOverFrame = (this.gameOverFrame + 1) % this.GAME_OVER.length;
+
+        if (!this.losePlayed) {
+            this.losePlayed = true;
+            setTimeout(() => {
+                if (this.world?.sounds) this.world.sounds.play("lose");
+            }, 500);
+        }
     }
 
 }

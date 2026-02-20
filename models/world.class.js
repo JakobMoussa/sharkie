@@ -5,7 +5,6 @@ class World {
 
     canvas;
     ctx;
-    img;
     keyboard;
     endboss;
     x_camera = 0;
@@ -18,17 +17,17 @@ class World {
     coins = [];
     coinCount = 0;
     maxCoins = 20;
-
     poisonShots = [];
-    shootCd = 0;
-
-
     endbossBar;
     showEndbossBar = false;
+    gameState = "play";
+    overlayImg = new Image();
+    collisionInterval = null;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
+        this.overlayImg.src = 'img/Grafiken - Sharkie/3. Background/Dark/1.png';
         this.keyboard = keyboard;
         this.sounds = new SoundEffects();
         this.endboss = new Endboss();
@@ -50,10 +49,24 @@ class World {
     setWorld() {
         this.shark.world = this;
     }
+
+    checkEndState() {
+        if (this.gameState !== "play") return;
+
+        if (this.shark.deadDone) {
+            this.gameState = "lose";
+            return;
+        }
+
+        if (this.endboss.deadDone) {
+            this.gameState = "win";
+            return;
+        }
+    }
  
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
+        this.checkEndState();
         this.ctx.save();
 
         this.ctx.translate(this.x_camera, 0);
@@ -75,12 +88,20 @@ class World {
         this.addObjectsToMap(this.enemies);
 
         this.ctx.restore();
+        if (this.gameState === "lose" || this.gameState === "win") {
+            this.drawEndOverlay();
+        }
 
         this.addToMap(this.statusBar);
         this.addToMap(this.poisonBar);
         this.addToMap(this.coinsBar);
+
+        if (this.endboss.deadDone) {
+            this.endboss.drawWinCentered(this.ctx);
+        }
         
         requestAnimationFrame(() => this.draw());
+
     }
 
 
@@ -164,7 +185,9 @@ class World {
     }
 
     checkCollisions() {
-        setInterval(() => {
+        this.collisionInterval = setInterval(() => {
+
+            if (this.gameState !== "play") return;
 
             this.enemies.forEach((enemy) => {
                 this.updatePufferNear(enemy);
@@ -183,14 +206,14 @@ class World {
                 this.endboss.visible &&
                 !this.endboss.dead &&
                 this.shark.slap &&
-                this.shark.isColliding(this.endboss, 20)
+                this.shark.isColliding(this.endboss, 70)
             ) {
                 this.endboss.hit();
                 this.showEndbossBar = true;
                 this.endbossBar.setPercentage(this.endboss.energy);
             }
 
-            if (this.endboss.visible && !this.endboss.dead && this.shark.isColliding(this.endboss, 20)) {
+            if (this.endboss.visible && !this.endboss.dead && this.shark.isColliding(this.endboss, 70)) {
                 this.shark.hitShock(800);
                 this.statusBar.setPercentage(this.shark.energy);
                 if (this.sounds) this.sounds.play("sharkHurt");
@@ -205,6 +228,7 @@ class World {
 
             this.shootPoison();
             this.cleanupShots();
+
 
         }, 1000 / 60);
     }
@@ -302,6 +326,21 @@ class World {
         this.dead = true;
         this.deadDone = false;
         this.currentImage = 0;
+    }
+
+    drawEndOverlay() {
+
+        if (this.overlayImg.complete) {
+            this.ctx.drawImage(this.overlayImg, 0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        if (this.gameState === "lose") {
+            this.shark.drawGameOverCentered(this.ctx);
+        }
+
+        if (this.gameState === "win") {
+            this.endboss.drawWinCentered(this.ctx);
+        }
     }
 
 
