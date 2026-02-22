@@ -83,27 +83,30 @@ class PufferFish extends MovableObject {
 
     animate() {
         this.moveLeft();
-        setInterval(() => {
+        setInterval(() => this.updateAnimation(), 250);
+    }
 
-            if (this.dead) {
-                if (this.currentImage >= this.deadImgs.length) {
-                    this.deadDone = true;
-                    this.currentImage = this.deadImgs.length - 1;
-                    this.img = this.imageCache[this.deadImgs[this.currentImage]];
-                    return;
-                }
+    updateAnimation() {
+        if (this.dead) {
+            this.playDeadAnimation();
+            return;
+        }
 
-                const path = this.deadImgs[this.currentImage];
-                this.img = this.imageCache[path];
-                this.currentImage++;
-                return;
-            }
-            
-            if (this.isNear) {
-                this.fishAnimation(this.transImgs);
-            } else {
-                this.fishAnimation(this.swimImgs);
-            }
-        }, 250);
+        this.playSwimAnimation();
+    }
+
+    playDeadAnimation() {
+        if (this.currentImage >= this.deadImgs.length) {
+            this.deadDone = true;
+            this.currentImage = this.deadImgs.length - 1;
+        }
+
+        this.img = this.imageCache[this.deadImgs[this.currentImage]];
+        this.currentImage++;
+    }
+
+    playSwimAnimation() {
+        const imgs = this.isNear ? this.transImgs : this.swimImgs;
+        this.fishAnimation(imgs);
     }
 }

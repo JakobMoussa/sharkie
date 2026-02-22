@@ -133,95 +133,97 @@ class Endboss extends MovableObject {
     }
 
     endbossAnimation() {
-
-        setInterval(() => {
-            if (this.world?.gameState !== "play") return;
-            if (!this.world) return;
-
-            const shark = this.world.shark;
-
-    
-            if (!this.hasAppeared) {
-                if (shark.x >= this.APPEAR_X) {
-                    this.visible = true;
-
-                    this.x = this.APPEAR_X + 200;
-                    this.y = this.SPAWN_Y;
-                    this.baseY = this.y;
-
-                    const dist = Math.abs(shark.x - this.x);
-                    if (dist <= this.INTRO_DISTANCE) {
-                        this.hasAppeared = true;
-                        this.playIntroAnimation();
-                    }
-                }
-                return;
-            }
-
-            if (!this.introPlayed) return;
-            if (this.dead) return;
-
-            const dist = Math.abs(shark.x - this.x);
-
-            if (dist < this.followRange) {
-                this.followShark(shark);
-                this.baseY = this.y;
-            } else {
-                this.floatAngle += 0.02;
-                this.y = this.baseY + Math.sin(this.floatAngle) * 30;
-            }
-
-            this.y = Math.max(0, Math.min(this.y, 600 - this.height));
-
-        }, 1000 / 60);
-
-        setInterval(() => {
-            if (this.world?.gameState !== "play") return;
-            if (!this.world) return;
-            if (!this.hasAppeared) return;
-            if (!this.introPlayed) return;
-
-            const shark = this.world.shark;
-            const dist = Math.abs(shark.x - this.x);
-
-            if (this.dead) {
-                if (!this.winSoundPlayed) {
-                    this.winSoundPlayed = true;
-
-                    this.world.sounds.play("win");
-
-                    setTimeout(() => {
-                        this.world.sounds.stop("win");
-                    }, 7000);
-                }
-
-                if (this.deadFrame >= this.DEAD_IMAGES.length) {
-                    this.deadDone = true;
-                    this.deadFrame = this.DEAD_IMAGES.length - 1;
-                }
-
-                const path = this.DEAD_IMAGES[this.deadFrame];
-                this.img = this.imageCache[path];
-                this.deadFrame++;
-                return;
-            }
-
-            if (Date.now() < this.hurtUntil) {
-                this.playAnimation(this.HURT_IMAGES);
-                return;
-            }
-
-            if (dist < this.attackRange) {
-                this.attack = true;
-                this.playAnimation(this.ATTACK_IMAGES);
-            } else {
-                this.attack = false;
-                this.playAnimation(this.FLOATING_IMAGES);
-            }
-
-        }, 150);
-
+        setInterval(() => this.updateMovement(), 1000 / 60);
+        setInterval(() => this.updateAnimation(), 150);
     }
+
+    updateMovement() {
+        if (!this.world || this.world.gameState !== "play") return;
+
+        const shark = this.world.shark;
+
+        if (!this.hasAppeared) {
+            this.tryAppear(shark);
+            return;
+        }
+
+        if (!this.introPlayed || this.dead) return;
+
+        this.moveOrFloat(shark);
+        this.y = Math.max(0, Math.min(this.y, 600 - this.height));
+    }
+
+    tryAppear(shark) {
+        if (shark.x < this.APPEAR_X) return;
+
+        this.visible = true;
+        this.x = this.APPEAR_X + 200;
+        this.y = this.SPAWN_Y;
+        this.baseY = this.y;
+
+        if (Math.abs(shark.x - this.x) <= this.INTRO_DISTANCE) {
+            this.hasAppeared = true;
+            this.playIntroAnimation();
+        }
+    }
+
+    moveOrFloat(shark) {
+        const dist = Math.abs(shark.x - this.x);
+
+        if (dist < this.followRange) {
+            this.followShark(shark);
+            this.baseY = this.y;
+        } else {
+            this.floatAngle += 0.02;
+            this.y = this.baseY + Math.sin(this.floatAngle) * 30;
+        }
+    }
+
+    updateAnimation() {
+        if (!this.world || this.world.gameState !== "play") return;
+        if (!this.hasAppeared || !this.introPlayed) return;
+
+        if (this.dead) {
+            this.playDeadAnimation();
+            return;
+        }
+
+        if (Date.now() < this.hurtUntil) {
+            this.playAnimation(this.HURT_IMAGES);
+            return;
+        }
+
+        this.playAttackOrFloat();
+    }
+
+    playDeadAnimation() {
+        if (!this.winSoundPlayed) {
+            this.winSoundPlayed = true;
+            this.world.sounds.play("win");
+            setTimeout(() => this.world.sounds.stop("win"), 7000);
+        }
+
+        if (this.deadFrame >= this.DEAD_IMAGES.length) {
+            this.deadDone = true;
+            this.deadFrame = this.DEAD_IMAGES.length - 1;
+        }
+
+        this.img = this.imageCache[this.DEAD_IMAGES[this.deadFrame]];
+        this.deadFrame++;
+    }
+
+    playAttackOrFloat() {
+        const dist = Math.abs(this.world.shark.x - this.x);
+
+        if (dist < this.attackRange) {
+            this.attack = true;
+            this.playAnimation(this.ATTACK_IMAGES);
+        } else {
+            this.attack = false;
+            this.playAnimation(this.FLOATING_IMAGES);
+        }
+    }
+
 
     hit() {
         if (this.dead) return;

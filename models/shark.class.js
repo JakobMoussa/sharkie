@@ -360,4 +360,39 @@ class Shark extends MovableObject {
         }
     }
 
+    gameOverScreen() {
+        if (this.energy > 0) return;
+        if(!this.deadDone) {
+            this.playDeadAnimation();
+            return;
+        }
+
+        this.playGameOverloop();
+        this.playlosesound();
+    }
+
+    playDeadAnimation() {
+        this.img = this.imageCach[this.DEAD_IMAGES[this.deadFrame]];
+        this.deadFrame++;
+
+        if (this.deadFrame >= this.DEAD_IMAGES.length) {
+            this.deadDone = true;
+            this.gameOverFrame = 0;
+        }
+        
+    }
+
+    playGameOverLoop() {
+        this.gameOverFrame = (this.gameOverFrame + 1) % this.GAME_OVER.length;
+    }
+
+    playLoseSound() {
+        if (this.losePlayed) return;
+        this.losePlayed = true;
+        setTimeout(() => {
+            if (this.world?.sounds) this.world.sounds.play("lose");
+        }, 500);
+    }
+
+
 }
