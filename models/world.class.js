@@ -23,17 +23,19 @@ class World {
     gameState = "play";
     overlayImg = new Image();
     collisionInterval = null;
+    retryImg = new Image();
+    retryBtn = {x: 0, y: 0, w: 0, h: 0};
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.overlayImg.src = 'img/Grafiken - Sharkie/3. Background/Dark/1.png';
+        this.retryImg.src = 'img/Grafiken - Sharkie/6.Botones/Try again/Recurso 17.png';
         this.keyboard = keyboard;
         this.sounds = new SoundEffects();
         this.endboss = new Endboss();
         this.endboss.world = this;
         this.endboss.endbossAnimation();
-
         this.setWorld();
         this.shark.start();
         this.statusBar = new StatusBar();
@@ -177,7 +179,7 @@ class World {
         }
 
         this.statusBar.setPercentage(this.shark.energy);
-         return false;
+         return true;
     }
 
     cleanupDeadEnemies() {
@@ -195,6 +197,7 @@ class World {
                 if (this.shark.isColliding(enemy, 40)) {
                     if (this.trySlapKill(enemy)) return;
                     const tookDamage = this.applyEnemyDamage(enemy);
+            
                     if (tookDamage) {
                         this.statusBar.setPercentage(this.shark.energy);
                         if (this.sounds) this.sounds.play("sharkHurt");
@@ -322,11 +325,6 @@ class World {
         this.poisonShots = this.poisonShots.filter(s => !s.hit);
     }
 
-    die() {
-        this.dead = true;
-        this.deadDone = false;
-        this.currentImage = 0;
-    }
 
     drawEndOverlay() {
 
@@ -341,7 +339,21 @@ class World {
         if (this.gameState === "win") {
             this.endboss.drawWinCentered(this.ctx);
         }
+
+        this.drawRetryButton();
     }
 
+    drawRetryButton() {
+        if (!this.retryImg.complete) return;
+
+        const w = this.canvas.width * 0.22;
+        const h = w * 0.45;
+
+        const x = (this.canvas.width - w) / 2;
+        const y = this.canvas.height * 0.75;
+
+        this.retryBtn = { x, y, w, h };
+        this.ctx.drawImage(this.retryImg, x, y, w, h);
+    }
 
 }

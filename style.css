@@ -30,3 +30,37 @@ h1 {
     color: transparent;
     margin: 20px;
 }
+
+
+#startOverlay {
+    position: relative;
+    width: 720px;
+    margin: 0 auto;
+}
+
+#overlayImg {
+    width: 100%;
+    display: block;
+}
+
+#startBtn {
+    position: absolute;
+    left: 36%;
+    font-weight: 700;
+    font-size: 25px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    bottom: 12%;
+    text-align: center;
+    align-content: center;
+    width: 28%;
+    height: 14%;
+    cursor: pointer;
+    background-color: aqua;
+    border-radius: 30px;
+    color: #7a15e6;
+}
+
+#startBtn:hover {
+   background-color: #7a15e67c;
+   color: white;
+}
