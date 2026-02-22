@@ -64,3 +64,53 @@ h1 {
    background-color: #7a15e67c;
    color: white;
 }
+
+.NoteOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.box {
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 14px;
+  padding: 22px 26px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+.box p {
+  margin: 0;
+  color: white;
+  font-size: 22px;
+  line-height: 1.25;
+  font-family: Arial, sans-serif;
+}
+
+/* ✅ unter 600px: Spiel blockieren + Hinweis zeigen */
+
+@media (max-width: 699px) {
+  #overlayImg {
+    display: none;
+  }
+}
+
+@media (max-width: 599px) {
+  .NoteOverlay {
+    display: flex;
+  }
+
+  canvas {
+    pointer-events: none;
+  }
+
+  #overlayImg {
+    display: none;
+  }
+}
+
