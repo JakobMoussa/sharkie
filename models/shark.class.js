@@ -158,7 +158,6 @@ class Shark extends MovableObject {
         }
 
         this.slap = now < this.slapUntil;
-        
     }
 
     setShoot() {

@@ -29,24 +29,37 @@ class World {
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
+        this.keyboard = keyboard;
+        this.loadImages();
+        this.initObjects();
+        this.startGame();
+    }
+
+    loadImages() {
         this.overlayImg.src = 'img/Grafiken - Sharkie/3. Background/Dark/1.png';
         this.retryImg.src = 'img/Grafiken - Sharkie/6.Botones/Try again/Recurso 17.png';
-        this.keyboard = keyboard;
+    }
+
+    initObjects() {
         this.sounds = new SoundEffects();
         this.endboss = new Endboss();
         this.endboss.world = this;
-        this.endboss.endbossAnimation();
-        this.setWorld();
-        this.shark.start();
         this.statusBar = new StatusBar();
         this.poisonBar = new PoisonBar();
         this.coinsBar = new CoinsBar();
         this.endbossBar = new EndbossStatusBar();
+    }
+
+    startGame() {
+        this.setWorld();
+        this.endboss.endbossAnimation();
+        this.shark.start();
         this.checkCollisions();
         this.spawnPoison();
         this.spawnCoins();
         this.draw();
     }
+
 
     setWorld() {
         this.shark.world = this;
@@ -66,46 +79,88 @@ class World {
         }
     }
  
+    // draw() {
+    //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //     this.checkEndState();
+    //     this.ctx.save();
+
+    //     this.ctx.translate(this.x_camera, 0);
+
+    //     this.addObjectsToMap(this.backgroundObjects);
+    //     this.addObjectsToMap(this.poisons);
+    //     this.addObjectsToMap(this.coins);
+    //     this.addObjectsToMap(this.poisonShots);
+
+    //     if (this.endboss.visible && !this.endboss.deadDone) {
+    //         this.addToMap(this.endboss);
+
+    //         if (this.showEndbossBar) {
+    //             this.endbossBar.draw(this.ctx, this.endboss);
+    //         }
+    //     }
+
+    //     this.addToMap(this.shark);
+    //     this.addObjectsToMap(this.enemies);
+
+    //     this.ctx.restore();
+    //     if (this.gameState === "lose" || this.gameState === "win") {
+    //         this.drawEndOverlay();
+    //     }
+
+    //     this.addToMap(this.statusBar);
+    //     this.addToMap(this.poisonBar);
+    //     this.addToMap(this.coinsBar);
+
+    //     if (this.endboss.deadDone) {
+    //         this.endboss.drawWinCentered(this.ctx);
+    //     }
+        
+    //     requestAnimationFrame(() => this.draw());
+    // }    
+
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.checkEndState();
         this.ctx.save();
-
         this.ctx.translate(this.x_camera, 0);
+        this.drawWorld();
+        this.ctx.restore();
+        this.drawUI();
+        requestAnimationFrame(() => this.draw());
+    }
 
+    drawWorld() {
         this.addObjectsToMap(this.backgroundObjects);
         this.addObjectsToMap(this.poisons);
         this.addObjectsToMap(this.coins);
         this.addObjectsToMap(this.poisonShots);
-
-        if (this.endboss.visible && !this.endboss.deadDone) {
-            this.addToMap(this.endboss);
-
-            if (this.showEndbossBar) {
-                this.endbossBar.draw(this.ctx, this.endboss);
-            }
-        }
-
         this.addToMap(this.shark);
         this.addObjectsToMap(this.enemies);
+        this.drawEndboss();
+    }
 
-        this.ctx.restore();
-        if (this.gameState === "lose" || this.gameState === "win") {
-            this.drawEndOverlay();
+    drawEndboss() {
+        if (!this.endboss.visible || this.endboss.deadDone) return;
+
+        this.addToMap(this.endboss);
+        if (this.showEndbossBar) {
+            this.endbossBar.draw(this.ctx, this.endboss);
         }
+    }
 
+    drawUI() {
         this.addToMap(this.statusBar);
         this.addToMap(this.poisonBar);
         this.addToMap(this.coinsBar);
 
+        if (this.gameState === "lose" || this.gameState === "win") {
+            this.drawEndOverlay();
+        }
+
         if (this.endboss.deadDone) {
             this.endboss.drawWinCentered(this.ctx);
         }
-        
-        requestAnimationFrame(() => this.draw());
-
     }
-
 
     addObjectsToMap(objects) {
         objects.forEach(o => this.addToMap(o));
@@ -188,52 +243,51 @@ class World {
 
     checkCollisions() {
         this.collisionInterval = setInterval(() => {
-
             if (this.gameState !== "play") return;
 
-            this.enemies.forEach((enemy) => {
-                this.updatePufferNear(enemy);
-
-                if (this.shark.isColliding(enemy, 40)) {
-                    if (this.trySlapKill(enemy)) return;
-                    const tookDamage = this.applyEnemyDamage(enemy);
-            
-                    if (tookDamage) {
-                        this.statusBar.setPercentage(this.shark.energy);
-                        if (this.sounds) this.sounds.play("sharkHurt");
-                    }
-                }
-            });
-
-            if (
-                this.endboss.visible &&
-                !this.endboss.dead &&
-                this.shark.slap &&
-                this.shark.isColliding(this.endboss, 70)
-            ) {
-                this.endboss.hit();
-                this.showEndbossBar = true;
-                this.endbossBar.setPercentage(this.endboss.energy);
-            }
-
-            if (this.endboss.visible && !this.endboss.dead && this.shark.isColliding(this.endboss, 70)) {
-                this.shark.hitShock(800);
-                this.statusBar.setPercentage(this.shark.energy);
-                if (this.sounds) this.sounds.play("sharkHurt");
-            }
-
-            if (this.endboss.deadDone) this.showEndbossBar = false;
-
+            this.checkEnemyCollisions();
+            this.checkEndbossCollisions();
             this.checkCoins();
             this.ckeckPoisons();
             this.checkPoisonShotHits();
             this.cleanupDeadEnemies();
-
             this.shootPoison();
             this.cleanupShots();
 
-
         }, 1000 / 60);
+    }
+
+    checkEnemyCollisions() {
+        this.enemies.forEach((enemy) => {
+            this.updatePufferNear(enemy);
+
+            if (this.shark.isColliding(enemy, 40)) {
+                if (this.trySlapKill(enemy)) return;
+                const tookDamage = this.applyEnemyDamage(enemy);
+                if (tookDamage) {
+                    this.statusBar.setPercentage(this.shark.energy);
+                    if (this.sounds) this.sounds.play("sharkHurt");
+                }
+            }
+        });
+    }
+
+    checkEndbossCollisions() {
+        if (!this.endboss.visible || this.endboss.dead) return;
+
+        if (this.shark.slap && this.shark.isColliding(this.endboss, 70)) {
+            this.endboss.hit();
+            this.showEndbossBar = true;
+            this.endbossBar.setPercentage(this.endboss.energy);
+        }
+
+        if (this.shark.isColliding(this.endboss, 70)) {
+            this.shark.hitShock(800);
+            this.statusBar.setPercentage(this.shark.energy);
+            if (this.sounds) this.sounds.play("sharkHurt");
+        }
+
+        if (this.endboss.deadDone) this.showEndbossBar = false;
     }
 
 
