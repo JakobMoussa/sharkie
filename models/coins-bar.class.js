@@ -23,12 +23,25 @@ class CoinsBar extends MovableObject {
         this.setPercentage(0);
     }
 
+/**
+ * Updates the collectable status based on the current percentage.
+ * Determines the correct image index and loads the corresponding image.
+ *
+ * @param {number} percentage - Current collected amount (0–10).
+ * @returns {void}
+ */
     setPercentage(value) {
         this.percentage = Math.max(0, Math.min(100, value));
         const i = this.resolveImageIndex();
         this.img = this.imageCache[this.COINSBAR_IMAGES[i]];
     }
-
+    
+/**
+ * Resolves the correct image index depending on the collected percentage.
+ *
+ * @param {number} percentage - Current collected amount (0–10).
+ * @returns {number} Index of the corresponding image in COLLECTABLE_IMAGES.
+ */
     resolveImageIndex() {
         if (this.percentage >= 100) return 5;
         if (this.percentage >= 80) return 4;

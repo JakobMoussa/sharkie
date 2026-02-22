@@ -40,6 +40,10 @@ class World {
         this.retryImg.src = 'img/Grafiken - Sharkie/6.Botones/Try again/Recurso 17.png';
     }
 
+    /**
+     * Initializes game objects and UI bars.
+     * @returns {void}
+     */
     initObjects() {
         this.sounds = new SoundEffects();
         this.endboss = new Endboss();
@@ -50,6 +54,10 @@ class World {
         this.endbossBar = new EndbossStatusBar();
     }
 
+    /**
+     * Starts the main game systems.
+     * @returns {void}
+     */
     startGame() {
         this.setWorld();
         this.endboss.endbossAnimation();
@@ -60,11 +68,18 @@ class World {
         this.draw();
     }
 
-
+    /**
+     * Assigns world reference to shark.
+     * @returns {void}
+     */
     setWorld() {
         this.shark.world = this;
     }
 
+    /**
+     * Checks win or lose condition.
+     * @returns {void}
+     */
     checkEndState() {
         if (this.gameState !== "play") return;
 
@@ -79,45 +94,10 @@ class World {
         }
     }
  
-    // draw() {
-    //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    //     this.checkEndState();
-    //     this.ctx.save();
-
-    //     this.ctx.translate(this.x_camera, 0);
-
-    //     this.addObjectsToMap(this.backgroundObjects);
-    //     this.addObjectsToMap(this.poisons);
-    //     this.addObjectsToMap(this.coins);
-    //     this.addObjectsToMap(this.poisonShots);
-
-    //     if (this.endboss.visible && !this.endboss.deadDone) {
-    //         this.addToMap(this.endboss);
-
-    //         if (this.showEndbossBar) {
-    //             this.endbossBar.draw(this.ctx, this.endboss);
-    //         }
-    //     }
-
-    //     this.addToMap(this.shark);
-    //     this.addObjectsToMap(this.enemies);
-
-    //     this.ctx.restore();
-    //     if (this.gameState === "lose" || this.gameState === "win") {
-    //         this.drawEndOverlay();
-    //     }
-
-    //     this.addToMap(this.statusBar);
-    //     this.addToMap(this.poisonBar);
-    //     this.addToMap(this.coinsBar);
-
-    //     if (this.endboss.deadDone) {
-    //         this.endboss.drawWinCentered(this.ctx);
-    //     }
-        
-    //     requestAnimationFrame(() => this.draw());
-    // }    
-
+    /**
+     * Main render loop.
+     * @returns {void}
+     */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.checkEndState();
@@ -129,6 +109,10 @@ class World {
         requestAnimationFrame(() => this.draw());
     }
 
+    /**
+     * Draws all world objects.
+     * @returns {void}
+     */
     drawWorld() {
         this.addObjectsToMap(this.backgroundObjects);
         this.addObjectsToMap(this.poisons);
@@ -139,6 +123,10 @@ class World {
         this.drawEndboss();
     }
 
+    /**
+     * Draws endboss and its health bar.
+     * @returns {void}
+     */
     drawEndboss() {
         if (!this.endboss.visible || this.endboss.deadDone) return;
 
@@ -148,6 +136,10 @@ class World {
         }
     }
 
+    /**
+     * Draws UI and overlays.
+     * @returns {void}
+     */
     drawUI() {
         this.addToMap(this.statusBar);
         this.addToMap(this.poisonBar);
@@ -162,10 +154,22 @@ class World {
         }
     }
 
+    /**
+     * Draws an array of objects.
+     *
+     * @param {Array} objects - Objects to draw.
+     * @returns {void}
+     */
     addObjectsToMap(objects) {
         objects.forEach(o => this.addToMap(o));
     }
 
+    /**
+     * Draws a single object.
+     *
+     * @param {MovableObject} mo - Object to draw.
+     * @returns {void}
+     */
     addToMap(mo) {
 
         if (!mo.img) return;
@@ -183,11 +187,21 @@ class World {
         this.ctx.restore();
     }
 
+    /**
+     * Returns random Y position.
+     *
+     * @returns {number}
+     */
     randomY() {
         return 100 + Math.random() * 400;
     }
 
-
+    /**
+     * Updates pufferfish "near" state.
+     *
+     * @param {MovableObject} enemy - Enemy instance.
+     * @returns {void}
+     */
     updatePufferNear(enemy) {
         if (!(enemy instanceof PufferFish) || enemy.dead) return;
 
@@ -202,6 +216,12 @@ class World {
         enemy.setNear(nearX && nearY);
     }
 
+    /**
+     * Attempts to kill enemy with slap.
+     *
+     * @param {MovableObject} enemy
+     * @returns {boolean}
+     */
     trySlapKill(enemy) {
         if (!this.shark.slap) return false;
 
@@ -218,6 +238,12 @@ class World {
         return false;
     }
 
+    /**
+     * Applies enemy damage to shark.
+     *
+     * @param {MovableObject} enemy
+     * @returns {boolean}
+     */
     applyEnemyDamage(enemy) {
         if (enemy.dead) return false;
 
@@ -237,10 +263,18 @@ class World {
          return true;
     }
 
+    /**
+     * Removes finished enemies.
+     * @returns {void}
+     */
     cleanupDeadEnemies() {
         this.enemies = this.enemies.filter(e => !e.deadDone);
     }
 
+    /**
+     * Starts collision detection loop.
+     * @returns {void}
+     */
     checkCollisions() {
         this.collisionInterval = setInterval(() => {
             if (this.gameState !== "play") return;
@@ -257,6 +291,10 @@ class World {
         }, 1000 / 60);
     }
 
+    /**
+     * Handles enemy collisions.
+     * @returns {void}
+     */
     checkEnemyCollisions() {
         this.enemies.forEach((enemy) => {
             this.updatePufferNear(enemy);
@@ -272,6 +310,10 @@ class World {
         });
     }
 
+    /**
+     * Handles endboss collisions.
+     * @returns {void}
+     */
     checkEndbossCollisions() {
         if (!this.endboss.visible || this.endboss.dead) return;
 
@@ -290,7 +332,10 @@ class World {
         if (this.endboss.deadDone) this.showEndbossBar = false;
     }
 
-
+    /**
+     * Spawns poison items.
+     * @returns {void}
+     */
     spawnPoison() {
         for (let i = 0; i < 30; i++) {
             const x = 300 + Math.random() * 2800;
@@ -299,6 +344,10 @@ class World {
         }
     }
 
+    /**
+     * Handles poison collection.
+     * @returns {void}
+     */
     ckeckPoisons() {
         this.poisons.forEach((poison, index) => {
             if (this.poisonCount >= this.maxPoison) return;
@@ -314,6 +363,10 @@ class World {
         });
     }
 
+    /**
+     * Spawns coin items.
+     * @returns {void}
+     */
     spawnCoins() {
         for (let i = 0; i < 20; i++) {
             const x = 300 + Math.random() * 2600;
@@ -322,6 +375,10 @@ class World {
         }
     }
 
+    /**
+     * Handles coin collection.
+     * @returns {void}
+     */
     checkCoins() {
         this.coins.forEach((coin, index) => {
             if (this.shark.isColliding(coin, 10)) {
@@ -335,6 +392,10 @@ class World {
         });
     }
 
+    /**
+     * Shoots poison projectile.
+     * @returns {void}
+     */
     shootPoison() {
         if (!this.shark.shotReady) return;
         if (this.poisonCount <= 0) return;
@@ -351,10 +412,18 @@ class World {
         this.shark.shotReady = false;
     }
 
+    /**
+     * Removes out-of-bounds shots.
+     * @returns {void}
+     */
     cleanupShots() {
         this.poisonShots = this.poisonShots.filter(s => s.x < 4000);
     }
 
+    /**
+     * Checks projectile collisions.
+     * @returns {void}
+     */
     checkPoisonShotHits() {
         this.poisonShots.forEach((shot, shotIndex) => {
             this.enemies.forEach((enemy) => {
@@ -379,7 +448,10 @@ class World {
         this.poisonShots = this.poisonShots.filter(s => !s.hit);
     }
 
-
+    /**
+     * Draws end overlay (win/lose).
+     * @returns {void}
+     */
     drawEndOverlay() {
 
         if (this.overlayImg.complete) {
@@ -397,6 +469,10 @@ class World {
         this.drawRetryButton();
     }
 
+    /**
+     * Draws retry button.
+     * @returns {void}
+     */
     drawRetryButton() {
         if (!this.retryImg.complete) return;
 

@@ -42,39 +42,72 @@ class JellyFish extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Triggers the death state of the jellyfish.
+     * Resets animation index and prepares death animation.
+     *
+     * @returns {void}
+     */
     die() {
         this.dead = true;
         this.deadDone = false;
         this.currentImage = 0;
     }
-
+    /**
+     * Starts movement and animation intervals.
+     * Handles swim animation, floating movement,
+     * and death animation when triggered.
+     *
+     * @returns {void}
+     */
     animate() {
-        setInterval(() => {
-            if (this.dead) {
-                if (this.currentImage >= this.JELLYFISH_DEAD.length) {
-                    this.deadDone = true;
-                    this.currentImage = this.JELLYFISH_DEAD.length - 1;
-                    this.img = this.imageCache[this.JELLYFISH_DEAD[this.currentImage]];
-                    return;
-                }
+        setInterval(() => this.updateAnimation(), 200);
+        setInterval(() => this.updateFloat(), 1000 / 60);
+    }
 
-                const path = this.JELLYFISH_DEAD[this.currentImage];
-                this.img = this.imageCache[path];
-                this.currentImage++;
-                return;
-            }
+    /**
+     * Updates the current animation frame.
+     * Plays swim animation if alive,
+     * otherwise triggers death animation.
+     *
+     * @returns {void}
+     */
+    updateAnimation() {
+        if (this.dead) {
+            this.playDeadAnimation();
+            return;
+        }
+        this.fishAnimation(this.JELLYFISH_SWIM);
+    }
 
-            this.fishAnimation(this.JELLYFISH_SWIM);
-        }, 200);
+    /**
+     * Plays the death animation frames.
+    * Stops on the last frame once completed.
+    *
+    * @returns {void}
+    */
+    playDeadAnimation() {
+        if (this.currentImage >= this.JELLYFISH_DEAD.length) {
+            this.deadDone = true;
+            this.currentImage = this.JELLYFISH_DEAD.length - 1;
+        }
 
-        setInterval(() => {
-            if (this.dead) return;
+        this.img = this.imageCache[this.JELLYFISH_DEAD[this.currentImage]];
+        this.currentImage++;
+    }
 
-            this.floatAngle += this.floatSpeed;
-            this.y = this.baseY + Math.sin(this.floatAngle) * this.heightDepth;
-            this.y = Math.max(0, Math.min(this.y, 580 - this.height));
-        }, 1000 / 60);
+    /**
+     * Updates vertical floating movement using sine wave motion.
+     * Movement is clamped to canvas boundaries.
+     *
+     * @returns {void}
+     */
+    updateFloat() {
+        if (this.dead) return;
 
+        this.floatAngle += this.floatSpeed;
+        this.y = this.baseY + Math.sin(this.floatAngle) * this.heightDepth;
+        this.y = Math.max(0, Math.min(this.y, 580 - this.height));
     }
 
     

@@ -1,5 +1,8 @@
 class EndbossStatusBar {
 
+ /**
+ * Creates a new Endboss status bar with default size and full health.
+ */
     constructor() {
         this.width = 140;
         this.height = 14;

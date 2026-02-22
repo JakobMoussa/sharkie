@@ -15,7 +15,6 @@ body {
     background-color: black;
 }
 
-
 h1 {
     font-size: 70px;
     font-weight: 900;
@@ -30,7 +29,6 @@ h1 {
     color: transparent;
     margin: 20px;
 }
-
 
 #startOverlay {
     position: relative;
@@ -91,8 +89,6 @@ h1 {
   line-height: 1.25;
   font-family: Arial, sans-serif;
 }
-
-/* ✅ unter 600px: Spiel blockieren + Hinweis zeigen */
 
 @media (max-width: 699px) {
   #overlayImg {

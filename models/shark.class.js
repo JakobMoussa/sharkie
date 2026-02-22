@@ -147,6 +147,11 @@ class Shark extends MovableObject {
         this.loadImages(this.GAME_OVER);
     }
 
+    /**
+     * Handles slap attack activation and cooldown logic.
+     *
+     * @returns {void}
+     */
     setSlap() {
         const now = Date.now();
 
@@ -160,6 +165,11 @@ class Shark extends MovableObject {
         this.slap = now < this.slapUntil;
     }
 
+    /**
+     * Handles bubble shooting logic and animation timing.
+     *
+     * @returns {void}
+     */
     setShoot() {
         const now = Date.now();
 
@@ -176,15 +186,31 @@ class Shark extends MovableObject {
         }
     }
 
+    /**
+     * Starts movement and animation loops.
+     *
+     * @returns {void}
+     */
     start() {
         this.startMovementLoop();
         this.startAnimationLoop();
     } 
 
+    /**
+     * Starts the continuous movement update loop.
+     *
+     * @returns {void}
+     */
     startMovementLoop() {
         setInterval(() => this.updateMovement(), 1000 / 60);
     }
 
+    /**
+    * Updates movement physics, input handling,
+    * camera movement and boundary checks.
+    *
+    * @returns {void}
+    */
     updateMovement() {
         if (this.world?.gameState !== "play") return;
         if (!this.world || !this.world.keyboard) return;
@@ -200,6 +226,11 @@ class Shark extends MovableObject {
             this.updateLastMoveTime();
     }
 
+    /**
+     * Applies acceleration based on keyboard input.
+     *
+     * @returns {void}
+     */
     applyInputAcceleration() {
         if (this.world.keyboard.RIGHT) { this.vx += this.acceleration; this.otherDirection = false; }
         if (this.world.keyboard.LEFT)  { this.vx -= this.acceleration; this.otherDirection = true; }
@@ -207,20 +238,40 @@ class Shark extends MovableObject {
         if (this.world.keyboard.DOWN)  { this.vy += this.acceleration; }
     }
 
+    /**
+     * Limits velocity to maximum speed.
+     *
+     * @returns {void}
+     */
     applyClampSpeed() {
         this.vx = Math.max(-this.maxSpeed, Math.min(this.vx, this.maxSpeed));
         this.vy = Math.max(-this.maxSpeed, Math.min(this.vy, this.maxSpeed));
     }
 
+    /**
+     * Updates position based on velocity.
+     *
+     * @returns {void}
+     */
     applyPosition() {
         this.x += this.vx;
         this.y += this.vy;
     }
 
+    /**
+     * Updates world camera position relative to shark.
+     *
+     * @returns {void}
+     */
     applyCamera() {
         this.world.x_camera = -this.x;
     }
 
+    /**
+     * Applies friction when no directional input is active.
+     *
+     * @returns {void}
+     */
     applyFriction() {
         const anyHorizontal = this.world.keyboard.LEFT || this.world.keyboard.RIGHT;
         const anyVertical = this.world.keyboard.UP || this.world.keyboard.DOWN;
@@ -232,16 +283,31 @@ class Shark extends MovableObject {
         if (Math.abs(this.vy) < 0.05) this.vy = 0;
     }
 
+    /**
+     * Restricts shark movement within world boundaries.
+     *
+     * @returns {void}
+     */
     applyBounds() {
         this.y = Math.max(-90, Math.min(this.y, this.world.canvas.height - this.height));
         this.x = Math.max(0, Math.min(this.x, 3800 - this.width));
     }
-
+    
+    /**
+     * Updates last movement timestamp if shark is moving.
+     *
+     * @returns {void}
+     */
     updateLastMoveTime() {
         const moving = (Math.abs(this.vx) > 0.05 || Math.abs(this.vy) > 0.05);
         if (moving) this.lastMoveTime = Date.now();
     }
 
+    /**
+     * Starts animation update loop.
+     *
+     * @returns {void}
+     */
     startAnimationLoop() {
         setInterval(() => {
             this.updateState();
@@ -250,6 +316,12 @@ class Shark extends MovableObject {
         }, 120);
     }
 
+    /**
+     * Updates shark animation state based on
+     * movement, damage, attacks and idle time.
+     *
+     * @returns {void}
+     */
     updateState() {
         const now = Date.now();
 
@@ -268,6 +340,11 @@ class Shark extends MovableObject {
         this.state = (idleTime > 3000) ? "longidle" : "idle";
     }
 
+    /**
+     * Plays animation according to current state.
+     *
+     * @returns {void}
+     */
     updateAnimation() {
         switch (this.state) {
             case "dead":
@@ -296,6 +373,12 @@ class Shark extends MovableObject {
         }
     }   
 
+    /**
+     * Applies electric shock damage.
+     *
+     * @param {number} [durationMs=800] - Shock duration in milliseconds.
+     * @returns {boolean} True if damage was applied.
+     */
     hitShock(durationMs = 800) {
         const now = Date.now();
         if (now < this.shockUntil) return false;
@@ -307,6 +390,12 @@ class Shark extends MovableObject {
         return true;
     }
 
+    /**
+     * Applies poison damage.
+     *
+     * @param {number} [durationMs=1200] - Poison duration in milliseconds.
+     * @returns {boolean} True if damage was applied.
+     */
     hitPoison(durationMs = 1200) {
         const now = Date.now();
         if (now < this.poisonUntil) return false;
@@ -318,6 +407,12 @@ class Shark extends MovableObject {
         return true;
     }
 
+    /**
+     * Draws the game over animation centered on canvas.
+     *
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @returns {void}
+     */
     drawGameOverCentered(ctx) {
         if (!this.gameOverStart) this.gameOverStart = Date.now();
 
@@ -335,31 +430,12 @@ class Shark extends MovableObject {
         ctx.drawImage(img, (ctx.canvas.width - w) / 2, (ctx.canvas.height - h) / 2, w, h);
     }
 
-    gameOverScreen() {
-        if (this.energy > 0) return;
-
-        if (!this.deadDone) {
-            const path = this.DEAD_IMAGES[this.deadFrame];
-            this.img = this.imageCache[path];
-            this.deadFrame++;
-
-            if (this.deadFrame >= this.DEAD_IMAGES.length) {
-                this.deadDone = true;
-                this.gameOverFrame = 0;
-            }
-            return;
-        }
-
-        this.gameOverFrame = (this.gameOverFrame + 1) % this.GAME_OVER.length;
-
-        if (!this.losePlayed) {
-            this.losePlayed = true;
-            setTimeout(() => {
-                if (this.world?.sounds) this.world.sounds.play("lose");
-            }, 500);
-        }
-    }
-
+    /**
+     * Handles the full game over sequence.
+     * Plays death animation, game over loop and sound.
+     *
+     * @returns {void}
+     */
     gameOverScreen() {
         if (this.energy > 0) return;
         if(!this.deadDone) {
@@ -371,6 +447,11 @@ class Shark extends MovableObject {
         this.playlosesound();
     }
 
+    /**
+     * Plays shark death animation frames.
+     *
+     * @returns {void}
+     */
     playDeadAnimation() {
         this.img = this.imageCach[this.DEAD_IMAGES[this.deadFrame]];
         this.deadFrame++;
@@ -378,14 +459,22 @@ class Shark extends MovableObject {
         if (this.deadFrame >= this.DEAD_IMAGES.length) {
             this.deadDone = true;
             this.gameOverFrame = 0;
-        }
-        
+        }   
     }
-
+    /**
+     * Loops game over animation frames.
+     *
+     * @returns {void}
+     */
     playGameOverLoop() {
         this.gameOverFrame = (this.gameOverFrame + 1) % this.GAME_OVER.length;
     }
 
+    /**
+     * Plays lose sound once after death.
+     *
+     * @returns {void}
+     */
     playLoseSound() {
         if (this.losePlayed) return;
         this.losePlayed = true;
@@ -393,6 +482,4 @@ class Shark extends MovableObject {
             if (this.world?.sounds) this.world.sounds.play("lose");
         }, 500);
     }
-
-
 }

@@ -110,6 +110,11 @@ class Endboss extends MovableObject {
         this.baseY = this.y;
     }
 
+/**
+ * Plays the introduction animation sequence of the endboss.
+ *
+ * @returns {void}
+ */
     playIntroAnimation() {
 
         if (this.introRunning) return;
@@ -132,11 +137,21 @@ class Endboss extends MovableObject {
         next();
     }
 
+/**
+ * Starts the movement and animation intervals for the endboss.
+ *
+ * @returns {void}
+ */
     endbossAnimation() {
         setInterval(() => this.updateMovement(), 1000 / 60);
         setInterval(() => this.updateAnimation(), 150);
     }
 
+/**
+ * Updates the movement behavior of the endboss.
+ *
+ * @returns {void}
+ */
     updateMovement() {
         if (!this.world || this.world.gameState !== "play") return;
 
@@ -153,6 +168,12 @@ class Endboss extends MovableObject {
         this.y = Math.max(0, Math.min(this.y, 600 - this.height));
     }
 
+/**
+ * Checks if the endboss should appear based on shark position.
+ *
+ * @param {Shark} shark - The player shark.
+ * @returns {void}
+ */
     tryAppear(shark) {
         if (shark.x < this.APPEAR_X) return;
 
@@ -167,6 +188,12 @@ class Endboss extends MovableObject {
         }
     }
 
+/**
+ * Handles follow or floating behavior depending on shark distance.
+ *
+ * @param {Shark} shark - The player shark.
+ * @returns {void}
+ */
     moveOrFloat(shark) {
         const dist = Math.abs(shark.x - this.x);
 
@@ -179,6 +206,11 @@ class Endboss extends MovableObject {
         }
     }
 
+/**
+ * Updates animation state depending on current boss state.
+ *
+ * @returns {void}
+ */
     updateAnimation() {
         if (!this.world || this.world.gameState !== "play") return;
         if (!this.hasAppeared || !this.introPlayed) return;
@@ -196,6 +228,11 @@ class Endboss extends MovableObject {
         this.playAttackOrFloat();
     }
 
+/**
+ * Plays the death animation sequence.
+ *
+ * @returns {void}
+ */
     playDeadAnimation() {
         if (!this.winSoundPlayed) {
             this.winSoundPlayed = true;
@@ -212,6 +249,12 @@ class Endboss extends MovableObject {
         this.deadFrame++;
     }
 
+/**
+ * Plays attack animation if shark is in range,
+ * otherwise plays floating animation.
+ *
+ * @returns {void}
+ */
     playAttackOrFloat() {
         const dist = Math.abs(this.world.shark.x - this.x);
 
@@ -224,7 +267,12 @@ class Endboss extends MovableObject {
         }
     }
 
-
+/**
+ * Applies damage to the endboss.
+ * Triggers hurt state and death if energy reaches zero.
+ *
+ * @returns {void}
+ */
     hit() {
         if (this.dead) return;
 
@@ -240,6 +288,12 @@ class Endboss extends MovableObject {
         }
     }
 
+/**
+ * Moves the endboss toward the shark.
+ *
+ * @param {Shark} shark - The player shark.
+ * @returns {void}
+ */
     followShark(shark) {
         const dx = shark.x - this.x;
         const dy = shark.y - this.y;
@@ -255,7 +309,13 @@ class Endboss extends MovableObject {
         this.otherDirection = dx > 0;
         this.y = Math.max(0, Math.min(this.y, 600 - this.height));
     }
-    
+
+/**
+ * Draws the win animation centered on the canvas.
+ *
+ * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+ * @returns {void}
+ */
     drawWinCentered(ctx) {
         if (!this.winStart) this.winStart = Date.now();
 
