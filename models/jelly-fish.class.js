@@ -14,17 +14,17 @@ class JellyFish extends MovableObject {
      
 
     JELLYFISH_SWIM = [
-        'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Regular damage/Lila 1.png',
-        'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Regular damage/Lila 2.png',
-        'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Regular damage/Lila 3.png',
-        'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Regular damage/Lila 4.png'
+        'img/Grafiken/2.Enemy/2 Jelly fish/Regular damage/Lila 1.png',
+        'img/Grafiken/2.Enemy/2 Jelly fish/Regular damage/Lila 2.png',
+        'img/Grafiken/2.Enemy/2 Jelly fish/Regular damage/Lila 3.png',
+        'img/Grafiken/2.Enemy/2 Jelly fish/Regular damage/Lila 4.png'
     ];
 
     JELLYFISH_DEAD = [
-        'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Dead/Lila/L1.png',
-        'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Dead/Lila/L2.png',
-        'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Dead/Lila/L3.png',
-        'img/Grafiken - Sharkie/2.Enemy/2 Jelly fish/Dead/Lila/L4.png'
+        'img/Grafiken/2.Enemy/2 Jelly fish/Dead/Lila/L1.png',
+        'img/Grafiken/2.Enemy/2 Jelly fish/Dead/Lila/L2.png',
+        'img/Grafiken/2.Enemy/2 Jelly fish/Dead/Lila/L3.png',
+        'img/Grafiken/2.Enemy/2 Jelly fish/Dead/Lila/L4.png'
     ];
 
 

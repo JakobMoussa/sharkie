@@ -8,14 +8,14 @@ class Poison extends MovableObject {
 
 
     IMAGES_POSION = [
-        'img/Grafiken - Sharkie/4. Marcadores/Posiขn/Animada/1.png',
-        'img/Grafiken - Sharkie/4. Marcadores/Posiขn/Animada/2.png',
-        'img/Grafiken - Sharkie/4. Marcadores/Posiขn/Animada/3.png',
-        'img/Grafiken - Sharkie/4. Marcadores/Posiขn/Animada/4.png',
-        'img/Grafiken - Sharkie/4. Marcadores/Posiขn/Animada/5.png',
-        'img/Grafiken - Sharkie/4. Marcadores/Posiขn/Animada/6.png',
-        'img/Grafiken - Sharkie/4. Marcadores/Posiขn/Animada/7.png',
-        'img/Grafiken - Sharkie/4. Marcadores/Posiขn/Animada/8.png'
+        'img/Grafiken/4. Marcadores/Posiขn/Animada/1.png',
+        'img/Grafiken/4. Marcadores/Posiขn/Animada/2.png',
+        'img/Grafiken/4. Marcadores/Posiขn/Animada/3.png',
+        'img/Grafiken/4. Marcadores/Posiขn/Animada/4.png',
+        'img/Grafiken/4. Marcadores/Posiขn/Animada/5.png',
+        'img/Grafiken/4. Marcadores/Posiขn/Animada/6.png',
+        'img/Grafiken/4. Marcadores/Posiขn/Animada/7.png',
+        'img/Grafiken/4. Marcadores/Posiขn/Animada/8.png'
     ];
 
     constructor(x, y) {

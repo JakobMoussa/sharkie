@@ -36,8 +36,8 @@ class World {
     }
 
     loadImages() {
-        this.overlayImg.src = 'img/Grafiken - Sharkie/3. Background/Dark/1.png';
-        this.retryImg.src = 'img/Grafiken - Sharkie/6.Botones/Try again/Recurso 17.png';
+        this.overlayImg.src = 'img/Grafiken/3. Background/Dark/1.png';
+        this.retryImg.src = 'img/Grafiken/6.Botones/Try again/Recurso 17.png';
     }
 
     /**

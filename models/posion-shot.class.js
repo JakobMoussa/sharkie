@@ -6,7 +6,7 @@ class PoisonShot extends MovableObject {
     hit = false;
 
     IMAGES_SHOT = [
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png',
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png',
     ];
 
     constructor(x, y) {

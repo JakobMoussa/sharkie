@@ -1,109 +1,109 @@
 class Shark extends MovableObject {
     
     IDLE_IMAGES = [   
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/2.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/3.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/4.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/5.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/6.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/7.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/8.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/9.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/10.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/11.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/12.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/13.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/14.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/15.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/16.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/17.png',
-        'img/Grafiken - Sharkie/1.Sharkie/1.IDLE/18.png'
+        'img/Grafiken/1.Sharkie/1.IDLE/1.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/2.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/3.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/4.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/5.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/6.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/7.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/8.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/9.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/10.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/11.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/12.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/13.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/14.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/15.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/16.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/17.png',
+        'img/Grafiken/1.Sharkie/1.IDLE/18.png'
     ];
 
     LONGIDLE_IMAGES = [
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I2.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I3.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I4.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I5.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I6.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I7.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I8.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I9.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I10.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I11.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I12.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I13.png',
-        'img/Grafiken - Sharkie/1.Sharkie/2.Long_IDLE/I14.png'
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I1.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I2.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I3.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I4.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I5.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I6.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I7.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I8.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I9.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I10.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I11.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I12.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I13.png',
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I14.png'
     ];
 
     SWIM_IMAGES = [
-        'img/Grafiken - Sharkie/1.Sharkie/3.Swim/1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/3.Swim/2.png',
-        'img/Grafiken - Sharkie/1.Sharkie/3.Swim/3.png',
-        'img/Grafiken - Sharkie/1.Sharkie/3.Swim/4.png',
-        'img/Grafiken - Sharkie/1.Sharkie/3.Swim/5.png',
-        'img/Grafiken - Sharkie/1.Sharkie/3.Swim/6.png'
+        'img/Grafiken/1.Sharkie/3.Swim/1.png',
+        'img/Grafiken/1.Sharkie/3.Swim/2.png',
+        'img/Grafiken/1.Sharkie/3.Swim/3.png',
+        'img/Grafiken/1.Sharkie/3.Swim/4.png',
+        'img/Grafiken/1.Sharkie/3.Swim/5.png',
+        'img/Grafiken/1.Sharkie/3.Swim/6.png'
     ];
 
     DEAD_IMAGES = [
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/2.png',       
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/3.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/4.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/5.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/6.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/7.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/8.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/9.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/10.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/11.png',
-        'img/Grafiken - Sharkie/1.Sharkie/6.dead/1.Poisoned/12.png'
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/1.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/2.png',       
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/3.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/4.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/5.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/6.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/7.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/8.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/9.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/10.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/11.png',
+        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/12.png'
     ];
 
 
     ELECTRICSHOCK_IMAGES = [
-        'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/2.Electric shock/1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/2.Electric shock/2.png'
+        'img/Grafiken/1.Sharkie/5.Hurt/2.Electric shock/1.png',
+        'img/Grafiken/1.Sharkie/5.Hurt/2.Electric shock/2.png'
     ];
 
     POISONED_IMAGES = [
-        'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/1.Poisoned/1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/1.Poisoned/2.png',
-        'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/1.Poisoned/3.png',
-        'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/1.Poisoned/4.png',
-        'img/Grafiken - Sharkie/1.Sharkie/5.Hurt/1.Poisoned/5.png'
+        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/1.png',
+        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/2.png',
+        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/3.png',
+        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/4.png',
+        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/5.png'
     ];
 
     FINSLAP_IMAGES = [
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/2.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/3.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/4.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/5.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/6.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/7.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Fin slap/8.png'
+        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/1.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/2.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/3.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/4.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/5.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/6.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/7.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/8.png'
     ];
 
     SHOT_IMAGES = [
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/1.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/2.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/3.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/4.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/5.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/6.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/7.png',
-        'img/Grafiken - Sharkie/1.Sharkie/4.Attack/Bubble trap/For Whale/8.png'
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/1.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/2.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/3.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/4.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/5.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/6.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/7.png',
+        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/8.png'
     ];
 
     GAME_OVER = [
-        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 9.png',
-        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 10.png',
-        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 11.png',
-        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 12.png',
-        'img/Grafiken - Sharkie/6.Botones/Tittles/Game Over/Recurso 13.png'
+        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 9.png',
+        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 10.png',
+        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 11.png',
+        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 12.png',
+        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 13.png'
     ];
 
     currentImage = 0;
@@ -348,7 +348,7 @@ class Shark extends MovableObject {
     updateAnimation() {
         switch (this.state) {
             case "dead":
-            this.playAnimation(this.DEAD_IMAGES);
+            // this.playAnimation(this.DEAD_IMAGES);
             break;
             case "shock":
             this.playAnimation(this.ELECTRICSHOCK_IMAGES);
@@ -443,8 +443,8 @@ class Shark extends MovableObject {
             return;
         }
 
-        this.playGameOverloop();
-        this.playlosesound();
+        this.playGameOverLoop();
+        this.playLoseSound();
     }
 
     /**
@@ -453,7 +453,7 @@ class Shark extends MovableObject {
      * @returns {void}
      */
     playDeadAnimation() {
-        this.img = this.imageCach[this.DEAD_IMAGES[this.deadFrame]];
+        this.img = this.imageCache[this.DEAD_IMAGES[this.deadFrame]];
         this.deadFrame++;
 
         if (this.deadFrame >= this.DEAD_IMAGES.length) {
@@ -461,6 +461,7 @@ class Shark extends MovableObject {
             this.gameOverFrame = 0;
         }   
     }
+
     /**
      * Loops game over animation frames.
      *

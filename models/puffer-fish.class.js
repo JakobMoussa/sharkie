@@ -7,48 +7,48 @@ class PufferFish extends MovableObject {
     deadDone = false;
 
     FISHES_SWIMING_GREEN = [        
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim2.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim3.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim4.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim5.png'
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim1.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim2.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim3.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim4.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/1.swim5.png'
     ];
 
     FISHES_SWIMING_RED = [        
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim1.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim2.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim3.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim4.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim5.png'
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim1.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim2.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim3.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim4.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/1.Swim/2.swim5.png'
     ];
 
 
     TRANSITION_GREEN = [        
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition1.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition2.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition3.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition4.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition5.png'
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition1.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition2.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition3.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition4.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/1.transition5.png'
     ];
 
     TRANSITION_RED = [        
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition1.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition2.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition3.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition4.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition5.png'
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition1.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition2.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition3.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition4.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/2.transition/2.transition5.png'
     ];
 
     GREEN_FISHES_DEAD= [        
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 1 (can animate by going up).png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 2 (can animate by going down to the floor after the Fin Slap attack).png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 3 (can animate by going down to the floor after the Fin Slap attack).png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 1 (can animate by going up).png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 2 (can animate by going down to the floor after the Fin Slap attack).png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/1.Dead 3 (can animate by going down to the floor after the Fin Slap attack).png',
     ];
 
     RED_FISHES_DEAD= [        
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.2.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.3.png',
-        'img/Grafiken - Sharkie/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.2.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.3.png',
+        'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.png',
     ];
 
     constructor(x, y, color = 'green') {

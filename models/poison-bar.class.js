@@ -1,12 +1,12 @@
 class PoisonBar extends MovableObject {
 
     POISON_BAR_IMAGES = [
-        'img/Grafiken - Sharkie/4. Marcadores/green/poisoned bubbles/0_ copia 2.png',
-        'img/Grafiken - Sharkie/4. Marcadores/green/poisoned bubbles/20_ copia 3.png',
-        'img/Grafiken - Sharkie/4. Marcadores/green/poisoned bubbles/40_ copia 2.png',
-        'img/Grafiken - Sharkie/4. Marcadores/green/poisoned bubbles/60_ copia 2.png',
-        'img/Grafiken - Sharkie/4. Marcadores/green/poisoned bubbles/80_ copia 2.png',
-        'img/Grafiken - Sharkie/4. Marcadores/green/poisoned bubbles/100_ copia 3.png'
+        'img/Grafiken/4. Marcadores/green/poisoned bubbles/0_ copia 2.png',
+        'img/Grafiken/4. Marcadores/green/poisoned bubbles/20_ copia 3.png',
+        'img/Grafiken/4. Marcadores/green/poisoned bubbles/40_ copia 2.png',
+        'img/Grafiken/4. Marcadores/green/poisoned bubbles/60_ copia 2.png',
+        'img/Grafiken/4. Marcadores/green/poisoned bubbles/80_ copia 2.png',
+        'img/Grafiken/4. Marcadores/green/poisoned bubbles/100_ copia 3.png'
     ];
 
     percentage = 0;

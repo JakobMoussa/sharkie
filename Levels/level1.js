@@ -20,16 +20,16 @@ const Level1 = new Level(
         ],
 
         [
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 0, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 0, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/2.png', 900, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/2.png', 900, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 1800, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 1800, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/2.png', 2700, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/2.png', 2700, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 3600, 0),
-        new Background('img/Grafiken - Sharkie/3. Background/Dark/1.png', 3600, 0),
+        new Background('img/Grafiken/3. Background/Dark/1.png', 0, 0),
+        new Background('img/Grafiken/3. Background/Dark/1.png', 0, 0),
+        new Background('img/Grafiken/3. Background/Dark/2.png', 900, 0),
+        new Background('img/Grafiken/3. Background/Dark/2.png', 900, 0),
+        new Background('img/Grafiken/3. Background/Dark/1.png', 1800, 0),
+        new Background('img/Grafiken/3. Background/Dark/1.png', 1800, 0),
+        new Background('img/Grafiken/3. Background/Dark/2.png', 2700, 0),
+        new Background('img/Grafiken/3. Background/Dark/2.png', 2700, 0),
+        new Background('img/Grafiken/3. Background/Dark/1.png', 3600, 0),
+        new Background('img/Grafiken/3. Background/Dark/1.png', 3600, 0),
         ],
         
 
