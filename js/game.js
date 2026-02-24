@@ -106,3 +106,25 @@ window.addEventListener("keyup", (e) => {
 });
 
 window.addEventListener("load", initStartOverlay);
+
+document.addEventListener("DOMContentLoaded", function () {
+  const btn = document.getElementById("privacyBtn");
+  const modal = document.getElementById("privacyModal");
+  const close = document.getElementById("closePrivacy");
+
+  btn.addEventListener("click", function () {
+    modal.style.display = "flex";
+  });
+
+  close.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+    modal.addEventListener("click", function (remove) {
+        if (remove.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+
+});
+
