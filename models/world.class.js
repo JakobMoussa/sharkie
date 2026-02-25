@@ -300,7 +300,7 @@ class World {
         this.enemies.forEach((enemy) => {
             this.updatePufferNear(enemy);
 
-            if (this.shark.isColliding(enemy, 40)) {
+            if (this.shark.isCollidingEnemy(enemy)) {
                 if (this.trySlapKill(enemy)) return;
                 const tookDamage = this.applyEnemyDamage(enemy);
                 if (tookDamage) {
@@ -318,13 +318,13 @@ class World {
     checkEndbossCollisions() {
         if (!this.endboss.visible || this.endboss.dead) return;
 
-        if (this.shark.slap && this.shark.isColliding(this.endboss, 70)) {
+        if (this.shark.slap && this.shark.isCollidingEnemy(this.endboss, 70)) {
             this.endboss.hit();
             this.showEndbossBar = true;
             this.endbossBar.setPercentage(this.endboss.energy);
         }
 
-        if (this.shark.isColliding(this.endboss, 70)) {
+        if (this.shark.isCollidingEnemy(this.endboss, 70)) {
             this.shark.hitShock(800);
             this.statusBar.setPercentage(this.shark.energy);
             if (this.sounds) this.sounds.play("sharkHurt");
@@ -353,7 +353,7 @@ class World {
         this.poisons.forEach((poison, index) => {
             if (this.poisonCount >= this.maxPoison) return;
 
-            if (this.shark.isColliding(poison, 10)) {
+            if (this.shark.isCollidingItem(poison)) {
                 this.poisons.splice(index, 1);
 
                 this.poisonCount++;
@@ -382,7 +382,8 @@ class World {
      */
     checkCoins() {
         this.coins.forEach((coin, index) => {
-            if (this.shark.isColliding(coin, 10)) {
+            
+            if (this.shark.isCollidingItem(coin)) {
                 this.coins.splice(index, 1);
 
                 this.coinCount++;
@@ -429,14 +430,14 @@ class World {
         this.poisonShots.forEach((shot, shotIndex) => {
             this.enemies.forEach((enemy) => {
                 if (enemy.dead) return;
-                if (shot.isColliding(enemy, 10)) {
+                if (shot.isColliding(enemy, 0, 0)) {
                     if (typeof enemy.die === 'function') {
                         enemy.die();
                         shot.hit = true;
                     }
                 }
             });
-                if (this.endboss.visible && !this.endboss.dead && shot.isColliding(this.endboss, 30)) {
+                if (this.endboss.visible && !this.endboss.dead && shot.isColliding(this.endboss, 0, 0)) {
                     this.endboss.hit();
                     shot.hit = true;
 

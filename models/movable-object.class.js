@@ -3,6 +3,7 @@ class MovableObject extends DrawableObject {
     speed = 0.15;
     otherDirection = false;
     offset = 50;
+    hitboxOffset = 35;
 
     moveLeft () {
         setInterval(() => {
@@ -27,16 +28,47 @@ class MovableObject extends DrawableObject {
         this.img = this.imageCache[path] || this.img;
     }
 
-    isColliding(other, offset) {
+    isColliding(other, padThis = 0, padOther = 0) {
         return (
-            this.x + this.width - offset > other.x + offset &&
-            this.x + offset < other.x + other.width - offset &&
-            this.y + this.height - offset > other.y + offset &&
-            this.y + offset < other.y + other.height - offset
+            this.x + this.width - padThis > other.x + padOther &&
+            this.x + padThis < other.x + other.width - padOther &&
+            this.y + this.height - padThis > other.y + padOther &&
+            this.y + padThis < other.y + other.height - padOther
         );
     }
 
-    
+    isCollidingEnemy(other) {
+        const padThis = 55;
+        const padOther = 15;
+
+        return (
+            this.x + this.width - padThis > other.x + padOther &&
+            this.x + padThis < other.x + other.width - padOther &&
+            this.y + this.height - padThis > other.y + padOther &&
+            this.y + padThis < other.y + other.height - padOther
+        );
+    }
+
+    isCollidingItem(other) {
+        const padThis = 75;
+        const padOther = 5;
+
+        return (
+            this.x + this.width - padThis > other.x + padOther &&
+            this.x + padThis < other.x + other.width - padOther &&
+            this.y + this.height - padThis > other.y + padOther &&
+            this.y + padThis < other.y + other.height - padOther
+        );
+    }
+
+    isCollidingEnemy(other) {
+        return this.isColliding(other, 55, 15);
+    }
+
+    isCollidingItem(other) {
+        return this.isColliding(other, 75, 5);
+    }
+
 }
 
 

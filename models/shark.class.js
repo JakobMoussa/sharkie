@@ -337,7 +337,7 @@ class Shark extends MovableObject {
 
 
         const idleTime = now - this.lastMoveTime;
-        this.state = (idleTime > 3000) ? "longidle" : "idle";
+        this.state = (idleTime > 2000) ? "longidle" : "idle";
     }
 
     /**

@@ -7,7 +7,6 @@ let isMuted = false;
 
 muteButton.src = "img/Grafiken/6.Botones/sound-on.png";
 
-
 /**
  * Initializes the start overlay.
  * Hides canvas and attaches start button listener.
