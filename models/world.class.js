@@ -314,7 +314,6 @@ class World {
                 if (this.trySlapKill(enemy)) return;
                 const tookDamage = this.applyEnemyDamage(enemy);
                 if (tookDamage) {
-                    this.statusBar.setPercentage(this.shark.energy);
                     if (this.sounds) this.sounds.play("sharkHurt");
                 }
             }

@@ -403,6 +403,8 @@ class Shark extends MovableObject {
         const now = Date.now();
         if (now < this.shockUntil) return false;
 
+        if (this.world) {this.world.statusBar.setPercentage(this.energy); }
+
         this.energy -= 10;
         if (this.energy < 0) this.energy = 0;
 
@@ -420,6 +422,8 @@ class Shark extends MovableObject {
         const now = Date.now();
         if (now < this.poisonUntil) return false;
 
+        if (this.world) {this.world.statusBar.setPercentage(this.energy); }
+        
         this.energy -= 5;
         if (this.energy < 0) this.energy = 0;
 
