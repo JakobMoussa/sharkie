@@ -98,6 +98,7 @@ h1 {
   border: none;
   background: #1f2d3d;
   color: white;
+  margin-top: 13px;
 }
 
 #privacyBtn:hover {
@@ -165,6 +166,10 @@ h1 {
   }
 
   #overlayImg {
+    display: none;
+  }
+
+  #canvas {
     display: none;
   }
 }

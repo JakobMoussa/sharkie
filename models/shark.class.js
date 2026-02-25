@@ -348,7 +348,6 @@ class Shark extends MovableObject {
     updateAnimation() {
         switch (this.state) {
             case "dead":
-            // this.playAnimation(this.DEAD_IMAGES);
             break;
             case "shock":
             this.playAnimation(this.ELECTRICSHOCK_IMAGES);

@@ -14,6 +14,7 @@ class SoundEffects {
         this.win = new Audio('Sound effects/Win Sound.mp3');
 
         this.background.loop = true;
+        this.muted = false;
     }
 
     play(sound) {
@@ -28,6 +29,28 @@ class SoundEffects {
             this[sound].pause();
             this[sound].currentTime = 0;
         }
+    }
+
+    muteAllSounds() {
+        this.muted = true;
+
+        Object.keys(this).forEach((key) => {
+            const value = this[key];
+            if (value instanceof Audio) {
+                value.muted = true;
+            }
+        });
+    }
+
+    unmuteAllSounds() {
+        this.muted = false;
+
+        Object.keys(this).forEach((key) => {
+            const value = this[key];
+            if (value instanceof Audio) {
+                value.muted = false;
+            }
+        });
     }
 
 }

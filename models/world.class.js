@@ -107,6 +107,7 @@ class World {
         this.ctx.restore();
         this.drawUI();
         requestAnimationFrame(() => this.draw());
+        drawMuteButton(this.ctx);
     }
 
     /**

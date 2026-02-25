@@ -2,6 +2,11 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 let sounds = new SoundEffects();
+let muteButton = new Image();
+let isMuted = false;
+
+muteButton.src = "img/Grafiken/6.Botones/sound-on.png";
+
 
 /**
  * Initializes the start overlay.
@@ -17,6 +22,36 @@ function initStartOverlay() {
     startBtn.addEventListener("click", startGame);
 }
 
+function toggleMute() {
+    if (!world?.sounds) return;
+
+    if (!isMuted) {
+        world.sounds.muteAllSounds();
+        muteButton.src = "img/Grafiken/6.Botones/sound-off.png";
+        isMuted = true;
+    } else {
+        world.sounds.unmuteAllSounds();
+        muteButton.src = "img/Grafiken/6.Botones/sound-on.png";
+        isMuted = false;
+    }
+}
+
+function drawMuteButton(context) {
+    const x = 800;
+    const y = 40;
+    const width = 40;
+    const height = 40;
+
+    context.fillStyle = "white";
+    context.fillRect(x - 5, y - 5, width + 10, height + 10);
+
+    context.strokeStyle = "#007BFF";
+    context.lineWidth = 3;
+    context.strokeRect(x - 5, y - 5, width + 10, height + 10);
+
+    context.drawImage(muteButton, x, y, width, height);
+}
+
 /**
  * Starts the game.
  * Hides overlay, shows canvas, creates world instance.
@@ -30,6 +65,18 @@ function startGame() {
     world = new World(canvas, keyboard);
     initRetryButton();
     startMusicOnce();
+
+    canvas?.addEventListener("click", function (e) {
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        if (mouseX >= 800 && mouseX <= 840 &&
+            mouseY >= 40 && mouseY <= 80) {
+
+            toggleMute();
+        }
+    })
 }
 
 /**
