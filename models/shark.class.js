@@ -131,6 +131,8 @@ class Shark extends MovableObject {
     gameOverFrame = 0;
     losePlayed = false;
     gameOverStart = 0;
+    slapEndedHandled = false;
+    shootEndedHandled = false;
 
     constructor() {
         super();
@@ -152,10 +154,12 @@ class Shark extends MovableObject {
      *
      * @returns {void}
      */
+
     setSlap() {
         const now = Date.now();
 
         if (this.world.keyboard.SPACE && now >= this.slapCooldownUntil) {
+            this.lastMoveTime = now;
             this.slapUntil = now + 350;
             this.slapCooldownUntil = now + 600;
 
@@ -177,12 +181,18 @@ class Shark extends MovableObject {
             this.shoot = true;
             this.shotReady = false;
             this.shootUntil = now + (this.SHOT_IMAGES.length * 120);
+            this.shootEndedHandled = false; // ✅ neu starten
             if (this.world.sounds) this.world.sounds.play("bubble");
         }
 
         if (this.shoot && now >= this.shootUntil) {
             this.shoot = false;
             this.shotReady = true;
+        }
+
+        if (!this.shoot && !this.shootEndedHandled && now >= this.shootUntil) {
+            this.lastMoveTime = Date.now();
+            this.shootEndedHandled = true;
         }
     }
 
@@ -298,9 +308,16 @@ class Shark extends MovableObject {
      *
      * @returns {void}
      */
+
     updateLastMoveTime() {
-        const moving = (Math.abs(this.vx) > 0.05 || Math.abs(this.vy) > 0.05);
-        if (moving) this.lastMoveTime = Date.now();
+        if (
+            this.world.keyboard.LEFT ||
+            this.world.keyboard.RIGHT ||
+            this.world.keyboard.UP ||
+            this.world.keyboard.DOWN
+        ) {
+            this.lastMoveTime = Date.now();
+        }
     }
 
     /**
@@ -316,12 +333,6 @@ class Shark extends MovableObject {
         }, 120);
     }
 
-    /**
-     * Updates shark animation state based on
-     * movement, damage, attacks and idle time.
-     *
-     * @returns {void}
-     */
     updateState() {
         const now = Date.now();
 
@@ -335,9 +346,19 @@ class Shark extends MovableObject {
         if (this.slap) { this.state = "slap"; return; }
         if (moving) { this.state = "swim"; return; }
 
-
         const idleTime = now - this.lastMoveTime;
-        this.state = (idleTime > 2000) ? "longidle" : "idle";
+
+        if (
+            !this.slap &&
+            !this.shoot &&
+            now >= this.shockUntil &&
+            now >= this.poisonUntil &&
+            idleTime > 3000
+        ) {
+            this.state = "longidle";
+        } else {
+            this.state = "idle";
+        }
     }
 
     /**

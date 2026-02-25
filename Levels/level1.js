@@ -10,12 +10,14 @@ const Level1 = new Level(
         new PufferFish(1250, randomY(), 'green'),
         new PufferFish(1000, randomY(), 'red'),
         new PufferFish(1200, randomY(), 'green'),
+        new PufferFish(1400, randomY(), 'red'),
+        new PufferFish(1600, randomY(), 'green'),
         new JellyFish(750, randomY()),
         new JellyFish(900, randomY()),
         new JellyFish(600, randomY()),
         new JellyFish(900, randomY()),
         new JellyFish(1300, randomY()),
-        new JellyFish(2000, randomY()),
+        new JellyFish(1800, randomY()),
         new Endboss(2500)
         ],
 

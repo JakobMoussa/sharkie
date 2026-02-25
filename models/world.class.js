@@ -248,20 +248,25 @@ class World {
     applyEnemyDamage(enemy) {
         if (enemy.dead) return false;
 
+        let didDamage = false;
+
         if (enemy instanceof JellyFish) {
-            this.shark.hitShock(800);
+            didDamage = this.shark.hitShock(800);
         }
 
         if (enemy instanceof PufferFish) {
-            this.shark.hitPoison(1200);
+            didDamage = this.shark.hitPoison(1200); 
         }
 
         if (this.shark.energy <= 0) {
             this.shark.energy = 0;
         }
 
-        this.statusBar.setPercentage(this.shark.energy);
-         return true;
+        if (didDamage) {
+            this.statusBar.setPercentage(this.shark.energy);
+        }
+
+         return didDamage;
     }
 
     /**
@@ -300,7 +305,12 @@ class World {
         this.enemies.forEach((enemy) => {
             this.updatePufferNear(enemy);
 
-            if (this.shark.isCollidingEnemy(enemy)) {
+            const oldY = this.shark.y;
+            this.shark.y = oldY + 40;
+            const hit = this.shark.isCollidingEnemy(enemy);
+            this.shark.y = oldY;
+
+            if (hit)  {
                 if (this.trySlapKill(enemy)) return;
                 const tookDamage = this.applyEnemyDamage(enemy);
                 if (tookDamage) {
@@ -318,15 +328,16 @@ class World {
     checkEndbossCollisions() {
         if (!this.endboss.visible || this.endboss.dead) return;
 
-        if (this.shark.slap && this.shark.isCollidingEnemy(this.endboss, 70)) {
+        if (this.shark.slap && this.shark.isCollidingBoss(this.endboss)) {
             this.endboss.hit();
             this.showEndbossBar = true;
             this.endbossBar.setPercentage(this.endboss.energy);
         }
 
-        if (this.shark.isCollidingEnemy(this.endboss, 70)) {
+        if (this.shark.isCollidingBoss(this.endboss)) {
             this.shark.hitShock(800);
             this.statusBar.setPercentage(this.shark.energy);
+
             if (this.sounds) this.sounds.play("sharkHurt");
         }
 

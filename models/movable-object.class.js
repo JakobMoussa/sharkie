@@ -5,7 +5,7 @@ class MovableObject extends DrawableObject {
     offset = 50;
     hitboxOffset = 35;
 
-    moveLeft () {
+    moveLeft() {
         setInterval(() => {
             this.x -= this.speed;
         }, 1000 / 60);
@@ -38,31 +38,7 @@ class MovableObject extends DrawableObject {
     }
 
     isCollidingEnemy(other) {
-        const padThis = 55;
-        const padOther = 15;
-
-        return (
-            this.x + this.width - padThis > other.x + padOther &&
-            this.x + padThis < other.x + other.width - padOther &&
-            this.y + this.height - padThis > other.y + padOther &&
-            this.y + padThis < other.y + other.height - padOther
-        );
-    }
-
-    isCollidingItem(other) {
-        const padThis = 75;
-        const padOther = 5;
-
-        return (
-            this.x + this.width - padThis > other.x + padOther &&
-            this.x + padThis < other.x + other.width - padOther &&
-            this.y + this.height - padThis > other.y + padOther &&
-            this.y + padThis < other.y + other.height - padOther
-        );
-    }
-
-    isCollidingEnemy(other) {
-        return this.isColliding(other, 55, 15);
+        return this.isColliding(other, 90, 0);
     }
 
     isCollidingItem(other) {
