@@ -1,5 +1,7 @@
 class SoundEffects {
  
+    lastSharkHurtTime = 0;
+
     constructor () {
 
         this.background = new Audio('Sound effects/Background Sound.mp3');
@@ -18,6 +20,14 @@ class SoundEffects {
     }
 
     play(sound) {
+        if (this.muted) return;
+
+        if (sound === "sharkHurt") {
+            const now = Date.now();
+
+            if (now - this.lastSharkHurtTime < 1000) {return; }
+            this.lastSharkHurtTime = now;
+        }
         if (this[sound]) {
             this[sound].currentTime = 0;
             this[sound].play();
@@ -52,5 +62,4 @@ class SoundEffects {
             }
         });
     }
-
 }

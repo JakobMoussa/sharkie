@@ -32,7 +32,8 @@ h1 {
 
 #startOverlay {
     position: relative;
-    width: 720px;
+    width: 90%;
+    max-width: 720px;
     margin: 0 auto;
 }
 
@@ -170,7 +171,22 @@ h1 {
   }
 
   #canvas {
-    display: none;
+    display: none !important;
+  }
+
+  #startOverlay {
+    display: none !important;
+  }
+
+  .privacyWrapper {
+    display: none !important;
+  }
+
+  header {
+    display: none !important;
+  }
+
+  .NoteOverlay {
+    display: flex !important;
   }
 }
-

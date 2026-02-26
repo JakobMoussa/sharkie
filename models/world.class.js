@@ -327,13 +327,13 @@ class World {
     checkEndbossCollisions() {
         if (!this.endboss.visible || this.endboss.dead) return;
 
-        if (this.shark.slap && this.shark.isCollidingBoss(this.endboss)) {
+        if (this.shark.slap && this.shark.isCollidingEnemy(this.endboss)) {
             this.endboss.hit();
             this.showEndbossBar = true;
             this.endbossBar.setPercentage(this.endboss.energy);
         }
 
-        if (this.shark.isCollidingBoss(this.endboss)) {
+        if (this.shark.isCollidingEnemy(this.endboss)) {
             this.shark.hitShock(800);
             this.statusBar.setPercentage(this.shark.energy);
 
