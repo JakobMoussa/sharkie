@@ -27,15 +27,15 @@ class Shark extends MovableObject {
         'img/Grafiken/1.Sharkie/2.Long_IDLE/I3.png',
         'img/Grafiken/1.Sharkie/2.Long_IDLE/I4.png',
         'img/Grafiken/1.Sharkie/2.Long_IDLE/I5.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I6.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I7.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I8.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I9.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I10.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I11.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I12.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I13.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I14.png'
+        'img/Grafiken/1.Sharkie/2.Long_IDLE/I6.png'
+    ];
+
+    SLEEP_IMAGES = [
+        'img/Grafiken/1.Sharkie/7.sleep/I10.png',
+        'img/Grafiken/1.Sharkie/7.sleep/I11.png',
+        'img/Grafiken/1.Sharkie/7.sleep/I12.png',
+        'img/Grafiken/1.Sharkie/7.sleep/I13.png',
+        'img/Grafiken/1.Sharkie/7.sleep/I14.png'
     ];
 
     SWIM_IMAGES = [
@@ -140,6 +140,7 @@ class Shark extends MovableObject {
 
         this.loadImages(this.IDLE_IMAGES);
         this.loadImages(this.LONGIDLE_IMAGES);
+        this.loadImages(this.SLEEP_IMAGES);
         this.loadImages(this.SWIM_IMAGES);
         this.loadImages(this.DEAD_IMAGES);
         this.loadImages(this.POISONED_IMAGES);
@@ -352,13 +353,20 @@ class Shark extends MovableObject {
             !this.slap &&
             !this.shoot &&
             now >= this.shockUntil &&
-            now >= this.poisonUntil &&
-            idleTime > 3000
+            now >= this.poisonUntil
         ) {
-            this.state = "longidle";
-        } else {
-            this.state = "idle";
+            if (idleTime > 8000) {
+                this.state = "sleep";
+                return;
+            }
+
+            if (idleTime > 3000) {
+                this.state = "longidle";
+                return;
+            }
         }
+
+        this.state = "idle";
     }
 
     /**
@@ -384,6 +392,9 @@ class Shark extends MovableObject {
             break;
             case "longidle":
             this.playAnimation(this.LONGIDLE_IMAGES);
+            break;
+            case "sleep":
+            this.playAnimation(this.SLEEP_IMAGES);
             break;
             case "shoot":
             this.playAnimation(this.SHOT_IMAGES);

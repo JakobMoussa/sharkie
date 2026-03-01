@@ -62,10 +62,6 @@ class Endboss extends MovableObject {
     ]
 
     currentImage = 0;
-    vx = 0;
-    vy = 0;
-    acceleration = 5;
-    friction = 0.95;
     baseY = 200;
     floatAngle = 8;
     hasAppeared = false;
@@ -76,22 +72,16 @@ class Endboss extends MovableObject {
     INTRO_DISTANCE = 800;
     width = 300;
     height = 450;
-
     energy = 100;
     hurt = false;
     attack = false;
-
     hurtUntil = 0;
-
     followSpeed = 2.5;
     followRange = 800;
     attackRange = 200;
-    isFollowing = false;
     dead = false;
     deadFrame = 0;
-
     winSoundPlayed = false;
-
     winStart = 0;
     winFrame = 0;
 
@@ -119,17 +109,22 @@ class Endboss extends MovableObject {
 
         if (this.introRunning) return;
 
+        this.introRunning = true;
+
+        if (this.world.sounds) {
+            this.world.sounds.play("endbossEntry");
+        }
+
         let i = 0;
+
         const next = () => {
             if (i < this.SWIM_IMAGES.length) {
                 const path = this.SWIM_IMAGES[i];
                 this.img = this.imageCache[path] || this.img;
                 i++;
-                setTimeout(next, 180);
-                this.world.sounds.play("endbossEntry");
+                setTimeout(next, 200);
             } else {
                 this.introRunning = false;
-                this.introPlayed = true;
                 this.introPlayed = true;
             }
         };

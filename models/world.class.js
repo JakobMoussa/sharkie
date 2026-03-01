@@ -1,7 +1,7 @@
 class World {
     shark = new Shark();
-    enemies = Level1.enemies;
-    backgroundObjects = Level1.backgroundObjects;
+    enemies = [];
+    backgroundObjects = [];
 
     canvas;
     ctx;
@@ -46,6 +46,9 @@ class World {
      */
     initObjects() {
         this.sounds = new SoundEffects();
+        const level = createLevel1();
+        this.enemies = level.enemies;
+        this.backgroundObjects = level.backgroundObjects;
         this.endboss = new Endboss();
         this.endboss.world = this;
         this.statusBar = new StatusBar();
@@ -100,6 +103,7 @@ class World {
      */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
         this.checkEndState();
         this.ctx.save();
         this.ctx.translate(this.x_camera, 0);
@@ -172,7 +176,6 @@ class World {
      * @returns {void}
      */
     addToMap(mo) {
-
         if (!mo.img) return;
         this.ctx.save();
 
@@ -182,7 +185,6 @@ class World {
             this.ctx.scale(-1, 1);
             this.ctx.drawImage(mo.img, 0, 0, mo.width, mo.height);
         } else {
-
             this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
         }
         this.ctx.restore();
@@ -305,10 +307,7 @@ class World {
         this.enemies.forEach((enemy) => {
             this.updatePufferNear(enemy);
 
-            const oldY = this.shark.y;
-            this.shark.y = oldY + 40;
             const hit = this.shark.isCollidingEnemy(enemy);
-            this.shark.y = oldY;
 
             if (hit)  {
                 if (this.trySlapKill(enemy)) return;
@@ -326,21 +325,28 @@ class World {
      */
     checkEndbossCollisions() {
         if (!this.endboss.visible || this.endboss.dead) return;
+        this.checkEndbossSlapHit();
+        this.checkEndbossDamageToShark();
+        if (this.endboss.deadDone) this.showEndbossBar = false;
+    }
 
-        if (this.shark.slap && this.shark.isCollidingEnemy(this.endboss)) {
+    checkEndbossSlapHit() {
+        if (this.shark.slap && this.shark.isCollidingBoss(this.endboss)) {
             this.endboss.hit();
             this.showEndbossBar = true;
             this.endbossBar.setPercentage(this.endboss.energy);
         }
+    }
 
-        if (this.shark.isCollidingEnemy(this.endboss)) {
-            this.shark.hitShock(800);
-            this.statusBar.setPercentage(this.shark.energy);
-
-            if (this.sounds) this.sounds.play("sharkHurt");
+    checkEndbossDamageToShark() {
+        const oldY = this.shark.y;
+        this.shark.y = oldY + 40;
+        const hit = this.shark.isCollidingBoss(this.endboss);
+        this.shark.y = oldY;
+        if (hit) {
+            const didDamage = this.shark.hitShock(800);
+            if (didDamage && this.sounds) this.sounds.play("sharkHurt");
         }
-
-        if (this.endboss.deadDone) this.showEndbossBar = false;
     }
 
     /**
@@ -437,27 +443,31 @@ class World {
      * @returns {void}
      */
     checkPoisonShotHits() {
-        this.poisonShots.forEach((shot, shotIndex) => {
-            this.enemies.forEach((enemy) => {
-                if (enemy.dead) return;
-                if (shot.isColliding(enemy, 0, 0)) {
-                    if (typeof enemy.die === 'function') {
-                        enemy.die();
-                        shot.hit = true;
-                    }
-                }
-            });
-                if (this.endboss.visible && !this.endboss.dead && shot.isColliding(this.endboss, 0, 0)) {
-                    this.endboss.hit();
-                    shot.hit = true;
-
-                    this.showEndbossBar = true;
-                    this.endbossBar.setPercentage(this.endboss.energy);
-
-                }
+        this.poisonShots.forEach((shot) => {
+            this.checkShotEnemyHits(shot);
+            this.checkShotEndbossHit(shot);
         });
-
         this.poisonShots = this.poisonShots.filter(s => !s.hit);
+    }
+
+    checkShotEnemyHits(shot) {
+        this.enemies.forEach((enemy) => {
+            if (enemy.dead) return;
+            if (shot.isColliding(enemy, 0, 0) && typeof enemy.die === 'function') {
+                enemy.die();
+                shot.hit = true;
+            }
+        });
+    }
+
+    checkShotEndbossHit(shot) {
+        if (!this.endboss.visible || this.endboss.dead) return;
+        if (shot.isColliding(this.endboss, 0, 0)) {
+            this.endboss.hit();
+            shot.hit = true;
+            this.showEndbossBar = true;
+            this.endbossBar.setPercentage(this.endboss.energy);
+        }
     }
 
     /**
@@ -496,6 +506,14 @@ class World {
 
         this.retryBtn = { x, y, w, h };
         this.ctx.drawImage(this.retryImg, x, y, w, h);
+    }
+
+    destroy() {
+        if (this.collisionInterval) {
+            clearInterval(this.collisionInterval);
+            this.collisionInterval = null;
+        }
+        this.gameState = "stopped";
     }
 
 }

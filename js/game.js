@@ -4,6 +4,7 @@ let keyboard = new Keyboard();
 let sounds = new SoundEffects();
 let muteButton = new Image();
 let isMuted = false;
+let retryListenerBound = false;
 
 muteButton.src = "img/Grafiken/6.Botones/sound-on.png";
 
@@ -58,24 +59,74 @@ function drawMuteButton(context) {
  * @returns {void}
  */
 function startGame() {
+    showGameCanvas();
+    createWorldAndInit();
+    markGameRunning();
+    attachVisibilityListeners();
+    watchGameEnd();
+    attachMuteClick();
+}
+
+function showGameCanvas() {
     document.getElementById("startOverlay").style.display = "none";
     canvas.style.display = "block";
+}
 
+function createWorldAndInit() {
     world = new World(canvas, keyboard);
+    initMobileControls();
     initRetryButton();
     startMusicOnce();
+}
 
+function markGameRunning() {
+    document.body.classList.add("gameRunning");
+    controlsVisibility();
+}
+
+function attachVisibilityListeners() {
+    window.addEventListener("resize", controlsVisibility);
+    window.addEventListener("orientationchange", controlsVisibility);
+}
+
+function watchGameEnd() {
+    const endWatcher = setInterval(() => {
+        if (!world) return;
+        if (world.gameState !== "play") {
+            document.body.classList.remove("gameRunning");
+            controlsVisibility();
+            clearInterval(endWatcher);
+        }
+    }, 200);
+}
+
+function attachMuteClick() {
     canvas?.addEventListener("click", function (e) {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        const { mx, my } = getMousePos(e);
 
-        if (mouseX >= 800 && mouseX <= 840 &&
-            mouseY >= 40 && mouseY <= 80) {
-
+        if (mx >= 800 && mx <= 840 && my >= 40 && my <= 80) {
             toggleMute();
         }
-    })
+    });
+}
+
+function resetKeyboard() {
+  keyboard.RIGHT = false;
+  keyboard.LEFT  = false;
+  keyboard.UP    = false;
+  keyboard.DOWN  = false;
+  keyboard.SPACE = false;
+  keyboard.F     = false;
+}
+
+function restartGame() {
+  if (world) world.destroy();
+  resetKeyboard();
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  world = new World(canvas, keyboard);
+  document.body.classList.add("gameRunning");
+  controlsVisibility();
 }
 
 /**
@@ -84,6 +135,8 @@ function startGame() {
  * @returns {void}
  */
 function initRetryButton() {
+    if (retryListenerBound) return;
+    retryListenerBound = true;
     canvas.addEventListener("click", handleRetryClick);
 }
 
@@ -97,7 +150,7 @@ function handleRetryClick(e) {
     if (world.gameState === "play") return;
 
     const { mx, my } = getMousePos(e);
-    if (isInsideRetryBtn(mx, my)) location.reload();
+    if (isInsideRetryBtn(mx, my)) restartGame();
 }
 
 /**
@@ -108,7 +161,17 @@ function handleRetryClick(e) {
  */
 function getMousePos(e) {
     const rect = canvas.getBoundingClientRect();
-    return { mx: e.clientX - rect.left, my: e.clientY - rect.top };
+
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    return {
+        mx: (clientX - rect.left) * scaleX,
+        my: (clientY - rect.top) * scaleY
+    };
 }
 
 /**
@@ -151,6 +214,40 @@ window.addEventListener("keyup", (e) => {
     if (e.keyCode === 70) keyboard.F = false;
 });
 
+function initMobileControls() {
+  const kb = world.keyboard;
+
+  const map = [
+    { id: "btnLeft", key: "LEFT" },
+    { id: "btnRight", key: "RIGHT" },
+    { id: "btnUp", key: "UP" },
+    { id: "btnDown", key: "DOWN" },
+    { id: "btnSlap", key: "SPACE" },
+    { id: "btnPoison", key: "F" }
+  ];
+
+  map.forEach(({ id, key }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener("pointerdown", (e) => { e.preventDefault(); kb[key] = true; });
+    el.addEventListener("pointerup", () => kb[key] = false);
+    el.addEventListener("pointercancel", () => kb[key] = false);
+    el.addEventListener("pointerleave", () => kb[key] = false);
+  });
+}
+
+function controlsVisibility() {
+  const controls = document.querySelector(".mobileControls");
+  if (!controls) return;
+
+  const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+  const isSmall = window.innerWidth <= 1366;
+  const show = document.body.classList.contains("gameRunning") && isLandscape && isSmall;
+
+  controls.style.display = show ? "flex" : "none";
+}
+
 window.addEventListener("load", initStartOverlay);
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -173,4 +270,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
-
