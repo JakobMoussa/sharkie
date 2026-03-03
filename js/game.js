@@ -22,6 +22,10 @@ function initStartOverlay() {
     startBtn.addEventListener("click", startGame);
 }
 
+/**
+ * Toggles global audio state and updates the mute icon.
+ * @returns {void}
+ */
 function toggleMute() {
     if (!world?.sounds) return;
 
@@ -36,6 +40,11 @@ function toggleMute() {
     }
 }
 
+/**
+ * Renders the mute button onto the HUD.
+ * @param {CanvasRenderingContext2D} context - Canvas 2D context.
+ * @returns {void}
+ */
 function drawMuteButton(context) {
     const x = 800;
     const y = 40;
@@ -62,16 +71,23 @@ function startGame() {
     showGameCanvas();
     createWorldAndInit();
     markGameRunning();
-    attachVisibilityListeners();
     watchGameEnd();
     attachMuteClick();
 }
 
+/**
+ * Hides start overlay and reveals the canvas.
+ * @returns {void}
+ */
 function showGameCanvas() {
     document.getElementById("startOverlay").style.display = "none";
     canvas.style.display = "block";
 }
 
+/**
+ * Instantiates world and sets up inputs/UI helpers.
+ * @returns {void}
+ */
 function createWorldAndInit() {
     world = new World(canvas, keyboard);
     initMobileControls();
@@ -79,27 +95,32 @@ function createWorldAndInit() {
     startMusicOnce();
 }
 
+/**
+ * Flags the document as running to trigger UI states.
+ * @returns {void}
+ */
 function markGameRunning() {
     document.body.classList.add("gameRunning");
-    controlsVisibility();
 }
 
-function attachVisibilityListeners() {
-    window.addEventListener("resize", controlsVisibility);
-    window.addEventListener("orientationchange", controlsVisibility);
-}
-
+/**
+ * Observes world state to remove running flag when finished.
+ * @returns {void}
+ */
 function watchGameEnd() {
     const endWatcher = setInterval(() => {
         if (!world) return;
         if (world.gameState !== "play") {
             document.body.classList.remove("gameRunning");
-            controlsVisibility();
             clearInterval(endWatcher);
         }
     }, 200);
 }
 
+/**
+ * Hooks canvas clicks to toggle mute when hitting the mute icon box.
+ * @returns {void}
+ */
 function attachMuteClick() {
     canvas?.addEventListener("click", function (e) {
         const { mx, my } = getMousePos(e);
@@ -110,6 +131,10 @@ function attachMuteClick() {
     });
 }
 
+/**
+ * Resets all keyboard flags to false.
+ * @returns {void}
+ */
 function resetKeyboard() {
   keyboard.RIGHT = false;
   keyboard.LEFT  = false;
@@ -119,6 +144,10 @@ function resetKeyboard() {
   keyboard.F     = false;
 }
 
+/**
+ * Destroys current world and starts a fresh run.
+ * @returns {void}
+ */
 function restartGame() {
   if (world) world.destroy();
   resetKeyboard();
@@ -126,7 +155,6 @@ function restartGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   world = new World(canvas, keyboard);
   document.body.classList.add("gameRunning");
-  controlsVisibility();
 }
 
 /**
@@ -214,6 +242,10 @@ window.addEventListener("keyup", (e) => {
     if (e.keyCode === 70) keyboard.F = false;
 });
 
+/**
+ * Wires on-screen buttons to keyboard flags (touch/mobile).
+ * @returns {void}
+ */
 function initMobileControls() {
   const kb = world.keyboard;
 
@@ -235,17 +267,6 @@ function initMobileControls() {
     el.addEventListener("pointercancel", () => kb[key] = false);
     el.addEventListener("pointerleave", () => kb[key] = false);
   });
-}
-
-function controlsVisibility() {
-  const controls = document.querySelector(".mobileControls");
-  if (!controls) return;
-
-  const isLandscape = window.matchMedia("(orientation: landscape)").matches;
-  const isSmall = window.innerWidth <= 1366;
-  const show = document.body.classList.contains("gameRunning") && isLandscape && isSmall;
-
-  controls.style.display = show ? "flex" : "none";
 }
 
 window.addEventListener("load", initStartOverlay);

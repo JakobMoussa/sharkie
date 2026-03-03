@@ -106,7 +106,7 @@ class World {
 
         this.checkEndState();
         this.ctx.save();
-        this.ctx.translate(this.x_camera, 0);
+        this.ctx.translate(Math.round(this.x_camera), 0);
         this.drawWorld();
         this.ctx.restore();
         this.drawUI();

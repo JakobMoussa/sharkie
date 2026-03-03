@@ -1,3 +1,7 @@
+/**
+ * Spiky enemy that swims leftward and can puff up when the player is near.
+ * Handles its own animations, movement and death state.
+ */
 class PufferFish extends MovableObject {
 
     width = 100;
@@ -51,6 +55,12 @@ class PufferFish extends MovableObject {
         'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.png',
     ];
 
+    /**
+     * Creates a new puffer fish.
+     * @param {number} x - World x-position.
+     * @param {number} y - World y-position.
+     * @param {'green'|'red'} [color='green'] - Which sprite set to use.
+     */
     constructor(x, y, color = 'green') {
         super();
         this.x = x;
@@ -70,22 +80,39 @@ class PufferFish extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Marks whether the player is near, switching the animation set.
+     * @param {boolean} value - True if the player is close.
+     * @returns {void}
+     */
     setNear(value) {
         if(this.dead) return;
         this.isNear = value;
     }
 
+    /**
+     * Enters death state and resets animation counter.
+     * @returns {void}
+     */
     die() {
         this.dead = true;
         this.deadDone = false;
         this.currentImage = 0;
     }
 
+    /**
+     * Starts autonomous movement and animation loop.
+     * @returns {void}
+     */
     animate() {
         this.moveLeft();
         setInterval(() => this.updateAnimation(), 250);
     }
 
+    /**
+     * Chooses the correct frame based on alive/dead state.
+     * @returns {void}
+     */
     updateAnimation() {
         if (this.dead) {
             this.playDeadAnimation();
@@ -95,6 +122,10 @@ class PufferFish extends MovableObject {
         this.playSwimAnimation();
     }
 
+    /**
+     * Advances through death sprites; marks completion at the end.
+     * @returns {void}
+     */
     playDeadAnimation() {
         if (this.currentImage >= this.deadImgs.length) {
             this.deadDone = true;
@@ -105,6 +136,10 @@ class PufferFish extends MovableObject {
         this.currentImage++;
     }
 
+    /**
+     * Plays either swim or puffed-up transition frames depending on proximity.
+     * @returns {void}
+     */
     playSwimAnimation() {
         const imgs = this.isNear ? this.transImgs : this.swimImgs;
         this.fishAnimation(imgs);
