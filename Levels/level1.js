@@ -8,21 +8,27 @@ function randomY() {
 function createLevel1() {
     return new Level(
         [
-            new PufferFish(600, randomY(), 'green'),
+            new PufferFish(1000, randomY(), 'green'),
             new PufferFish(1400, randomY(), 'red'),
+            new PufferFish(2500, randomY(), 'green'),
+            new PufferFish(2800, randomY(), 'red'),
             new PufferFish(1550, randomY(), 'green'),
-            new PufferFish(700, randomY(), 'red'),
+            new PufferFish(1800, randomY(), 'red'),
             new PufferFish(1250, randomY(), 'green'),
-            new PufferFish(1000, randomY(), 'red'),
+            new PufferFish(2700, randomY(), 'red'),
             new PufferFish(1200, randomY(), 'green'),
             new PufferFish(1400, randomY(), 'red'),
             new PufferFish(1600, randomY(), 'green'),
+            new PufferFish(2000, randomY(), 'green'),
+            new PufferFish(2400, randomY(), 'red'),
             new JellyFish(750, randomY()),
             new JellyFish(900, randomY()),
             new JellyFish(600, randomY()),
             new JellyFish(900, randomY()),
             new JellyFish(1300, randomY()),
-            new JellyFish(1800, randomY())
+            new JellyFish(2000, randomY()),
+            new JellyFish(2400, randomY()),
+            new JellyFish(2600, randomY())
         ],
 
         [

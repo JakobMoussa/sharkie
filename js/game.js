@@ -1,12 +1,15 @@
+const MUTE_STORAGE_KEY = "sharkieMuted";
 let canvas;
 let world;
 let keyboard = new Keyboard();
 let sounds = new SoundEffects();
 let muteButton = new Image();
-let isMuted = false;
+let isMuted = loadStoredMutePreference();
 let retryListenerBound = false;
 
-muteButton.src = "img/Grafiken/6.Botones/sound-on.png";
+muteButton.src = isMuted
+  ? "img/Grafiken/6.Botones/sound-off.png"
+  : "img/Grafiken/6.Botones/sound-on.png";
 
 /**
  * Initializes the start overlay.
@@ -20,6 +23,7 @@ function initStartOverlay() {
 
     const startBtn = document.getElementById("startBtn");
     startBtn.addEventListener("click", startGame);
+    syncMuteIcon();
 }
 
 /**
@@ -27,17 +31,44 @@ function initStartOverlay() {
  * @returns {void}
  */
 function toggleMute() {
-    if (!world?.sounds) return;
+    isMuted = !isMuted;
+    applyMuteStateToWorld();
+    muteButton.src = isMuted
+      ? "img/Grafiken/6.Botones/sound-off.png"
+      : "img/Grafiken/6.Botones/sound-on.png";
+    saveMuteState();
+}
 
-    if (!isMuted) {
-        world.sounds.muteAllSounds();
-        muteButton.src = "img/Grafiken/6.Botones/sound-off.png";
-        isMuted = true;
-    } else {
-        world.sounds.unmuteAllSounds();
-        muteButton.src = "img/Grafiken/6.Botones/sound-on.png";
-        isMuted = false;
-    }
+/**
+ * Reads the persisted mute preference from localStorage.
+ * Returns false when no preference is stored or storage is unavailable.
+ * @returns {boolean}
+ */
+function loadStoredMutePreference() {
+  if (!window.localStorage) return false;
+  return localStorage.getItem(MUTE_STORAGE_KEY) === "true";
+}
+
+/**
+ * Writes the current mute preference to localStorage.
+ * @returns {void}
+ */
+function saveMuteState() {
+  if (!window.localStorage) return;
+  localStorage.setItem(MUTE_STORAGE_KEY, String(isMuted));
+}
+
+/**
+ * Applies the current mute flag to all world sounds (noop if world not ready).
+ * @returns {void}
+ */
+function applyMuteStateToWorld() {
+  if (!world?.sounds) return;
+  if (isMuted) {
+    world.sounds.muteAllSounds();
+  } else {
+    world.sounds.unmuteAllSounds();
+  }
 }
 
 /**
@@ -90,6 +121,7 @@ function showGameCanvas() {
  */
 function createWorldAndInit() {
     world = new World(canvas, keyboard);
+    applyMuteStateToWorld();
     initMobileControls();
     initRetryButton();
     startMusicOnce();
@@ -112,6 +144,7 @@ function watchGameEnd() {
         if (!world) return;
         if (world.gameState !== "play") {
             document.body.classList.remove("gameRunning");
+            showEndButtons();
             clearInterval(endWatcher);
         }
     }, 200);
@@ -122,13 +155,34 @@ function watchGameEnd() {
  * @returns {void}
  */
 function attachMuteClick() {
-    canvas?.addEventListener("click", function (e) {
-        const { mx, my } = getMousePos(e);
 
-        if (mx >= 800 && mx <= 840 && my >= 40 && my <= 80) {
+    if (canvas) {
+        canvas.addEventListener("click", handleCanvasMuteClick);
+    }
+
+    const muteBtn = document.getElementById("muteOverlay");
+
+    if (muteBtn) {
+        muteBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
             toggleMute();
-        }
-    });
+            syncMuteIcon();
+        });
+    }
+
+}
+
+/**
+ * Handles clicks on the canvas to toggle mute when pressing the HUD icon.
+ * @param {MouseEvent} e - Mouse click event.
+ * @returns {void}
+ */
+function handleCanvasMuteClick(e) {
+    const { mx, my } = getMousePos(e);
+    if (mx >= 800 && mx <= 840 && my >= 40 && my <= 80) {
+        toggleMute();
+        syncMuteIcon();
+    }
 }
 
 /**
@@ -154,7 +208,24 @@ function restartGame() {
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   world = new World(canvas, keyboard);
+  applyMuteStateToWorld();
   document.body.classList.add("gameRunning");
+  syncMuteIcon();
+}
+
+/**
+ * Returns to start overlay without reload.
+ * @returns {void}
+ */
+function backToOptions() {
+  document.body.classList.remove("gameRunning");
+  hideEndButtons();
+  if (world) {
+    world.destroy();
+    world.gameState = "stopped";
+  }
+  canvas.style.display = "none";
+  document.getElementById("startOverlay").style.display = "block";
 }
 
 /**
@@ -166,11 +237,17 @@ function initRetryButton() {
     if (retryListenerBound) return;
     retryListenerBound = true;
     canvas.addEventListener("click", handleRetryClick);
+    const retryBtn = document.getElementById("retryHitbox");
+    if (retryBtn) retryBtn.addEventListener("click", () => restartGame());
+    const backBtn = document.getElementById("backToOptions");
+    if (backBtn) backBtn.addEventListener("click", backToOptions);
+
+    window.addEventListener("resize", repositionEndButtons);
+    window.addEventListener("orientationchange", repositionEndButtons);
 }
 
 /**
  * Handles click on retry button.
- *
  * @param {MouseEvent} e - Mouse click event.
  * @returns {void}
  */
@@ -179,6 +256,27 @@ function handleRetryClick(e) {
 
     const { mx, my } = getMousePos(e);
     if (isInsideRetryBtn(mx, my)) restartGame();
+}
+
+/**
+ * Repositions retry/back buttons when end overlay is visible.
+ * @returns {void}
+ */
+function repositionEndButtons() {
+    if (!world || (world.gameState !== "win" && world.gameState !== "lose")) return;
+    world.positionRetryButton();
+    world.positionBackButton();
+}
+
+/**
+ * Hides end buttons overlay elements if present.
+ * @returns {void}
+ */
+function hideEndButtons() {
+  const retryBtn = document.getElementById("retryHitbox");
+  const backBtn = document.getElementById("backToOptions");
+  if (retryBtn) retryBtn.style.display = "none";
+  if (backBtn) backBtn.style.display = "none";
 }
 
 /**
@@ -224,6 +322,26 @@ function startMusicOnce() {
     if (world && world.sounds) world.sounds.play("background");
 }
 
+/**
+ * Shows retry/back buttons overlay when the game ends.
+ * @returns {void}
+ */
+function showEndButtons() {
+  const retryBtn = document.getElementById("retryHitbox");
+  const backBtn = document.getElementById("backToOptions");
+  if (retryBtn) retryBtn.style.display = "block";
+  if (backBtn) backBtn.style.display = "block";
+}
+
+/**
+ * Syncs mute overlay icon image with current mute state.
+ * @returns {void}
+ */
+function syncMuteIcon() {
+  const icon = document.getElementById("muteOverlayIcon");
+  if (!icon) return;
+  icon.src = isMuted ? "img/Grafiken/6.Botones/sound-off.png" : "img/Grafiken/6.Botones/sound-on.png";
+}
 window.addEventListener("keydown", (e) => {
     if (e.keyCode === 39) keyboard.RIGHT = true;
     if (e.keyCode === 37) keyboard.LEFT = true;
@@ -248,8 +366,15 @@ window.addEventListener("keyup", (e) => {
  */
 function initMobileControls() {
   const kb = world.keyboard;
+  getControlMap().forEach((cfg) => bindMobileControl(cfg, kb));
+}
 
-  const map = [
+/**
+ * Returns mapping between on-screen control IDs and keyboard flags.
+ * @returns {{id:string,key:string}[]} Control map entries.
+ */
+function getControlMap() {
+  return [
     { id: "btnLeft", key: "LEFT" },
     { id: "btnRight", key: "RIGHT" },
     { id: "btnUp", key: "UP" },
@@ -257,37 +382,79 @@ function initMobileControls() {
     { id: "btnSlap", key: "SPACE" },
     { id: "btnPoison", key: "F" }
   ];
+}
 
-  map.forEach(({ id, key }) => {
-    const el = document.getElementById(id);
-    if (!el) return;
+/**
+ * Binds a touch/pointer button to a keyboard flag.
+ * @param {{id:string,key:string}} param0 - Control config.
+ * @param {Keyboard} kb - Keyboard state object.
+ * @returns {void}
+ */
+function bindMobileControl({ id, key }, kb) {
+  const el = document.getElementById(id);
+  if (!el) return;
 
-    el.addEventListener("pointerdown", (e) => { e.preventDefault(); kb[key] = true; });
-    el.addEventListener("pointerup", () => kb[key] = false);
-    el.addEventListener("pointercancel", () => kb[key] = false);
-    el.addEventListener("pointerleave", () => kb[key] = false);
-  });
+  el.addEventListener("pointerdown", (e) => { e.preventDefault(); kb[key] = true; });
+  el.addEventListener("pointerup", () => kb[key] = false);
+  el.addEventListener("pointercancel", () => kb[key] = false);
+  el.addEventListener("pointerleave", () => kb[key] = false);
 }
 
 window.addEventListener("load", initStartOverlay);
 
-document.addEventListener("DOMContentLoaded", function () {
-  const btn = document.getElementById("privacyBtn");
-  const modal = document.getElementById("privacyModal");
-  const close = document.getElementById("closePrivacy");
+document.addEventListener("DOMContentLoaded", initPrivacyModal);
 
-  btn.addEventListener("click", function () {
-    modal.style.display = "flex";
-  });
+/**
+ * Initializes the privacy modal by wiring its controls.
+ * @returns {void}
+ */
+function initPrivacyModal() {
+    const btn = document.getElementById("privacyBtn");
+    const modal = document.getElementById("privacyModal");
+    const close = document.getElementById("closePrivacy");
 
-  close.addEventListener("click", function () {
-    modal.style.display = "none";
-  });
+    attachPrivacyEvents(btn, modal, close);
+}
 
-    modal.addEventListener("click", function (remove) {
-        if (remove.target === modal) {
-            modal.style.display = "none";
+/**
+ * Wires click handlers for opening/closing the privacy modal.
+ * @param {HTMLElement} btn - Button that opens the modal.
+ * @param {HTMLElement} modal - Modal element.
+ * @param {HTMLElement} close - Close icon/button element.
+ * @returns {void}
+ */
+function attachPrivacyEvents(btn, modal, close) {
+
+    btn.addEventListener("click", function () {
+        openPrivacyModal(modal);
+    });
+
+    close.addEventListener("click", function () {
+        closePrivacyModal(modal);
+    });
+
+    modal.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            closePrivacyModal(modal);
         }
     });
 
-});
+}
+
+/**
+ * Shows the privacy modal.
+ * @param {HTMLElement} modal - Modal element.
+ * @returns {void}
+ */
+function openPrivacyModal(modal) {
+    modal.style.display = "flex";
+}
+
+/**
+ * Hides the privacy modal.
+ * @param {HTMLElement} modal - Modal element.
+ * @returns {void}
+ */
+function closePrivacyModal(modal) {
+    modal.style.display = "none";
+}

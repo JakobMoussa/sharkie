@@ -67,7 +67,7 @@ class Endboss extends MovableObject {
     hasAppeared = false;
     introPlayed = false;
     visible = false;
-    APPEAR_X = 2500;
+    APPEAR_X = 3200;
     SPAWN_Y = 0;
     INTRO_DISTANCE = 800;
     width = 300;
@@ -86,6 +86,9 @@ class Endboss extends MovableObject {
     winFrame = 0;
 
 
+    /**
+     * Creates an endboss instance and preloads all animations.
+     */
     constructor() {
         super();
         this.loadImages(this.SWIM_IMAGES);
@@ -100,53 +103,54 @@ class Endboss extends MovableObject {
         this.baseY = this.y;
     }
 
-/**
- * Plays the introduction animation sequence of the endboss.
- *
- * @returns {void}
- */
+    /**
+     * Plays the introduction animation sequence of the endboss.
+     * @returns {void}
+     */
     playIntroAnimation() {
-
         if (this.introRunning) return;
-
         this.introRunning = true;
-
-        if (this.world.sounds) {
-            this.world.sounds.play("endbossEntry");
-        }
-
-        let i = 0;
-
-        const next = () => {
-            if (i < this.SWIM_IMAGES.length) {
-                const path = this.SWIM_IMAGES[i];
-                this.img = this.imageCache[path] || this.img;
-                i++;
-                setTimeout(next, 200);
-            } else {
-                this.introRunning = false;
-                this.introPlayed = true;
-            }
-        };
-
-        next();
+        this.playIntroSound();
+        this.stepIntroFrames(0);
     }
 
-/**
- * Starts the movement and animation intervals for the endboss.
- *
- * @returns {void}
- */
+    /**
+     * Plays the intro roar/sound effect once.
+     * @returns {void}
+     */
+    playIntroSound() {
+        if (this.world.sounds) this.world.sounds.play("endbossEntry");
+    }
+
+    /**
+     * Steps through intro swim frames with a delay.
+     * @param {number} i - Current frame index.
+     * @returns {void}
+     */
+    stepIntroFrames(i) {
+        if (i < this.SWIM_IMAGES.length) {
+            const path = this.SWIM_IMAGES[i];
+            this.img = this.imageCache[path] || this.img;
+            setTimeout(() => this.stepIntroFrames(i + 1), 200);
+            return;
+        }
+        this.introRunning = false;
+        this.introPlayed = true;
+    }
+
+    /**
+     * Starts the movement and animation intervals for the endboss.
+     * @returns {void}
+     */
     endbossAnimation() {
         setInterval(() => this.updateMovement(), 1000 / 60);
         setInterval(() => this.updateAnimation(), 150);
     }
 
-/**
- * Updates the movement behavior of the endboss.
- *
- * @returns {void}
- */
+    /**
+     * Updates the movement behavior of the endboss.
+     * @returns {void}
+     */
     updateMovement() {
         if (!this.world || this.world.gameState !== "play") return;
 
@@ -163,93 +167,138 @@ class Endboss extends MovableObject {
         this.y = Math.max(0, Math.min(this.y, 600 - this.height));
     }
 
-/**
- * Checks if the endboss should appear based on shark position.
- *
- * @param {Shark} shark - The player shark.
- * @returns {void}
- */
+    /**
+     * Checks if the endboss should appear based on shark position.
+     * @param {Shark} shark - The player shark.
+     * @returns {void}
+     */
     tryAppear(shark) {
         if (shark.x < this.APPEAR_X) return;
-
-        this.visible = true;
-        this.x = this.APPEAR_X + 200;
-        this.y = this.SPAWN_Y;
-        this.baseY = this.y;
-
-        if (Math.abs(shark.x - this.x) <= this.INTRO_DISTANCE) {
+        this.spawnAtAppearPoint();
+        if (this.isSharkNearIntro(shark)) {
             this.hasAppeared = true;
             this.playIntroAnimation();
         }
     }
 
-/**
- * Handles follow or floating behavior depending on shark distance.
- *
- * @param {Shark} shark - The player shark.
- * @returns {void}
- */
-    moveOrFloat(shark) {
-        const dist = Math.abs(shark.x - this.x);
-
-        if (dist < this.followRange) {
-            this.followShark(shark);
-            this.baseY = this.y;
-        } else {
-            this.floatAngle += 0.02;
-            this.y = this.baseY + Math.sin(this.floatAngle) * 30;
-        }
+    /**
+     * Positions and shows the boss when appearing.
+     * @returns {void}
+     */
+    spawnAtAppearPoint() {
+        this.visible = true;
+        this.x = this.APPEAR_X + 200;
+        this.y = this.SPAWN_Y;
+        this.baseY = this.y;
     }
 
-/**
- * Updates animation state depending on current boss state.
- *
- * @returns {void}
- */
+    /**
+     * Checks if the shark is within intro trigger distance.
+     * @param {Shark} shark - The player shark.
+     * @returns {boolean} True if within intro distance.
+     */
+    isSharkNearIntro(shark) {
+        return Math.abs(shark.x - this.x) <= this.INTRO_DISTANCE;
+    }
+
+    /**
+     * Handles follow or floating behavior depending on shark distance.
+     * @param {Shark} shark - The player shark.
+     * @returns {void}
+     */
+    moveOrFloat(shark) {
+        const dist = Math.abs(shark.x - this.x);
+        if (dist < this.followRange) return this.followTarget(shark);
+        this.floatIdle();
+    }
+
+    /**
+     * Sets follow mode and updates baseY anchor.
+     * @param {Shark} shark - The player shark.
+     * @returns {void}
+     */
+    followTarget(shark) {
+        this.followShark(shark);
+        this.baseY = this.y;
+    }
+
+    /**
+     * Applies idle floating motion using a sine wave.
+     * @returns {void}
+     */
+    floatIdle() {
+        this.floatAngle += 0.02;
+        this.y = this.baseY + Math.sin(this.floatAngle) * 30;
+    }
+
+    /**
+     * Updates animation state depending on current boss state.
+     * @returns {void}
+     */
     updateAnimation() {
         if (!this.world || this.world.gameState !== "play") return;
         if (!this.hasAppeared || !this.introPlayed) return;
-
-        if (this.dead) {
-            this.playDeadAnimation();
-            return;
-        }
-
-        if (Date.now() < this.hurtUntil) {
-            this.playAnimation(this.HURT_IMAGES);
-            return;
-        }
-
+        if (this.tryDeadAnimation()) return;
+        if (this.tryHurtAnimation()) return;
         this.playAttackOrFloat();
     }
 
-/**
- * Plays the death animation sequence.
- *
- * @returns {void}
- */
+    /**
+     * Plays death animation if dead.
+     * @returns {boolean} True if death animation handled.
+     */
+    tryDeadAnimation() {
+        if (!this.dead) return false;
+        this.playDeadAnimation();
+        return true;
+    }
+
+    /**
+     * Plays hurt animation if currently hurt.
+     * @returns {boolean} True if hurt animation handled.
+     */
+    tryHurtAnimation() {
+        if (Date.now() >= this.hurtUntil) return false;
+        this.playAnimation(this.HURT_IMAGES);
+        return true;
+    }
+
+    /**
+     * Plays the death animation sequence.
+     * @returns {void}
+     */
     playDeadAnimation() {
-        if (!this.winSoundPlayed) {
-            this.winSoundPlayed = true;
-            this.world.sounds.play("win");
-            setTimeout(() => this.world.sounds.stop("win"), 7000);
-        }
-
-        if (this.deadFrame >= this.DEAD_IMAGES.length) {
-            this.deadDone = true;
-            this.deadFrame = this.DEAD_IMAGES.length - 1;
-        }
-
+        this.playWinSoundOnce();
+        this.capDeadFrame();
         this.img = this.imageCache[this.DEAD_IMAGES[this.deadFrame]];
         this.deadFrame++;
     }
 
-/**
- * Plays attack animation if shark is in range,
- * otherwise plays floating animation.
- *
- * @returns {void}
- */
+    /**
+     * Plays the win sound once on death.
+     * @returns {void}
+     */
+    playWinSoundOnce() {
+        if (this.winSoundPlayed) return;
+        this.winSoundPlayed = true;
+        this.world.sounds.play("win");
+        setTimeout(() => this.world.sounds.stop("win"), 7000);
+    }
+
+    /**
+     * Caps deadFrame index and marks animation done.
+     * @returns {void}
+     */
+    capDeadFrame() {
+        if (this.deadFrame < this.DEAD_IMAGES.length) return;
+        this.deadDone = true;
+        this.deadFrame = this.DEAD_IMAGES.length - 1;
+    }
+
+    /**
+     * Plays attack animation if shark is in range, else floating animation.
+     * @returns {void}
+     */
     playAttackOrFloat() {
         const dist = Math.abs(this.world.shark.x - this.x);
 
@@ -262,12 +311,10 @@ class Endboss extends MovableObject {
         }
     }
 
-/**
- * Applies damage to the endboss.
- * Triggers hurt state and death if energy reaches zero.
- *
- * @returns {void}
- */
+    /**
+     * Applies damage to the endboss and handles hurt/death state.
+     * @returns {void}
+     */
     hit() {
         if (this.dead) return;
 
@@ -283,12 +330,11 @@ class Endboss extends MovableObject {
         }
     }
 
-/**
- * Moves the endboss toward the shark.
- *
- * @param {Shark} shark - The player shark.
- * @returns {void}
- */
+    /**
+     * Moves the endboss toward the shark with limited speed.
+     * @param {Shark} shark - The player shark.
+     * @returns {void}
+     */
     followShark(shark) {
         const dx = shark.x - this.x;
         const dy = shark.y - this.y;
@@ -305,12 +351,11 @@ class Endboss extends MovableObject {
         this.y = Math.max(0, Math.min(this.y, 600 - this.height));
     }
 
-/**
- * Draws the win animation centered on the canvas.
- *
- * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
- * @returns {void}
- */
+    /**
+     * Draws the win animation centered on the canvas.
+     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
+     * @returns {void}
+     */
     drawWinCentered(ctx) {
         if (!this.winStart) this.winStart = Date.now();
 

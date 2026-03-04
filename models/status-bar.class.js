@@ -23,12 +23,21 @@ class StatusBar extends MovableObject {
         this.setPercentage(100);
     }
 
+    /**
+     * Updates life percentage, clamps to [0,100] and swaps the sprite.
+     * @param {number} value - New health value.
+     * @returns {void}
+     */
     setPercentage(value) {
         this.percentage = Math.max(0, Math.min(100, value));
         const i = this.resolveImageIndex();
         this.img = this.imageCache[this.STATUSBAR_IMAGES[i]];
     }
 
+    /**
+     * Maps current percentage to the correct bar image index.
+     * @returns {number} Index in STATUSBAR_IMAGES.
+     */
     resolveImageIndex() {
         if (this.percentage >= 100) return 5;
         if (this.percentage >= 80) return 4;

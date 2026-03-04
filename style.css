@@ -64,6 +64,14 @@ h1 {
     color: #7a15e6;
 }
 
+.retryBtn {
+  cursor: pointer;
+}
+
+.retryBtn:hover {
+  background-color: #7a15e6;
+}
+
 #startBtn:hover {
    background-color: #7a15e67c;
    color: white;
@@ -153,6 +161,78 @@ h1 {
   display: inline-block;
 }
 
+.mute-overlay {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  background: white;
+  border: 2px solid #007BFF;
+  border-radius: 6px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  padding: 0;
+}
+
+.mute-overlay img {
+  width: 36px;
+  height: 36px;
+}
+.retry-button {
+  position: absolute;
+  cursor: pointer;
+  background-color: aqua;
+  color: #7a15e6;
+  border: none;
+  border-radius: 20px;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  padding: 8px 14px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  display: none;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 18%;
+  width: 40%;
+  max-width: 220px;
+}
+
+.retry-button:hover {
+  background-color: #7506ecb5;
+  color: white;
+}
+
+.options-button {
+  position: absolute;
+  cursor: pointer;
+  background-color: #1f2d3d;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 8px 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  display: none;
+  text-align: center;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 8%;
+  width: 40%;
+  max-width: 220px;
+}
+
+.options-button:hover {
+  background-color: #01ffffa0;
+  color: black;
+}
+
 @media (max-width: 699px) {
   #overlayImg {
     display: none;
@@ -199,6 +279,11 @@ h1 {
   .NoteOverlay {
     display: flex !important;
   }
+
+  .retry-button,
+  .options-button {
+    display: none !important;
+  }
 }
 
 .mobileControls { display: none; }
@@ -234,5 +319,34 @@ h1 {
     border: none;
     background: rgba(0,0,0,0.6);
     color: white;
+  }
+  #btnSlap {
+    font-size: 15px;
+  }
+}
+
+/* @media (max-width: 700px) and (orientation: landscape) {
+  .retry-button,
+  .options-button {
+    width: 25%;
+    max-width: 160px;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+} */
+
+
+@media (max-width: 950px) and (orientation: landscape) {
+  .retry-button,
+  .options-button {
+    width: 21%;
+    max-width: 160px;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  #privacyBtn {
+    margin-top: 3px;
+    padding: 4px 13px;
+    font-size: 12px;
   }
 }

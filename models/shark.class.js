@@ -1,110 +1,15 @@
 class Shark extends MovableObject {
     
-    IDLE_IMAGES = [   
-        'img/Grafiken/1.Sharkie/1.IDLE/1.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/2.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/3.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/4.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/5.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/6.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/7.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/8.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/9.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/10.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/11.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/12.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/13.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/14.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/15.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/16.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/17.png',
-        'img/Grafiken/1.Sharkie/1.IDLE/18.png'
-    ];
-
-    LONGIDLE_IMAGES = [
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I1.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I2.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I3.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I4.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I5.png',
-        'img/Grafiken/1.Sharkie/2.Long_IDLE/I6.png'
-    ];
-
-    SLEEP_IMAGES = [
-        'img/Grafiken/1.Sharkie/7.sleep/I10.png',
-        'img/Grafiken/1.Sharkie/7.sleep/I11.png',
-        'img/Grafiken/1.Sharkie/7.sleep/I12.png',
-        'img/Grafiken/1.Sharkie/7.sleep/I13.png',
-        'img/Grafiken/1.Sharkie/7.sleep/I14.png'
-    ];
-
-    SWIM_IMAGES = [
-        'img/Grafiken/1.Sharkie/3.Swim/1.png',
-        'img/Grafiken/1.Sharkie/3.Swim/2.png',
-        'img/Grafiken/1.Sharkie/3.Swim/3.png',
-        'img/Grafiken/1.Sharkie/3.Swim/4.png',
-        'img/Grafiken/1.Sharkie/3.Swim/5.png',
-        'img/Grafiken/1.Sharkie/3.Swim/6.png'
-    ];
-
-    DEAD_IMAGES = [
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/1.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/2.png',       
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/3.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/4.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/5.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/6.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/7.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/8.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/9.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/10.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/11.png',
-        'img/Grafiken/1.Sharkie/6.dead/1.Poisoned/12.png'
-    ];
-
-
-    ELECTRICSHOCK_IMAGES = [
-        'img/Grafiken/1.Sharkie/5.Hurt/2.Electric shock/1.png',
-        'img/Grafiken/1.Sharkie/5.Hurt/2.Electric shock/2.png'
-    ];
-
-    POISONED_IMAGES = [
-        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/1.png',
-        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/2.png',
-        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/3.png',
-        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/4.png',
-        'img/Grafiken/1.Sharkie/5.Hurt/1.Poisoned/5.png'
-    ];
-
-    FINSLAP_IMAGES = [
-        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/1.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/2.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/3.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/4.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/5.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/6.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/7.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Fin slap/8.png'
-    ];
-
-    SHOT_IMAGES = [
-        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/1.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/2.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/3.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/4.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/5.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/6.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/7.png',
-        'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/For Whale/8.png'
-    ];
-
-    GAME_OVER = [
-        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 9.png',
-        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 10.png',
-        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 11.png',
-        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 12.png',
-        'img/Grafiken/6.Botones/Tittles/Game Over/Recurso 13.png'
-    ];
+    IDLE_IMAGES = SHARK_IMAGES.IDLE;
+    LONGIDLE_IMAGES = SHARK_IMAGES.LONGIDLE;
+    SLEEP_IMAGES = SHARK_IMAGES.SLEEP;
+    SWIM_IMAGES = SHARK_IMAGES.SWIM;
+    DEAD_IMAGES = SHARK_IMAGES.DEAD;
+    ELECTRICSHOCK_IMAGES = SHARK_IMAGES.ELECTRICSHOCK;
+    POISONED_IMAGES = SHARK_IMAGES.POISONED;
+    FINSLAP_IMAGES = SHARK_IMAGES.FINSLAP;
+    SHOT_IMAGES = SHARK_IMAGES.SHOT;
+    GAME_OVER = SHARK_IMAGES.GAME_OVER;
 
     currentImage = 0;
     world;
@@ -155,7 +60,6 @@ class Shark extends MovableObject {
      *
      * @returns {void}
      */
-
     setSlap() {
         const now = Date.now();
 
@@ -177,24 +81,45 @@ class Shark extends MovableObject {
      */
     setShoot() {
         const now = Date.now();
+        this.startShootIfPressed(now);
+        this.finishShootIfDone(now);
+        this.markShootEnded(now);
+    }
 
-        if (this.world.keyboard.F && !this.shoot) {
-            this.shoot = true;
-            this.shotReady = false;
-            this.shootUntil = now + (this.SHOT_IMAGES.length * 120);
-            this.shootEndedHandled = false; // ✅ neu starten
-            if (this.world.sounds) this.world.sounds.play("bubble");
-        }
+    /**
+     * Begins a shooting action when the shoot key is pressed.
+     * @param {number} now - Current timestamp in ms.
+     * @returns {void}
+     */
+    startShootIfPressed(now) {
+        if (!this.world.keyboard.F || this.shoot) return;
+        this.shoot = true;
+        this.shotReady = false;
+        this.shootUntil = now + (this.SHOT_IMAGES.length * 120);
+        this.shootEndedHandled = false;
+        if (this.world.sounds) this.world.sounds.play("bubble");
+    }
 
-        if (this.shoot && now >= this.shootUntil) {
-            this.shoot = false;
-            this.shotReady = true;
-        }
+    /**
+     * Finishes shooting once the animation duration has elapsed.
+     * @param {number} now - Current timestamp in ms.
+     * @returns {void}
+     */
+    finishShootIfDone(now) {
+        if (!this.shoot || now < this.shootUntil) return;
+        this.shoot = false;
+        this.shotReady = true;
+    }
 
-        if (!this.shoot && !this.shootEndedHandled && now >= this.shootUntil) {
-            this.lastMoveTime = Date.now();
-            this.shootEndedHandled = true;
-        }
+    /**
+     * Resets shoot state bookkeeping after the shot has completed.
+     * @param {number} now - Current timestamp in ms.
+     * @returns {void}
+     */
+    markShootEnded(now) {
+        if (this.shoot || this.shootEndedHandled || now < this.shootUntil) return;
+        this.lastMoveTime = Date.now();
+        this.shootEndedHandled = true;
     }
 
     /**
@@ -226,15 +151,15 @@ class Shark extends MovableObject {
         if (this.world?.gameState !== "play") return;
         if (!this.world || !this.world.keyboard) return;
         if (this.energy <= 0) return;
-            this.setSlap();
-            this.setShoot();
-            this.applyInputAcceleration();
-            this.applyClampSpeed();
-            this.applyPosition();
-            this.applyCamera();
-            this.applyFriction();
-            this.applyBounds();
-            this.updateLastMoveTime();
+        this.setSlap();
+        this.setShoot();
+        this.applyInputAcceleration();
+        this.applyClampSpeed();
+        this.applyPosition();
+        this.applyCamera();
+        this.applyFriction();
+        this.applyBounds();
+        this.updateLastMoveTime();
     }
 
     /**
@@ -334,38 +259,70 @@ class Shark extends MovableObject {
         }, 120);
     }
 
+    /**
+     * Updates the state machine in priority order.
+     * @returns {void}
+     */
     updateState() {
         const now = Date.now();
+        if (this.handleDeadState()) return;
+        if (this.handleStatusEffects(now)) return;
+        if (this.handleAttackStates()) return;
+        if (this.handleMovementState()) return;
+        this.handleIdleState(now);
+    }
 
-        if (this.energy <= 0) {this.state = "dead"; return; }
+    /**
+     * Switches to dead state when energy is depleted.
+     * @returns {boolean} True if state changed.
+     */
+    handleDeadState() {
+        if (this.energy > 0) return false;
+        this.state = "dead";
+        return true;
+    }
 
+    /**
+     * Handles temporary status effects (shock/poison).
+     * @param {number} now - Current timestamp in ms.
+     * @returns {boolean} True if a status effect state was set.
+     */
+    handleStatusEffects(now) {
+        if (now < this.shockUntil) { this.state = "shock"; return true; }
+        if (now < this.poisonUntil) { this.state = "poisoned"; return true; }
+        return false;
+    }
+
+    /**
+     * Prioritizes attack states over movement/idle.
+     * @returns {boolean} True if an attack state was set.
+     */
+    handleAttackStates() {
+        if (this.shoot) { this.state = "shoot"; return true; }
+        if (this.slap) { this.state = "slap"; return true; }
+        return false;
+    }
+
+    /**
+     * Sets swimming state when velocity exceeds a small threshold.
+     * @returns {boolean} True if swimming.
+     */
+    handleMovementState() {
         const moving = (Math.abs(this.vx) > 0.05 || Math.abs(this.vy) > 0.05);
+        if (!moving) return false;
+        this.state = "swim";
+        return true;
+    }
 
-        if (now < this.shockUntil) { this.state = "shock"; return; }
-        if (now < this.poisonUntil) { this.state = "poisoned"; return; }
-        if (this.shoot) { this.state = "shoot"; return; }
-        if (this.slap) { this.state = "slap"; return; }
-        if (moving) { this.state = "swim"; return; }
-
+    /**
+     * Chooses idle/long-idle/sleep based on inactivity duration.
+     * @param {number} now - Current timestamp in ms.
+     * @returns {void}
+     */
+    handleIdleState(now) {
         const idleTime = now - this.lastMoveTime;
-
-        if (
-            !this.slap &&
-            !this.shoot &&
-            now >= this.shockUntil &&
-            now >= this.poisonUntil
-        ) {
-            if (idleTime > 8000) {
-                this.state = "sleep";
-                return;
-            }
-
-            if (idleTime > 3000) {
-                this.state = "longidle";
-                return;
-            }
-        }
-
+        if (idleTime > 8000) { this.state = "sleep"; return; }
+        if (idleTime > 3000) { this.state = "longidle"; return; }
         this.state = "idle";
     }
 
@@ -375,34 +332,28 @@ class Shark extends MovableObject {
      * @returns {void}
      */
     updateAnimation() {
-        switch (this.state) {
-            case "dead":
-            break;
-            case "shock":
-            this.playAnimation(this.ELECTRICSHOCK_IMAGES);
-            break;
-            case "poisoned":
-            this.playAnimation(this.POISONED_IMAGES);
-            break;
-            case "slap":
-            this.playAnimation(this.FINSLAP_IMAGES);
-            break;
-            case "swim":
-            this.playAnimation(this.SWIM_IMAGES);
-            break;
-            case "longidle":
-            this.playAnimation(this.LONGIDLE_IMAGES);
-            break;
-            case "sleep":
-            this.playAnimation(this.SLEEP_IMAGES);
-            break;
-            case "shoot":
-            this.playAnimation(this.SHOT_IMAGES);
-            break;
-            default:
-            this.playAnimation(this.IDLE_IMAGES);
-        }
+        const frames = this.getAnimationFramesForState();
+        if (!frames) return;
+        this.playAnimation(frames);
     }   
+
+    /**
+     * Maps current state to the corresponding animation frames.
+     * @returns {string[]|null} Frame list or null for dead state.
+     */
+    getAnimationFramesForState() {
+        const map = {
+            shock: this.ELECTRICSHOCK_IMAGES,
+            poisoned: this.POISONED_IMAGES,
+            slap: this.FINSLAP_IMAGES,
+            swim: this.SWIM_IMAGES,
+            longidle: this.LONGIDLE_IMAGES,
+            sleep: this.SLEEP_IMAGES,
+            shoot: this.SHOT_IMAGES,
+            dead: null
+        };
+        return map[this.state] ?? this.IDLE_IMAGES;
+    }
 
     /**
      * Applies electric shock damage.

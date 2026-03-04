@@ -108,7 +108,18 @@ class MovableObject extends DrawableObject {
      * @returns {boolean} True if colliding with the item.
      */
     isCollidingItem(other) {
-        return this.isColliding(other, 75, 5);
+        const shrinkX = this.width * 0.15;
+        const shrinkTop = this.height * 0.45;
+        const shrinkBottom = this.height * 0.25;
+
+        const itemPad = 10;
+
+        return (
+            this.x + this.width - shrinkX > other.x + itemPad &&
+            this.x + shrinkX < other.x + other.width - itemPad &&
+            this.y + this.height - shrinkBottom > other.y + itemPad &&
+            this.y + shrinkTop < other.y + other.height - itemPad
+        );
     }
 
 }

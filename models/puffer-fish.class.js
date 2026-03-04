@@ -55,12 +55,6 @@ class PufferFish extends MovableObject {
         'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.png',
     ];
 
-    /**
-     * Creates a new puffer fish.
-     * @param {number} x - World x-position.
-     * @param {number} y - World y-position.
-     * @param {'green'|'red'} [color='green'] - Which sprite set to use.
-     */
     constructor(x, y, color = 'green') {
         super();
         this.x = x;
@@ -114,11 +108,7 @@ class PufferFish extends MovableObject {
      * @returns {void}
      */
     updateAnimation() {
-        if (this.dead) {
-            this.playDeadAnimation();
-            return;
-        }
-
+        if (this.dead) return this.playDeadAnimation();
         this.playSwimAnimation();
     }
 
@@ -127,13 +117,19 @@ class PufferFish extends MovableObject {
      * @returns {void}
      */
     playDeadAnimation() {
-        if (this.currentImage >= this.deadImgs.length) {
-            this.deadDone = true;
-            this.currentImage = this.deadImgs.length - 1;
-        }
-
+        this.advanceDeathFrame();
         this.img = this.imageCache[this.deadImgs[this.currentImage]];
         this.currentImage++;
+    }
+
+    /**
+     * Caps the death animation at the final frame and flags completion.
+     * @returns {void}
+     */
+    advanceDeathFrame() {
+        if (this.currentImage < this.deadImgs.length) return;
+        this.deadDone = true;
+        this.currentImage = this.deadImgs.length - 1;
     }
 
     /**

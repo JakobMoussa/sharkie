@@ -1,10 +1,11 @@
 class Level {
-enemies;
-backgroundObjects;
+    
+    enemies;
+    backgroundObjects;
 
-constructor(enemies, backgroundObjects) {
-    this.enemies = enemies;
-    this.backgroundObjects = backgroundObjects;
-}
+    constructor(enemies, backgroundObjects) {
+        this.enemies = enemies;
+        this.backgroundObjects = backgroundObjects;
+    }
 
 }

@@ -28,6 +28,11 @@ class Poison extends MovableObject {
         this.animate();
     }
 
+    /**
+     * Loops through poison bottle frames to create a pulsing animation.
+     * Uses a simple modulo increment over the preloaded image cache.
+     * @returns {void}
+     */
     animate() {
         setInterval(() => {
             const i = this.currentImage % this.IMAGES_POSION.length;

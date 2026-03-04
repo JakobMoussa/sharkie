@@ -26,6 +26,11 @@ class World {
     retryImg = new Image();
     retryBtn = {x: 0, y: 0, w: 0, h: 0};
 
+    /**
+     * Creates a new world instance with rendering context and input.
+     * @param {HTMLCanvasElement} canvas - Target canvas.
+     * @param {Keyboard} keyboard - Shared keyboard state.
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -35,6 +40,10 @@ class World {
         this.startGame();
     }
 
+    /**
+     * Preloads overlay and retry images used by the HUD.
+     * @returns {void}
+     */
     loadImages() {
         this.overlayImg.src = 'img/Grafiken/3. Background/Dark/1.png';
         this.retryImg.src = 'img/Grafiken/6.Botones/Try again/Recurso 17.png';
@@ -250,25 +259,38 @@ class World {
     applyEnemyDamage(enemy) {
         if (enemy.dead) return false;
 
-        let didDamage = false;
+        const didDamage =
+            enemy instanceof JellyFish ? this.applyJellyDamage() :
+            enemy instanceof PufferFish ? this.applyPufferDamage() :
+            false;
 
-        if (enemy instanceof JellyFish) {
-            didDamage = this.shark.hitShock(800);
-        }
+        this.clampSharkEnergy();
+        if (didDamage) this.statusBar.setPercentage(this.shark.energy);
+        return didDamage;
+    }
 
-        if (enemy instanceof PufferFish) {
-            didDamage = this.shark.hitPoison(1200); 
-        }
+    /**
+     * Applies electric shock damage from a jellyfish.
+     * @returns {boolean} True if damage was applied.
+     */
+    applyJellyDamage() {
+        return this.shark.hitShock(800);
+    }
 
-        if (this.shark.energy <= 0) {
-            this.shark.energy = 0;
-        }
+    /**
+     * Applies poison damage from a pufferfish.
+     * @returns {boolean} True if damage was applied.
+     */
+    applyPufferDamage() {
+        return this.shark.hitPoison(1200);
+    }
 
-        if (didDamage) {
-            this.statusBar.setPercentage(this.shark.energy);
-        }
-
-         return didDamage;
+    /**
+     * Prevents shark energy from dropping below zero.
+     * @returns {void}
+     */
+    clampSharkEnergy() {
+        if (this.shark.energy <= 0) this.shark.energy = 0;
     }
 
     /**
@@ -330,6 +352,10 @@ class World {
         if (this.endboss.deadDone) this.showEndbossBar = false;
     }
 
+    /**
+     * Applies slap damage from the shark to the endboss.
+     * @returns {void}
+     */
     checkEndbossSlapHit() {
         if (this.shark.slap && this.shark.isCollidingBoss(this.endboss)) {
             this.endboss.hit();
@@ -338,6 +364,10 @@ class World {
         }
     }
 
+    /**
+     * Applies contact damage from the endboss to the shark.
+     * @returns {void}
+     */
     checkEndbossDamageToShark() {
         const oldY = this.shark.y;
         this.shark.y = oldY + 40;
@@ -418,10 +448,11 @@ class World {
         if (!this.shark.shotReady) return;
         if (this.poisonCount <= 0) return;
 
-        const x = this.shark.x + this.shark.width;
+        const facingLeft = this.shark.otherDirection === true;
+        const x = facingLeft ? this.shark.x - 20 : this.shark.x + this.shark.width;
         const y = this.shark.y + this.shark.height / 2;
 
-        this.poisonShots.push(new PoisonShot(x, y));
+        this.poisonShots.push(new PoisonShot(x, y, facingLeft));
 
         this.poisonCount--;
         const percent = (this.poisonCount / this.maxPoison) * 100;
@@ -435,7 +466,7 @@ class World {
      * @returns {void}
      */
     cleanupShots() {
-        this.poisonShots = this.poisonShots.filter(s => s.x < 4000);
+        this.poisonShots = this.poisonShots.filter(s => s.x > -200 && s.x < 4000);
     }
 
     /**
@@ -450,6 +481,11 @@ class World {
         this.poisonShots = this.poisonShots.filter(s => !s.hit);
     }
 
+    /**
+     * Tests a poison shot against regular enemies.
+     * @param {PoisonShot} shot - Projectile to test.
+     * @returns {void}
+     */
     checkShotEnemyHits(shot) {
         this.enemies.forEach((enemy) => {
             if (enemy.dead) return;
@@ -460,6 +496,11 @@ class World {
         });
     }
 
+    /**
+     * Tests a poison shot against the endboss and updates its bar.
+     * @param {PoisonShot} shot - Projectile to test.
+     * @returns {void}
+     */
     checkShotEndbossHit(shot) {
         if (!this.endboss.visible || this.endboss.dead) return;
         if (shot.isColliding(this.endboss, 0, 0)) {
@@ -496,24 +537,46 @@ class World {
      * @returns {void}
      */
     drawRetryButton() {
-        if (!this.retryImg.complete) return;
-
-        const w = this.canvas.width * 0.22;
-        const h = w * 0.45;
-
-        const x = (this.canvas.width - w) / 2;
-        const y = this.canvas.height * 0.75;
-
-        this.retryBtn = { x, y, w, h };
-        this.ctx.drawImage(this.retryImg, x, y, w, h);
+        // Buttons sind via CSS zentriert; hier nur anzeigen
+        this.retryBtn = { x: 0, y: 0, w: 0, h: 0 };
+        this.positionRetryButton();
+        this.positionBackButton();
     }
 
+    /**
+     * Shows the retry button on the end overlay.
+     * @returns {void}
+     */
+    positionRetryButton() {
+        const btn = document.getElementById("retryHitbox");
+        if (!btn) return;
+        btn.style.display = "block";
+    }
+
+    /**
+     * Shows the back-to-options button on the end overlay.
+     * @returns {void}
+     */
+    positionBackButton() {
+        const btn = document.getElementById("backToOptions");
+        if (!btn) return;
+        btn.style.display = "block";
+    }
+
+    /**
+     * Stops collision loop and hides overlay buttons.
+     * @returns {void}
+     */
     destroy() {
         if (this.collisionInterval) {
             clearInterval(this.collisionInterval);
             this.collisionInterval = null;
         }
         this.gameState = "stopped";
+        const btn = document.getElementById("retryHitbox");
+        if (btn) btn.style.display = "none";
+        const back = document.getElementById("backToOptions");
+        if (back) back.style.display = "none";
     }
 
 }

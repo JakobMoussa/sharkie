@@ -13,10 +13,11 @@
 <script src="./models/background.class.js"></script>
 <script src="./models/coin.class.js"></script>
 <script src="./models/poison.class.js"></script>
-<script src="./models/posion-shot.class.js"></script>
+<script src="./models/poison-shot.class.js"></script>
 <script src="./models/puffer-fish.class.js"></script>
 <script src="./models/jelly-fish.class.js"></script>
 <script src="./models/endboss.class.js"></script>
+<script src="./models/shark-images.class.js"></script>
 <script src="./models/shark.class.js"></script>
 <script src="./models/status-bar.class.js"></script>
 <script src="./models/coins-bar.class.js"></script>
@@ -49,13 +50,19 @@
 
   <div class="gameContainer">
     <canvas id="canvas" width="900" height="600"></canvas>
+    <button id="muteOverlay" class="mute-overlay" aria-label="Toggle sound">
+      <img id="muteOverlayIcon" src="img/Grafiken/6.Botones/sound-on.png" alt="mute icon">
+    </button>
+
+    <button id="retryHitbox" class="retry-button" aria-label="Try again">Try again</button>
+    <button id="backToOptions" class="options-button" aria-label="Back to options">Back to options</button>
 
     <div class="mobileControls">
       <button id="btnLeft">◀</button>
       <button id="btnRight">▶</button>
       <button id="btnUp">▲</button>
       <button id="btnDown">▼</button>
-      <button id="btnSlap">---</button>
+      <button id="btnSlap">SLAP</button>
       <button id="btnPoison">F</button>
     </div>
     

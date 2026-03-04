@@ -11,6 +11,9 @@ class PoisonBar extends MovableObject {
 
     percentage = 0;
 
+    /**
+     * Creates a poison bar UI element.
+     */
     constructor() {
         super();
         this.loadImages(this.POISON_BAR_IMAGES);
@@ -29,6 +32,10 @@ class PoisonBar extends MovableObject {
         this.img = this.imageCache[this.POISON_BAR_IMAGES[i]];
     }
 
+    /**
+     * Maps percentage to the corresponding bar image index.
+     * @returns {number} Image index for current percentage.
+     */
     resolveImageIndex() {
         if (this.percentage >= 100) return 5;
         if (this.percentage >= 80) return 4;
