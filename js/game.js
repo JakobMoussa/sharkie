@@ -158,6 +158,8 @@ function attachMuteClick() {
 
     if (canvas) {
         canvas.addEventListener("click", handleCanvasMuteClick);
+        canvas.addEventListener("mousemove", handleCanvasMuteHover);
+        canvas.addEventListener("mouseleave", () => (canvas.style.cursor = "default"));
     }
 
     const muteBtn = document.getElementById("muteOverlay");
@@ -183,6 +185,17 @@ function handleCanvasMuteClick(e) {
         toggleMute();
         syncMuteIcon();
     }
+}
+
+/**
+ * Shows pointer cursor when hovering the canvas mute icon.
+ * @param {MouseEvent} e - Mouse move event.
+ * @returns {void}
+ */
+function handleCanvasMuteHover(e) {
+    const { mx, my } = getMousePos(e);
+    const overMute = mx >= 800 && mx <= 840 && my >= 40 && my <= 80;
+    canvas.style.cursor = overMute ? "pointer" : "default";
 }
 
 /**

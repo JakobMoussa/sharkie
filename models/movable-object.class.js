@@ -61,8 +61,8 @@ class MovableObject extends DrawableObject {
      */
     isCollidingEnemy(other) {
         const sharkLeft = 45;
-        const sharkRight = 30;
-        const sharkTop = 55;
+        const sharkRight = 25;
+        const sharkTop = 70;
         const sharkBottom = 34;
 
         const enemyLeft = 40;
