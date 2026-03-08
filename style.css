@@ -119,6 +119,11 @@ h1 {
   background-color: #01ffffa0;
 }
 
+body.canvasVisible #privacyBtn,
+body.canvasVisible .privacyWrapper {
+  display: none !important;
+}
+
 .privacyModal {
   position: fixed;
   inset: 0;
@@ -286,16 +291,28 @@ h1 {
   }
 }
 
-.mobileControls { display: none; }
-.mobileControls button { touch-action: none; }
+.mobileControls { 
+  display: none; 
+}
 
-@media (orientation: portrait) {
+.mobileControls button { 
+  touch-action: none; 
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mobileControls {
+    display: none !important;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) and (orientation: portrait) {
   .mobileControls { display: flex !important; }
 }
 
-
-@media (max-width: 1366px) and (orientation: landscape) {
-  .topBar { display: none; }
+@media (hover: none) and (pointer: coarse) and (max-width: 1366px) and (orientation: landscape) {
+  .topBar { 
+    display: none; 
+  }
 
   body.gameRunning .mobileControls {
     position: absolute;
@@ -325,7 +342,7 @@ h1 {
   }
 }
 
-@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+@media (hover: none) and (pointer: coarse) and (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
   .gameContainer {
     display: flex;
     flex-direction: column;
@@ -361,7 +378,7 @@ h1 {
   }
 }
 
-@media (min-width: 1368px) and (min-height: 912px) and (orientation: landscape) {
+@media (hover: none) and (pointer: coarse) and (min-width: 1368px) and (min-height: 912px) and (orientation: landscape) {
     .gameContainer {
     display: flex;
     flex-direction: column;
@@ -403,6 +420,13 @@ h1 {
   }
 }
 
+@media (min-width: 1500px) {
+  .mobileControls,
+  body.gameRunning .mobileControls {
+    display: none !important;
+  }
+}
+
 @media (max-width: 950px) and (orientation: landscape) {
   .retry-button,
   .options-button {
@@ -421,7 +445,6 @@ h1 {
     display: none !important;
   }
 }
-
 
 @media (max-height: 430px) {
   #btnSlap {

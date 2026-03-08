@@ -1,37 +1,11 @@
 class World {
-    shark = new Shark();
-    enemies = [];
-    backgroundObjects = [];
-
-    canvas;
-    ctx;
-    keyboard;
-    endboss;
-    x_camera = 0;
-    statusBar;
-    poisonBar;
-    poisons = [];
-    poisonCount = 0;
-    maxPoison = 10;
-    coinsBar;
-    coins = [];
-    coinCount = 0;
-    maxCoins = 20;
-    poisonShots = [];
-    endbossBar;
-    showEndbossBar = false;
-    gameState = "play";
-    overlayImg = new Image();
-    collisionInterval = null;
-    retryImg = new Image();
-    retryBtn = {x: 0, y: 0, w: 0, h: 0};
-
     /**
      * Creates a new world instance with rendering context and input.
      * @param {HTMLCanvasElement} canvas - Target canvas.
      * @param {Keyboard} keyboard - Shared keyboard state.
      */
     constructor(canvas, keyboard) {
+        Object.assign(this, createWorldDefaults());
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;

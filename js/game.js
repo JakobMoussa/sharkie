@@ -113,6 +113,7 @@ function startGame() {
 function showGameCanvas() {
     document.getElementById("startOverlay").style.display = "none";
     canvas.style.display = "block";
+    document.body.classList.add("canvasVisible");
 }
 
 /**
@@ -232,6 +233,7 @@ function restartGame() {
  */
 function backToOptions() {
   document.body.classList.remove("gameRunning");
+  document.body.classList.remove("canvasVisible");
   hideEndButtons();
   if (world) {
     world.destroy();
