@@ -31,7 +31,6 @@ const SHARK_IMAGES = {
     ],
 
     SLEEP: [
-        'img/Grafiken/1.Sharkie/7.sleep/I10.png',
         'img/Grafiken/1.Sharkie/7.sleep/I11.png',
         'img/Grafiken/1.Sharkie/7.sleep/I12.png',
         'img/Grafiken/1.Sharkie/7.sleep/I13.png',

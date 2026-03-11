@@ -84,15 +84,15 @@ class MovableObject extends DrawableObject {
      * @returns {boolean} True if colliding with the endboss.
      */
     isCollidingBoss(other) {
-        const sharkLeft = 30;
-        const sharkRight = 30;
-        const sharkTop = 60;
-        const sharkBottom = 30;
+        const sharkLeft = this.width * 0.20;
+        const sharkRight = this.width * 0.20;
+        const sharkTop = this.height * 0.35;
+        const sharkBottom = this.height * 0.20;
 
-        const bossLeft = 120;
-        const bossRight = 120;
-        const bossTop = 220;
-        const bossBottom = 220;
+        const bossLeft = other.width * 0.28;
+        const bossRight = other.width * 0.28;
+        const bossTop = other.height * 0.35;
+        const bossBottom = other.height * 0.25;
 
         return (
             this.x + this.width - sharkRight > other.x + bossLeft &&

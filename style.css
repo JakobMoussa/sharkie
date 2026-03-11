@@ -28,7 +28,7 @@ h1 {
     padding: 0 18px;
     border: 3px solid #c9d5e9;
     border-radius: 14px;
-    background: linear-gradient(90deg, #004cc7, #7393c1);
+    background-color: white;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -104,22 +104,27 @@ h1 {
   font-family: Arial, sans-serif;
 }
 
-#privacyBtn {
-  padding: 8px 14px;
-  font-size: 14px;
+#privacyBtn,
+#impressumBtn {
+  padding: 5px 14px;
   cursor: pointer;
   border-radius: 6px;
   border: none;
   background: #1f2d3d;
   color: white;
-  margin-top: 13px;
 }
 
-#privacyBtn:hover {
+#impressumBtn {
+  font-size: 12px;
+}
+
+#privacyBtn:hover,
+#impressumBtn:hover {
   background-color: #01ffffa0;
 }
 
 body.canvasVisible #privacyBtn,
+body.canvasVisible #impressumBtn,
 body.canvasVisible .privacyWrapper {
   display: none !important;
 }
@@ -149,7 +154,8 @@ body.canvasVisible .privacyWrapper {
   color: #7a15e6;
 }
 
-#closePrivacy {
+#closePrivacy,
+#closeImpressum {
   margin-top: 15px;
   padding: 6px 12px;
   cursor: pointer;

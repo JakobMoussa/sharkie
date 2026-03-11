@@ -71,11 +71,13 @@ class World {
 
         if (this.shark.deadDone) {
             this.gameState = "lose";
+            this.stopBackgroundMusic();
             return;
         }
 
         if (this.endboss.deadDone) {
             this.gameState = "win";
+            this.stopBackgroundMusic();
             return;
         }
     }
@@ -343,10 +345,7 @@ class World {
      * @returns {void}
      */
     checkEndbossDamageToShark() {
-        const oldY = this.shark.y;
-        this.shark.y = oldY + 40;
         const hit = this.shark.isCollidingBoss(this.endboss);
-        this.shark.y = oldY;
         if (hit) {
             const didDamage = this.shark.hitShock(800);
             if (didDamage && this.sounds) this.sounds.play("sharkHurt");
@@ -420,7 +419,11 @@ class World {
      */
     shootPoison() {
         if (!this.shark.shotReady) return;
-        if (this.poisonCount <= 0) return;
+
+        if (this.poisonCount <= 0) {
+            this.shark.shotReady = false;
+            return;
+        }
 
         const facingLeft = this.shark.otherDirection === true;
         const x = facingLeft ? this.shark.x - 20 : this.shark.x + this.shark.width;
@@ -511,7 +514,6 @@ class World {
      * @returns {void}
      */
     drawRetryButton() {
-        // Buttons sind via CSS zentriert; hier nur anzeigen
         this.retryBtn = { x: 0, y: 0, w: 0, h: 0 };
         this.positionRetryButton();
         this.positionBackButton();
@@ -546,11 +548,20 @@ class World {
             clearInterval(this.collisionInterval);
             this.collisionInterval = null;
         }
+        this.stopBackgroundMusic();
         this.gameState = "stopped";
         const btn = document.getElementById("retryHitbox");
         if (btn) btn.style.display = "none";
         const back = document.getElementById("backToOptions");
         if (back) back.style.display = "none";
+    }
+
+    /**
+     * Stops the looping background track immediately.
+     * @returns {void}
+     */
+    stopBackgroundMusic() {
+        if (this.sounds) this.sounds.stop("background");
     }
 
 }

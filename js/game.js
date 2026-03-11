@@ -417,59 +417,65 @@ function bindMobileControl({ id, key }, kb) {
 
 window.addEventListener("load", initStartOverlay);
 
-document.addEventListener("DOMContentLoaded", initPrivacyModal);
+document.addEventListener("DOMContentLoaded", initLegalModals);
 
 /**
- * Initializes the privacy modal by wiring its controls.
+ * Initializes privacy and impressum modals by wiring their controls.
  * @returns {void}
  */
-function initPrivacyModal() {
-    const btn = document.getElementById("privacyBtn");
-    const modal = document.getElementById("privacyModal");
-    const close = document.getElementById("closePrivacy");
+function initLegalModals() {
+    const privacyBtn = document.getElementById("privacyBtn");
+    const privacyModal = document.getElementById("privacyModal");
+    const privacyClose = document.getElementById("closePrivacy");
 
-    attachPrivacyEvents(btn, modal, close);
+    attachModalEvents(privacyBtn, privacyModal, privacyClose);
+
+    const impressumBtn = document.getElementById("impressumBtn");
+    const impressumModal = document.getElementById("impressumModal");
+    const impressumClose = document.getElementById("closeImpressum");
+
+    attachModalEvents(impressumBtn, impressumModal, impressumClose);
 }
 
 /**
- * Wires click handlers for opening/closing the privacy modal.
+ * Wires click handlers for opening/closing a modal.
  * @param {HTMLElement} btn - Button that opens the modal.
  * @param {HTMLElement} modal - Modal element.
  * @param {HTMLElement} close - Close icon/button element.
  * @returns {void}
  */
-function attachPrivacyEvents(btn, modal, close) {
+function attachModalEvents(btn, modal, close) {
+    if (!btn || !modal || !close) return;
 
     btn.addEventListener("click", function () {
-        openPrivacyModal(modal);
+        openModal(modal);
     });
 
     close.addEventListener("click", function () {
-        closePrivacyModal(modal);
+        closeModal(modal);
     });
 
     modal.addEventListener("click", function (event) {
         if (event.target === modal) {
-            closePrivacyModal(modal);
+            closeModal(modal);
         }
     });
-
 }
 
 /**
- * Shows the privacy modal.
+ * Shows the modal.
  * @param {HTMLElement} modal - Modal element.
  * @returns {void}
  */
-function openPrivacyModal(modal) {
+function openModal(modal) {
     modal.style.display = "flex";
 }
 
 /**
- * Hides the privacy modal.
+ * Hides the modal.
  * @param {HTMLElement} modal - Modal element.
  * @returns {void}
  */
-function closePrivacyModal(modal) {
+function closeModal(modal) {
     modal.style.display = "none";
 }

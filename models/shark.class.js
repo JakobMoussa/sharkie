@@ -92,7 +92,8 @@ class Shark extends MovableObject {
      * @returns {void}
      */
     startShootIfPressed(now) {
-        if (!this.world.keyboard.F || this.shoot) return;
+        // Skip shooting when no poison is available
+        if (!this.world.keyboard.F || this.shoot || this.world.poisonCount <= 0) return;
         this.shoot = true;
         this.shotReady = false;
         this.shootUntil = now + (this.SHOT_IMAGES.length * 120);

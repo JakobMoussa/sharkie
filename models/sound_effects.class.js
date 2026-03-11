@@ -71,5 +71,9 @@ class SoundEffects {
             const value = this[key];
             if (value instanceof Audio) value.muted = false;
         });
+
+        if (this.background && this.background.paused) {
+            this.background.play();
+        }
     }
 }
