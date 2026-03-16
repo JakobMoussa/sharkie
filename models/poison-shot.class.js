@@ -4,6 +4,7 @@ class PoisonShot extends MovableObject {
     speed = 10;
     currentImage = 0;
     hit = false;
+    static preloadedImg = null;
 
     IMAGES_SHOT = [
         'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png',
@@ -11,6 +12,7 @@ class PoisonShot extends MovableObject {
 
     constructor(x, y, goLeft = false) {
         super();
+        PoisonShot.preload();
         this.x = x;
         this.y = y;
         this.otherDirection = goLeft;
@@ -18,7 +20,25 @@ class PoisonShot extends MovableObject {
 
         this.loadImage(this.IMAGES_SHOT[0]);
         this.loadImages(this.IMAGES_SHOT);
+        if (PoisonShot.preloadedImg) {
+            this.imageCache[this.IMAGES_SHOT[0]] = PoisonShot.preloadedImg;
+            this.img = PoisonShot.preloadedImg;
+        }
         this.animate();
+    }
+
+    /**
+     * Preloads the poison bubble sprite once to prevent the first shot from showing the last frame.
+     * @returns {void}
+     */
+    static preload() {
+        if (PoisonShot.preloadedImg) return;
+        const img = new Image();
+        img.src = 'img/Grafiken/1.Sharkie/4.Attack/Bubble trap/Poisoned Bubble (for whale).png';
+        if (img.decode) {
+            img.decode().catch(() => {});
+        }
+        PoisonShot.preloadedImg = img;
     }
 
     /**

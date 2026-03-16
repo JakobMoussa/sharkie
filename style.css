@@ -64,14 +64,6 @@ h1 {
     color: #7a15e6;
 }
 
-.retryBtn {
-  cursor: pointer;
-}
-
-.retryBtn:hover {
-  background-color: #7a15e6;
-}
-
 #startBtn:hover {
    background-color: #7a15e67c;
    color: white;
@@ -112,10 +104,15 @@ h1 {
   border: none;
   background: #1f2d3d;
   color: white;
+  font-size: 14px;
 }
 
-#impressumBtn {
-  font-size: 12px;
+.privacyWrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 
 #privacyBtn:hover,
@@ -201,16 +198,15 @@ body.canvasVisible .privacyWrapper {
   border: none;
   border-radius: 20px;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  font-size: 20px;
+  font-size: clamp(14px, 2.2vw, 20px);
   font-weight: 700;
-  padding: 8px 14px;
+  padding: clamp(6px, 1.4vw, 10px) clamp(10px, 2.4vw, 14px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.25);
   display: none;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 18%;
-  width: 40%;
-  max-width: 220px;
+  bottom: clamp(15%, 20vh, 15%);
+  width: clamp(140px, 40vw, 220px);
 }
 
 .retry-button:hover {
@@ -226,17 +222,16 @@ body.canvasVisible .privacyWrapper {
   border: none;
   border-radius: 20px;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  font-size: 18px;
+  font-size: clamp(13px, 2vw, 18px);
   font-weight: 700;
-  padding: 8px 12px;
+  padding: clamp(6px, 1.4vw, 10px) clamp(9px, 2.2vw, 12px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.25);
   display: none;
   text-align: center;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 8%;
-  width: 40%;
-  max-width: 220px;
+  bottom: clamp(5%, 13vh, 5%);
+  width: clamp(140px, 40vw, 220px);
 }
 
 .options-button:hover {
@@ -303,6 +298,14 @@ body.canvasVisible .privacyWrapper {
 
 .mobileControls button { 
   touch-action: none; 
+}
+
+body.gameEnded .mobileControls {
+  display: none !important;
+}
+
+body.gameEnded .mobileControls {
+  display: none !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -442,8 +445,6 @@ body.canvasVisible .privacyWrapper {
     padding: 6px 10px;
   }
   #privacyBtn {
-    margin-top: 3px;
-    padding: 4px 13px;
     font-size: 12px;
   }
 
@@ -464,5 +465,53 @@ body.canvasVisible .privacyWrapper {
 @media (max-width: 882px) and (max-height: 344px) {
   #overlayImg {
     height: 300px;
+  }
+}
+
+@media (max-width: 658px) and (max-height: 320px) {
+  .retry-button,
+  .options-button {
+    width: 30%;
+    max-width: 100px;
+    font-size: 12px;
+    padding: 4px 9px;
+  }
+
+  #overlayImg {
+    height: 285px;
+  }
+}
+
+@media (max-width: 667px) and (max-height: 320px) {
+  .retry-button,
+  .options-button {
+    width: clamp(110px, 30vw, 150px);
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .retry-button {
+    bottom: 46%;
+  }
+
+  .options-button {
+    bottom: 6%;
+  }
+}
+
+@media (max-height: 320px) {
+  .retry-button,
+  .options-button {
+    width: clamp(120px, 30vw, 180px);
+    font-size: 12px;
+    padding: 5px 9px;
+  }
+
+  .retry-button {
+    bottom: 15%;
+  }
+
+  .options-button {
+    bottom: 5%;
   }
 }

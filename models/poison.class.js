@@ -6,6 +6,12 @@ class Poison extends MovableObject {
     width = 40;
     height = 50;
 
+    hitbox = {
+        left: 8,
+        right: 8,
+        top: 11,
+        bottom: 11,
+    };
 
     IMAGES_POSION = [
         'img/Grafiken/4. Marcadores/Posiขn/Animada/1.png',
@@ -23,6 +29,7 @@ class Poison extends MovableObject {
         this.x = x;
         this.y = y;
 
+        this.setHitbox(18, 20, 22, 22);
         this.loadImage(this.IMAGES_POSION[0]);
         this.loadImages(this.IMAGES_POSION);
         this.animate();
@@ -41,6 +48,4 @@ class Poison extends MovableObject {
             this.currentImage++;
         }, 150);
     }
-
-
 }

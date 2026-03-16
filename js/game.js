@@ -100,6 +100,7 @@ function drawMuteButton(context) {
  */
 function startGame() {
     showGameCanvas();
+    document.body.classList.remove("gameEnded");
     createWorldAndInit();
     markGameRunning();
     watchGameEnd();
@@ -143,8 +144,9 @@ function markGameRunning() {
 function watchGameEnd() {
     const endWatcher = setInterval(() => {
         if (!world) return;
-        if (world.gameState !== "play") {
+        if (world.gameState === "win" || world.gameState === "lose") {
             document.body.classList.remove("gameRunning");
+            document.body.classList.add("gameEnded");
             showEndButtons();
             clearInterval(endWatcher);
         }
@@ -223,7 +225,9 @@ function restartGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   world = new World(canvas, keyboard);
   applyMuteStateToWorld();
+  document.body.classList.remove("gameEnded");
   document.body.classList.add("gameRunning");
+  watchGameEnd();
   syncMuteIcon();
 }
 
@@ -233,6 +237,7 @@ function restartGame() {
  */
 function backToOptions() {
   document.body.classList.remove("gameRunning");
+  document.body.classList.remove("gameEnded");
   document.body.classList.remove("canvasVisible");
   hideEndButtons();
   if (world) {
@@ -251,36 +256,10 @@ function backToOptions() {
 function initRetryButton() {
     if (retryListenerBound) return;
     retryListenerBound = true;
-    canvas.addEventListener("click", handleRetryClick);
     const retryBtn = document.getElementById("retryHitbox");
     if (retryBtn) retryBtn.addEventListener("click", () => restartGame());
     const backBtn = document.getElementById("backToOptions");
     if (backBtn) backBtn.addEventListener("click", backToOptions);
-
-    window.addEventListener("resize", repositionEndButtons);
-    window.addEventListener("orientationchange", repositionEndButtons);
-}
-
-/**
- * Handles click on retry button.
- * @param {MouseEvent} e - Mouse click event.
- * @returns {void}
- */
-function handleRetryClick(e) {
-    if (world.gameState === "play") return;
-
-    const { mx, my } = getMousePos(e);
-    if (isInsideRetryBtn(mx, my)) restartGame();
-}
-
-/**
- * Repositions retry/back buttons when end overlay is visible.
- * @returns {void}
- */
-function repositionEndButtons() {
-    if (!world || (world.gameState !== "win" && world.gameState !== "lose")) return;
-    world.positionRetryButton();
-    world.positionBackButton();
 }
 
 /**
@@ -313,20 +292,6 @@ function getMousePos(e) {
         mx: (clientX - rect.left) * scaleX,
         my: (clientY - rect.top) * scaleY
     };
-}
-
-/**
- * Checks if mouse click is inside retry button area.
- *
- * @param {number} mx - Mouse X position.
- * @param {number} my - Mouse Y position.
- * @returns {boolean} True if inside button.
- */
-function isInsideRetryBtn(mx, my) {
-    const { x, y, w, h } = world.retryBtn;
-    const inX = mx >= x && mx <= x + w;
-    const inY = my >= y && my <= y + h;
-    return inX && inY;
 }
 /**
  * Starts background music once.

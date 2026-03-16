@@ -17,9 +17,9 @@ class Coin extends MovableObject {
         this.x = x;
         this.y = y;
 
+        this.setHitbox(6, 6, 6, 6);
         this.loadImage(this.IMAGES_COIN[0]);
         this.loadImages(this.IMAGES_COIN);
-
     }
     
 }

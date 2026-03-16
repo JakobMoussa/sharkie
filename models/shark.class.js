@@ -31,6 +31,8 @@ class Shark extends MovableObject {
     shoot = false;
     shootUntil = 0;
     shotReady = false;
+    shootFrameStart = 0;
+    shootFrameDuration = 120;
     deadDone = false;
     deadFrame = 0;
     gameOverFrame = 0;
@@ -92,11 +94,12 @@ class Shark extends MovableObject {
      * @returns {void}
      */
     startShootIfPressed(now) {
-        // Skip shooting when no poison is available
         if (!this.world.keyboard.F || this.shoot || this.world.poisonCount <= 0) return;
         this.shoot = true;
         this.shotReady = false;
-        this.shootUntil = now + (this.SHOT_IMAGES.length * 120);
+        this.currentImage = 0;
+        this.shootFrameStart = now;
+        this.shootUntil = now + (this.SHOT_IMAGES.length * this.shootFrameDuration);
         this.shootEndedHandled = false;
         if (this.world.sounds) this.world.sounds.play("bubble");
     }
@@ -131,6 +134,8 @@ class Shark extends MovableObject {
     start() {
         this.startMovementLoop();
         this.startAnimationLoop();
+        this.setHitbox(60, 50, 120, 65);
+
     } 
 
     /**
@@ -335,8 +340,29 @@ class Shark extends MovableObject {
     updateAnimation() {
         const frames = this.getAnimationFramesForState();
         if (!frames) return;
+        if (this.state === "shoot") {
+            this.playShootAnimation(Date.now());
+            return;
+        }
         this.playAnimation(frames);
     }   
+
+    /**
+     * Plays the shoot animation with time-based frame stepping (no looping).
+     * @param {number} now - Current timestamp in ms.
+     * @returns {void}
+     */
+    playShootAnimation(now) {
+        const duration = this.shootFrameDuration || 100;
+        const elapsed = now - this.shootFrameStart;
+        const frameIndex = Math.min(
+            Math.floor(elapsed / duration),
+            this.SHOT_IMAGES.length - 1
+        );
+
+        const path = this.SHOT_IMAGES[frameIndex];
+        this.img = this.imageCache[path] || this.img;
+    }
 
     /**
      * Maps current state to the corresponding animation frames.
@@ -366,10 +392,10 @@ class Shark extends MovableObject {
         const now = Date.now();
         if (now < this.shockUntil) return false;
 
-        if (this.world) {this.world.statusBar.setPercentage(this.energy); }
-
-        this.energy -= 10;
+        this.energy -= 20;
         if (this.energy < 0) this.energy = 0;
+
+        if (this.world) { this.world.statusBar.setPercentage(this.energy); }
 
         this.shockUntil = now + durationMs;
         return true;
@@ -385,10 +411,10 @@ class Shark extends MovableObject {
         const now = Date.now();
         if (now < this.poisonUntil) return false;
 
-        if (this.world) {this.world.statusBar.setPercentage(this.energy); }
-        
-        this.energy -= 5;
+        this.energy -= 20;
         if (this.energy < 0) this.energy = 0;
+
+        if (this.world) { this.world.statusBar.setPercentage(this.energy); }
 
         this.poisonUntil = now + durationMs;
         return true;

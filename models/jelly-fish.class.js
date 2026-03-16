@@ -27,6 +27,13 @@ class JellyFish extends MovableObject {
         'img/Grafiken/2.Enemy/2 Jelly fish/Dead/Lila/L4.png'
     ];
 
+    hitbox = {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10,
+    };
+
 
     constructor(x, y) {
         super();

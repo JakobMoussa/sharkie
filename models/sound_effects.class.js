@@ -8,7 +8,6 @@ class SoundEffects {
     constructor() {
         this.background = new Audio('Sound effects/Background Sound.mp3');
         this.bubble = new Audio('Sound effects/Bubble.mp3');
-        this.endboss = new Audio('Sound effects/endboss Sound.mp3');
         this.endbossEntry = new Audio('Sound effects/endboss_entry Sound.mp3');
         this.sharkHurt = new Audio('Sound effects/Shark_Hurt Sound.mp3');
         this.sharkSlap = new Audio('Sound effects/Slap_Effect.mp3');

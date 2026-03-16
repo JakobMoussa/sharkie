@@ -67,11 +67,12 @@ class Endboss extends MovableObject {
     hasAppeared = false;
     introPlayed = false;
     visible = false;
-    APPEAR_X = 3200;
+    APPEAR_X = 3000;
     SPAWN_Y = 0;
     INTRO_DISTANCE = 800;
     width = 300;
     height = 450;
+    hitbox = { left: 30, right: 40, top: 200, bottom: 100 };
     energy = 100;
     hurt = false;
     attack = false;
@@ -187,7 +188,7 @@ class Endboss extends MovableObject {
      */
     spawnAtAppearPoint() {
         this.visible = true;
-        this.x = this.APPEAR_X + 200;
+        this.x = this.APPEAR_X + this.INTRO_DISTANCE + 100;
         this.y = this.SPAWN_Y;
         this.baseY = this.y;
     }

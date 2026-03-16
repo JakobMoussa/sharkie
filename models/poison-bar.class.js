@@ -11,9 +11,6 @@ class PoisonBar extends MovableObject {
 
     percentage = 0;
 
-    /**
-     * Creates a poison bar UI element.
-     */
     constructor() {
         super();
         this.loadImages(this.POISON_BAR_IMAGES);
@@ -26,6 +23,12 @@ class PoisonBar extends MovableObject {
         this.height = 60;
     }
 
+    /**
+     * Sets the poison fill level and swaps to the matching bar image.
+     * Value is clamped between 0 and 100 before resolving the sprite.
+     * @param {number} value - New poison percentage.
+     * @returns {void}
+     */
     setPercentage(value) {
         this.percentage = Math.max(0, Math.min(100, value));
         const i = this.resolveImageIndex();
@@ -44,6 +47,5 @@ class PoisonBar extends MovableObject {
         if (this.percentage >= 20) return 1;
         return 0;
     }
-
 
 }

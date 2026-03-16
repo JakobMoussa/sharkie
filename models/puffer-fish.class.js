@@ -55,6 +55,13 @@ class PufferFish extends MovableObject {
         'img/Grafiken/2.Enemy/1.Puffer fish (3 color options)/4.DIE/2.png',
     ];
 
+    hitbox = {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 24,
+    };
+
     constructor(x, y, color = 'green') {
         super();
         this.x = x;

@@ -3,6 +3,7 @@ class MovableObject extends DrawableObject {
     speed = 0.15;
     otherDirection = false;
     offset = 50;
+    hitbox = { left: 0, right: 0, top: 0, bottom: 0 };
 
     /**
      * Moves the object continuously to the left at the defined speed.
@@ -39,87 +40,82 @@ class MovableObject extends DrawableObject {
     }
 
     /**
-     * Checks whether this object overlaps with another object using optional padding.
-     * @param {MovableObject} other - The other object to check against.
-     * @param {number} [padThis=0] - Padding applied to this object's hitbox.
-     * @param {number} [padOther=0] - Padding applied to the other object's hitbox.
-     * @returns {boolean} True if the objects are colliding.
+     * Returns an axis-aligned bounding box with optional inner padding.
+     * @param {{left?:number,right?:number,top?:number,bottom?:number}|null} pad - Insets applied inside the box.
+     * @returns {{x:number,y:number,w:number,h:number}} Rectangle describing the hitbox.
      */
-    isColliding(other, padThis = 0, padOther = 0) {
+    getBounds(pad) {
+        const p = pad ?? { left: 0, right: 0, top: 0, bottom: 0 };
+        return {
+            x: this.x + (p.left || 0),
+            y: this.y + (p.top || 0),
+            w: this.width - (p.left || 0) - (p.right || 0),
+            h: this.height - (p.top || 0) - (p.bottom || 0),
+        };
+    }
+
+    /**
+     * Checks overlap between this object and another movable object.
+     * Uses this.hitbox and other.hitbox unless overrides are provided.
+     * @param {MovableObject} other - Target object.
+     * @param {{left?:number,right?:number,top?:number,bottom?:number}|null} [padThis=null] - Optional padding for this object.
+     * @param {{left?:number,right?:number,top?:number,bottom?:number}|null} [padOther=null] - Optional padding for the other object.
+     * @returns {boolean} True if rectangles overlap.
+     */
+    isColliding(other, padThis = null, padOther = null) {
+        const a = this.getBounds(padThis ?? this.hitbox);
+        const b = other.getBounds ? other.getBounds(padOther ?? other.hitbox) : {
+            x: other.x,
+            y: other.y,
+            w: other.width,
+            h: other.height,
+        };
+
         return (
-            this.x + this.width - padThis > other.x + padOther &&
-            this.x + padThis < other.x + other.width - padOther &&
-            this.y + this.height - padThis > other.y + padOther &&
-            this.y + padThis < other.y + other.height - padOther
+            a.x < b.x + b.w &&
+            a.x + a.w > b.x &&
+            a.y < b.y + b.h &&
+            a.y + a.h > b.y
         );
     }
 
     /**
-     * Checks collision with a regular enemy using a tighter hitbox.
-     * @param {MovableObject} other - The enemy object to check against.
-     * @returns {boolean} True if colliding with the enemy.
+     * Collision helper for regular enemies.
+     * @param {MovableObject} other - Enemy object.
+     * @returns {boolean} True if overlapping.
      */
     isCollidingEnemy(other) {
-        const sharkLeft = 45;
-        const sharkRight = 25;
-        const sharkTop = 70;
-        const sharkBottom = 34;
-
-        const enemyLeft = 40;
-        const enemyRight = 40;
-        const enemyTop = 40;
-        const enemyBottom = 80;
-
-        return (
-            this.x + this.width - sharkRight > other.x + enemyLeft &&
-            this.x + sharkLeft < other.x + other.width - enemyRight &&
-            this.y + this.height - sharkBottom > other.y + enemyTop &&
-            this.y + sharkTop < other.y + other.height - enemyBottom
-        );
+        return this.isColliding(other);
     }
 
     /**
-     * Checks collision with the endboss using reduced hitboxes on both sides.
-     * @param {MovableObject} other - The endboss object to check against.
-     * @returns {boolean} True if colliding with the endboss.
+     * Collision helper for the endboss.
+     * @param {MovableObject} other - Endboss object.
+     * @returns {boolean} True if overlapping.
      */
     isCollidingBoss(other) {
-        const sharkLeft = this.width * 0.20;
-        const sharkRight = this.width * 0.20;
-        const sharkTop = this.height * 0.35;
-        const sharkBottom = this.height * 0.20;
-
-        const bossLeft = other.width * 0.28;
-        const bossRight = other.width * 0.28;
-        const bossTop = other.height * 0.35;
-        const bossBottom = other.height * 0.25;
-
-        return (
-            this.x + this.width - sharkRight > other.x + bossLeft &&
-            this.x + sharkLeft < other.x + other.width - bossRight &&
-            this.y + this.height - sharkBottom > other.y + bossTop &&
-            this.y + sharkTop < other.y + other.height - bossBottom
-        );
+        return this.isColliding(other);
     }
 
     /**
-     * Checks collision with a collectible item using a tighter hitbox.
-     * @param {MovableObject} other - The item object to check against.
-     * @returns {boolean} True if colliding with the item.
+     * Collision helper for collectible items.
+     * @param {MovableObject} other - Item object.
+     * @returns {boolean} True if overlapping.
      */
     isCollidingItem(other) {
-        const shrinkX = this.width * 0.15;
-        const shrinkTop = this.height * 0.45;
-        const shrinkBottom = this.height * 0.25;
+        return this.isColliding(other);
+    }
 
-        const itemPad = 10;
-
-        return (
-            this.x + this.width - shrinkX > other.x + itemPad &&
-            this.x + shrinkX < other.x + other.width - itemPad &&
-            this.y + this.height - shrinkBottom > other.y + itemPad &&
-            this.y + shrinkTop < other.y + other.height - itemPad
-        );
+    /**
+     * Sets padding for this object's hitbox.
+     * @param {number} left - Padding on the left.
+     * @param {number} right - Padding on the right.
+     * @param {number} top - Padding on the top.
+     * @param {number} bottom - Padding on the bottom.
+     * @returns {void}
+     */
+    setHitbox(left, right, top, bottom) {
+        this.hitbox = { left, right, top, bottom };
     }
 
 }

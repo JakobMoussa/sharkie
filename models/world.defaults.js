@@ -29,7 +29,5 @@ function createWorldDefaults() {
     gameState: "play",
     overlayImg: new Image(),
     collisionInterval: null,
-    retryImg: new Image(),
-    retryBtn: { x: 0, y: 0, w: 0, h: 0 },
   };
 }

@@ -1,9 +1,5 @@
 class World {
-    /**
-     * Creates a new world instance with rendering context and input.
-     * @param {HTMLCanvasElement} canvas - Target canvas.
-     * @param {Keyboard} keyboard - Shared keyboard state.
-     */
+    /** Creates a new world instance with rendering context and input. @param {HTMLCanvasElement} canvas - Target canvas. @param {Keyboard} keyboard - Shared keyboard state.       */
     constructor(canvas, keyboard) {
         Object.assign(this, createWorldDefaults());
         this.ctx = canvas.getContext('2d');
@@ -14,19 +10,12 @@ class World {
         this.startGame();
     }
 
-    /**
-     * Preloads overlay and retry images used by the HUD.
-     * @returns {void}
-     */
+    /** Preloads overlay image used by the HUD. @returns {void}       */
     loadImages() {
         this.overlayImg.src = 'img/Grafiken/3. Background/Dark/1.png';
-        this.retryImg.src = 'img/Grafiken/6.Botones/Try again/Recurso 17.png';
     }
 
-    /**
-     * Initializes game objects and UI bars.
-     * @returns {void}
-     */
+    /** Initializes game objects and UI bars. @returns {void}       */
     initObjects() {
         this.sounds = new SoundEffects();
         const level = createLevel1();
@@ -38,12 +27,10 @@ class World {
         this.poisonBar = new PoisonBar();
         this.coinsBar = new CoinsBar();
         this.endbossBar = new EndbossStatusBar();
+        PoisonShot.preload();
     }
 
-    /**
-     * Starts the main game systems.
-     * @returns {void}
-     */
+    /** Starts the main game systems. @returns {void}       */
     startGame() {
         this.setWorld();
         this.endboss.endbossAnimation();
@@ -54,18 +41,12 @@ class World {
         this.draw();
     }
 
-    /**
-     * Assigns world reference to shark.
-     * @returns {void}
-     */
+    /** Assigns world reference to shark. @returns {void}       */
     setWorld() {
         this.shark.world = this;
     }
 
-    /**
-     * Checks win or lose condition.
-     * @returns {void}
-     */
+    /** Checks win or lose condition. @returns {void}       */
     checkEndState() {
         if (this.gameState !== "play") return;
 
@@ -82,10 +63,7 @@ class World {
         }
     }
  
-    /**
-     * Main render loop.
-     * @returns {void}
-     */
+    /** Main render loop. @returns {void}       */
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -99,10 +77,7 @@ class World {
         drawMuteButton(this.ctx);
     }
 
-    /**
-     * Draws all world objects.
-     * @returns {void}
-     */
+    /** Draws all world objects. @returns {void}       */
     drawWorld() {
         this.addObjectsToMap(this.backgroundObjects);
         this.addObjectsToMap(this.poisons);
@@ -113,10 +88,7 @@ class World {
         this.drawEndboss();
     }
 
-    /**
-     * Draws endboss and its health bar.
-     * @returns {void}
-     */
+    /** Draws endboss and its health bar. @returns {void}       */
     drawEndboss() {
         if (!this.endboss.visible || this.endboss.deadDone) return;
 
@@ -126,10 +98,7 @@ class World {
         }
     }
 
-    /**
-     * Draws UI and overlays.
-     * @returns {void}
-     */
+    /** Draws UI and overlays. @returns {void}       */
     drawUI() {
         this.addToMap(this.statusBar);
         this.addToMap(this.poisonBar);
@@ -144,22 +113,12 @@ class World {
         }
     }
 
-    /**
-     * Draws an array of objects.
-     *
-     * @param {Array} objects - Objects to draw.
-     * @returns {void}
-     */
+    /** Draws an array of objects.  @param {Array} objects - Objects to draw. @returns {void}       */
     addObjectsToMap(objects) {
         objects.forEach(o => this.addToMap(o));
     }
 
-    /**
-     * Draws a single object.
-     *
-     * @param {MovableObject} mo - Object to draw.
-     * @returns {void}
-     */
+    /** Draws a single object.  @param {MovableObject} mo - Object to draw. @returns {void}       */
     addToMap(mo) {
         if (!mo.img) return;
         this.ctx.save();
@@ -175,21 +134,12 @@ class World {
         this.ctx.restore();
     }
 
-    /**
-     * Returns random Y position.
-     *
-     * @returns {number}
-     */
+    /** Returns random Y position.  @returns {number}       */
     randomY() {
         return 100 + Math.random() * 400;
     }
 
-    /**
-     * Updates pufferfish "near" state.
-     *
-     * @param {MovableObject} enemy - Enemy instance.
-     * @returns {void}
-     */
+    /** Updates pufferfish "near" state.  @param {MovableObject} enemy - Enemy instance. @returns {void}       */
     updatePufferNear(enemy) {
         if (!(enemy instanceof PufferFish) || enemy.dead) return;
 
@@ -204,12 +154,7 @@ class World {
         enemy.setNear(nearX && nearY);
     }
 
-    /**
-     * Attempts to kill enemy with slap.
-     *
-     * @param {MovableObject} enemy
-     * @returns {boolean}
-     */
+    /** Attempts to kill enemy with slap.  @param {MovableObject} enemy @returns {boolean}       */
     trySlapKill(enemy) {
         if (!this.shark.slap) return false;
 
@@ -226,12 +171,7 @@ class World {
         return false;
     }
 
-    /**
-     * Applies enemy damage to shark.
-     *
-     * @param {MovableObject} enemy
-     * @returns {boolean}
-     */
+    /** Applies enemy damage to shark.  @param {MovableObject} enemy @returns {boolean}       */
     applyEnemyDamage(enemy) {
         if (enemy.dead) return false;
 
@@ -245,42 +185,27 @@ class World {
         return didDamage;
     }
 
-    /**
-     * Applies electric shock damage from a jellyfish.
-     * @returns {boolean} True if damage was applied.
-     */
+    /** Applies electric shock damage from a jellyfish. @returns {boolean} True if damage was applied.       */
     applyJellyDamage() {
         return this.shark.hitShock(800);
     }
 
-    /**
-     * Applies poison damage from a pufferfish.
-     * @returns {boolean} True if damage was applied.
-     */
+    /** Applies poison damage from a pufferfish. @returns {boolean} True if damage was applied.       */
     applyPufferDamage() {
         return this.shark.hitPoison(1200);
     }
 
-    /**
-     * Prevents shark energy from dropping below zero.
-     * @returns {void}
-     */
+    /** Prevents shark energy from dropping below zero. @returns {void}       */
     clampSharkEnergy() {
         if (this.shark.energy <= 0) this.shark.energy = 0;
     }
 
-    /**
-     * Removes finished enemies.
-     * @returns {void}
-     */
+    /** Removes finished enemies. @returns {void}       */
     cleanupDeadEnemies() {
         this.enemies = this.enemies.filter(e => !e.deadDone);
     }
 
-    /**
-     * Starts collision detection loop.
-     * @returns {void}
-     */
+    /** Starts collision detection loop. @returns {void}       */
     checkCollisions() {
         this.collisionInterval = setInterval(() => {
             if (this.gameState !== "play") return;
@@ -297,10 +222,7 @@ class World {
         }, 1000 / 60);
     }
 
-    /**
-     * Handles enemy collisions.
-     * @returns {void}
-     */
+    /** Handles enemy collisions. @returns {void}       */
     checkEnemyCollisions() {
         this.enemies.forEach((enemy) => {
             this.updatePufferNear(enemy);
@@ -317,10 +239,7 @@ class World {
         });
     }
 
-    /**
-     * Handles endboss collisions.
-     * @returns {void}
-     */
+    /** Handles endboss collisions. @returns {void}       */
     checkEndbossCollisions() {
         if (!this.endboss.visible || this.endboss.dead) return;
         this.checkEndbossSlapHit();
@@ -328,10 +247,7 @@ class World {
         if (this.endboss.deadDone) this.showEndbossBar = false;
     }
 
-    /**
-     * Applies slap damage from the shark to the endboss.
-     * @returns {void}
-     */
+    /** Applies slap damage from the shark to the endboss. @returns {void}       */
     checkEndbossSlapHit() {
         if (this.shark.slap && this.shark.isCollidingBoss(this.endboss)) {
             this.endboss.hit();
@@ -340,10 +256,7 @@ class World {
         }
     }
 
-    /**
-     * Applies contact damage from the endboss to the shark.
-     * @returns {void}
-     */
+    /** Applies contact damage from the endboss to the shark. @returns {void}       */
     checkEndbossDamageToShark() {
         const hit = this.shark.isCollidingBoss(this.endboss);
         if (hit) {
@@ -352,10 +265,7 @@ class World {
         }
     }
 
-    /**
-     * Spawns poison items.
-     * @returns {void}
-     */
+    /** Spawns poison items. @returns {void}       */
     spawnPoison() {
         for (let i = 0; i < 30; i++) {
             const x = 300 + Math.random() * 2800;
@@ -364,10 +274,7 @@ class World {
         }
     }
 
-    /**
-     * Handles poison collection.
-     * @returns {void}
-     */
+    /** Handles poison collection. @returns {void}       */
     ckeckPoisons() {
         this.poisons.forEach((poison, index) => {
             if (this.poisonCount >= this.maxPoison) return;
@@ -383,10 +290,7 @@ class World {
         });
     }
 
-    /**
-     * Spawns coin items.
-     * @returns {void}
-     */
+    /** Spawns coin items. @returns {void}       */
     spawnCoins() {
         for (let i = 0; i < 20; i++) {
             const x = 300 + Math.random() * 2600;
@@ -395,10 +299,7 @@ class World {
         }
     }
 
-    /**
-     * Handles coin collection.
-     * @returns {void}
-     */
+    /** Handles coin collection. @returns {void}       */
     checkCoins() {
         this.coins.forEach((coin, index) => {
             
@@ -413,10 +314,7 @@ class World {
         });
     }
 
-    /**
-     * Shoots poison projectile.
-     * @returns {void}
-     */
+    /** Shoots poison projectile. @returns {void}       */
     shootPoison() {
         if (!this.shark.shotReady) return;
 
@@ -438,18 +336,12 @@ class World {
         this.shark.shotReady = false;
     }
 
-    /**
-     * Removes out-of-bounds shots.
-     * @returns {void}
-     */
+    /** Removes out-of-bounds shots. @returns {void}       */
     cleanupShots() {
         this.poisonShots = this.poisonShots.filter(s => s.x > -200 && s.x < 4000);
     }
 
-    /**
-     * Checks projectile collisions.
-     * @returns {void}
-     */
+    /** Checks projectile collisions. @returns {void}       */
     checkPoisonShotHits() {
         this.poisonShots.forEach((shot) => {
             this.checkShotEnemyHits(shot);
@@ -458,29 +350,21 @@ class World {
         this.poisonShots = this.poisonShots.filter(s => !s.hit);
     }
 
-    /**
-     * Tests a poison shot against regular enemies.
-     * @param {PoisonShot} shot - Projectile to test.
-     * @returns {void}
-     */
+    /** Tests a poison shot against regular enemies. @param {PoisonShot} shot - Projectile to test. @returns {void}       */
     checkShotEnemyHits(shot) {
         this.enemies.forEach((enemy) => {
             if (enemy.dead) return;
-            if (shot.isColliding(enemy, 0, 0) && typeof enemy.die === 'function') {
+            if (shot.isColliding(enemy, null, null) && typeof enemy.die === 'function') {
                 enemy.die();
                 shot.hit = true;
             }
         });
     }
 
-    /**
-     * Tests a poison shot against the endboss and updates its bar.
-     * @param {PoisonShot} shot - Projectile to test.
-     * @returns {void}
-     */
+    /** Tests a poison shot against the endboss and updates its bar. @param {PoisonShot} shot - Projectile to test. @returns {void}       */
     checkShotEndbossHit(shot) {
         if (!this.endboss.visible || this.endboss.dead) return;
-        if (shot.isColliding(this.endboss, 0, 0)) {
+        if (shot.isColliding(this.endboss, null, null)) {
             this.endboss.hit();
             shot.hit = true;
             this.showEndbossBar = true;
@@ -488,10 +372,7 @@ class World {
         }
     }
 
-    /**
-     * Draws end overlay (win/lose).
-     * @returns {void}
-     */
+    /** Draws end overlay (win/lose). @returns {void}       */
     drawEndOverlay() {
 
         if (this.overlayImg.complete) {
@@ -505,44 +386,9 @@ class World {
         if (this.gameState === "win") {
             this.endboss.drawWinCentered(this.ctx);
         }
-
-        this.drawRetryButton();
     }
 
-    /**
-     * Draws retry button.
-     * @returns {void}
-     */
-    drawRetryButton() {
-        this.retryBtn = { x: 0, y: 0, w: 0, h: 0 };
-        this.positionRetryButton();
-        this.positionBackButton();
-    }
-
-    /**
-     * Shows the retry button on the end overlay.
-     * @returns {void}
-     */
-    positionRetryButton() {
-        const btn = document.getElementById("retryHitbox");
-        if (!btn) return;
-        btn.style.display = "block";
-    }
-
-    /**
-     * Shows the back-to-options button on the end overlay.
-     * @returns {void}
-     */
-    positionBackButton() {
-        const btn = document.getElementById("backToOptions");
-        if (!btn) return;
-        btn.style.display = "block";
-    }
-
-    /**
-     * Stops collision loop and hides overlay buttons.
-     * @returns {void}
-     */
+    /** Stops collision loop and hides overlay buttons. @returns {void}       */
     destroy() {
         if (this.collisionInterval) {
             clearInterval(this.collisionInterval);
@@ -556,12 +402,8 @@ class World {
         if (back) back.style.display = "none";
     }
 
-    /**
-     * Stops the looping background track immediately.
-     * @returns {void}
-     */
+    /** Stops the looping background track immediately. @returns {void}       */
     stopBackgroundMusic() {
         if (this.sounds) this.sounds.stop("background");
     }
-
 }
