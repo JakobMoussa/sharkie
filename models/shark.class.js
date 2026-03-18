@@ -332,55 +332,7 @@ class Shark extends MovableObject {
         this.state = "idle";
     }
 
-    /**
-     * Plays animation according to current state.
-     *
-     * @returns {void}
-     */
-    updateAnimation() {
-        const frames = this.getAnimationFramesForState();
-        if (!frames) return;
-        if (this.state === "shoot") {
-            this.playShootAnimation(Date.now());
-            return;
-        }
-        this.playAnimation(frames);
-    }   
-
-    /**
-     * Plays the shoot animation with time-based frame stepping (no looping).
-     * @param {number} now - Current timestamp in ms.
-     * @returns {void}
-     */
-    playShootAnimation(now) {
-        const duration = this.shootFrameDuration || 100;
-        const elapsed = now - this.shootFrameStart;
-        const frameIndex = Math.min(
-            Math.floor(elapsed / duration),
-            this.SHOT_IMAGES.length - 1
-        );
-
-        const path = this.SHOT_IMAGES[frameIndex];
-        this.img = this.imageCache[path] || this.img;
-    }
-
-    /**
-     * Maps current state to the corresponding animation frames.
-     * @returns {string[]|null} Frame list or null for dead state.
-     */
-    getAnimationFramesForState() {
-        const map = {
-            shock: this.ELECTRICSHOCK_IMAGES,
-            poisoned: this.POISONED_IMAGES,
-            slap: this.FINSLAP_IMAGES,
-            swim: this.SWIM_IMAGES,
-            longidle: this.LONGIDLE_IMAGES,
-            sleep: this.SLEEP_IMAGES,
-            shoot: this.SHOT_IMAGES,
-            dead: null
-        };
-        return map[this.state] ?? this.IDLE_IMAGES;
-    }
+    updateAnimation() { sharkUpdateAnimation(this); }
 
     /**
      * Applies electric shock damage.
@@ -420,80 +372,6 @@ class Shark extends MovableObject {
         return true;
     }
 
-    /**
-     * Draws the game over animation centered on canvas.
-     *
-     * @param {CanvasRenderingContext2D} ctx - Canvas rendering context.
-     * @returns {void}
-     */
-    drawGameOverCentered(ctx) {
-        if (!this.gameOverStart) this.gameOverStart = Date.now();
-
-        const passed = Date.now() - this.gameOverStart;
-
-        if (passed < 5000 && passed % 400 < 20) {
-            this.gameOverFrame = (this.gameOverFrame + 1) % this.GAME_OVER.length;
-        }
-
-        const img = this.imageCache[this.GAME_OVER[this.gameOverFrame]];
-        if (!img) return;
-
-        const w = ctx.canvas.width * 0.75;
-        const h = ctx.canvas.height * 0.45;
-        ctx.drawImage(img, (ctx.canvas.width - w) / 2, (ctx.canvas.height - h) / 2, w, h);
-    }
-
-    /**
-     * Handles the full game over sequence.
-     * Plays death animation, game over loop and sound.
-     *
-     * @returns {void}
-     */
-    gameOverScreen() {
-        if (this.energy > 0) return;
-        if(!this.deadDone) {
-            this.playDeadAnimation();
-            return;
-        }
-
-        this.playGameOverLoop();
-        this.playLoseSound();
-    }
-
-    /**
-     * Plays shark death animation frames.
-     *
-     * @returns {void}
-     */
-    playDeadAnimation() {
-        this.img = this.imageCache[this.DEAD_IMAGES[this.deadFrame]];
-        this.deadFrame++;
-
-        if (this.deadFrame >= this.DEAD_IMAGES.length) {
-            this.deadDone = true;
-            this.gameOverFrame = 0;
-        }   
-    }
-
-    /**
-     * Loops game over animation frames.
-     *
-     * @returns {void}
-     */
-    playGameOverLoop() {
-        this.gameOverFrame = (this.gameOverFrame + 1) % this.GAME_OVER.length;
-    }
-
-    /**
-     * Plays lose sound once after death.
-     *
-     * @returns {void}
-     */
-    playLoseSound() {
-        if (this.losePlayed) return;
-        this.losePlayed = true;
-        setTimeout(() => {
-            if (this.world?.sounds) this.world.sounds.play("lose");
-        }, 500);
-    }
+    drawGameOverCentered(ctx) { drawSharkGameOverCentered(this, ctx); }
+    gameOverScreen() { handleSharkGameOver(this); }
 }

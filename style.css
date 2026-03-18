@@ -239,6 +239,12 @@ body.canvasVisible .privacyWrapper {
   color: black;
 }
 
+.btn {
+  -webkit-touch-callout: none; /* unterdrückt iOS-Langdruck-Menü */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 @media (max-width: 699px) and (orientation: portrait) {
   #overlayImg {
     display: none;
@@ -294,6 +300,9 @@ body.canvasVisible .privacyWrapper {
 
 .mobileControls { 
   display: none; 
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .mobileControls button { 

@@ -346,6 +346,7 @@ window.addEventListener("keyup", (e) => {
  */
 function initMobileControls() {
   const kb = world.keyboard;
+  disableMobileControlsContextMenu();
   getControlMap().forEach((cfg) => bindMobileControl(cfg, kb));
 }
 
@@ -378,6 +379,16 @@ function bindMobileControl({ id, key }, kb) {
   el.addEventListener("pointerup", () => kb[key] = false);
   el.addEventListener("pointercancel", () => kb[key] = false);
   el.addEventListener("pointerleave", () => kb[key] = false);
+}
+
+/**
+ * Prevents context menus from appearing on mobile controls.
+ * @returns {void}
+ */
+function disableMobileControlsContextMenu() {
+  const controls = document.querySelector(".mobileControls");
+  if (!controls) return;
+  controls.addEventListener("contextmenu", (e) => e.preventDefault());
 }
 
 window.addEventListener("load", initStartOverlay);
